@@ -1,0 +1,77 @@
+Package: metis
+Version: 5.0
+Revision: 1
+Source: http://glaros.dtc.umn.edu/gkhome/fetch/sw/%n/%n-%v.tar.gz
+Source-MD5: aa1f67b27d4cb46f2ea81090b212d5df
+Description: Graph partitioning and matrix ordering
+DescDetail: <<
+METIS is a set of serial programs for partitioning graphs, partitioning 
+finite element meshes, and producing fill reducing orderings for sparse 
+matrices. The algorithms implemented in METIS are based on the multilevel 
+recursive-bisection, multilevel k-way, and multi-constraint partitioning 
+schemes developed in the Karypis Lab at the University of Minnesota.
+
+METIS's key features are the following:
+
+Provides high quality partitions!
+Experiments on a large number of graphs arising in various domains including
+finite element methods, linear programming, VLSI, and transportation show that
+METIS produces partitions that are consistently better than those produced by
+other widely used algorithms. The partitions produced by METIS are 
+consistently 10% to 50% better than those produced by spectral partitioning 
+algorithms.
+
+It is extremely fast!
+Experiments on a wide range of graphs has shown that METIS is one to two
+orders of magnitude faster than other widely used partitioning algorithms. 
+Graphs with over 1,000,000 vertices can be partitioned in 256 parts in a few
+seconds on current generation workstations and PCs.
+
+Produces low fill orderings!
+The fill-reducing orderings produced by METIS are significantly better than
+those produced by other widely used algorithms including multiple minimum 
+degree. For many classes of problems arising in scientific computations and
+linear programming, METIS is able to reduce the storage and computational 
+requirements of sparse matrix factorization, by up to an order of magnitude. 
+Moreover, unlike multiple minimum degree, the elimination trees produced by 
+METIS are suitable for parallel direct factorization. Furthermore, METIS is 
+able to compute these orderings very fast. Matrices with over 200,000 rows can
+be reordered in just a few seconds on current generation workstations and PCs.
+<<
+
+License: GPL/LGPL
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Homepage: http://glaros.dtc.umn.edu/gkhome/metis/metis/overview
+
+BuildDepends: cmake
+Depends: %n5.0-shlibs (= %v-%r)
+
+CompileScript: <<
+	make config shared=1 prefix=%i/opt/%n-%v
+	make
+<<
+
+InstallScript: <<
+	#!/bin/sh -ev
+	make install
+	# put binaries in PATh
+	mv %i/opt/%n-%v/bin %i/
+	# clean up install_name
+	for file in %i/bin/* 
+	do
+ 		install_name_tool -change lib%n.dylib %p/opt/%n-%v/lib/lib%n.dylib $file
+	done
+	install_name_tool -id %p/opt/%n-%v/lib/lib%n.dylib %i/opt/%n-%v/lib/lib%n.dylib
+<<
+
+SplitOff: <<
+	Package: %N5.0-shlibs
+	Files: opt/%N-%v/lib
+	Shlibs: %p/opt/%N-%v/lib/lib%N.dylib 0.0.0 %n (>= 5.0-1)
+<<
+
+SplitOff2: <<
+	Package: %N5.0-dev
+	Depends: %N5.0-shlibs (= %v-%r)
+	files: opt/%N-%v/include
+<<
