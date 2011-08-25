@@ -64,6 +64,8 @@ InstallScript: <<
 	install_name_tool -id %p/opt/%n-%v/lib/lib%n.dylib %i/opt/%n-%v/lib/lib%n.dylib
 <<
 
+DocFiles: graphs manual LICENSE.txt	
+
 SplitOff: <<
 	Package: %N5.0-shlibs
 	Files: opt/%N-%v/lib
