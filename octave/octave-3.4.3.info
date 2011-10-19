@@ -13,7 +13,7 @@ Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
 BuildDepends: <<
 	glpk-dev, hdf5.7, readline5, libncurses5, fftw3 (>= 3.1.1-7), 
 	libcurl4, libftgl2, qhull6-dev, flag-sort,
-	pcre, gcc%type_pkg[gcc]-compiler, suitesparse-metis, fink (>= 0.30.0), fink-package-precedence, sed, 
+	pcre, gcc%type_pkg[gcc]-compiler, suitesparse-metis, fink (>= 0.30.0), sed, 
 	graphicsmagick-dev, freetype219,
 	fltk13-aqua,
 	(%type_raw[-atlas] = -atlas) atlas, 
@@ -132,7 +132,6 @@ CompileScript: <<
  FLIBDIR="%p/lib/gcc4.6/lib"
  ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a
  make
- fink-package-precedence --depfile-ext='\.d$' --prohibit-bdep=%{Ni},%{Ni}-atlas,%{Ni}%type_raw[oct]-dev,%{Ni}%type_raw[oct]-atlas-dev,%{Ni}305-dev,%{Ni}305-atlas-dev,saclib-gcc46,saclib src
 <<
 
 InfoTest: <<
