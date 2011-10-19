@@ -198,7 +198,7 @@ InfoDocs: %{Ni}.info
 RuntimeVars: <<
  GNUTERM: aqua
 <<
-DocFiles: BUGS ChangeLog README ROADMAP SENDING-PATCHES COPYING
+DocFiles: BUGS COPYING ChangeLog* NEWS* PROJECTS README ROADMAP SENDING-PATCHES
 
 SplitOff: <<
 	Package: octave%type_pkg[oct]%type_pkg[-atlas]-shlibs
