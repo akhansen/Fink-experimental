@@ -177,7 +177,6 @@ InstallScript: <<
  cd %i/bin
  # create convenience symlink
  ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
- # generate versioned executables
 <<
 InfoDocs: %{Ni}.info
 RuntimeVars: <<
@@ -207,7 +206,7 @@ SplitOff: <<
 		(%type_raw[-atlas] != -atlas) qrupdate-shlibs (>= 1.1.1-5)
 	<<
 	Files: <<
-		lib/%{Ni}/%v/lib{cruft,octave,octinterp}.0.dylib
+		lib/%{Ni}/%v/lib{cruft,%{Ni},octinterp}.0.dylib
 	<<
 	Shlibs: <<
 		%p/lib/%{Ni}/%v/libcruft.0.dylib 0.0.0 %n (>=3.4.3-1)
@@ -421,7 +420,7 @@ CGDisplayBitsPerPixel on 10.7.
 
 Cleanups from David Fang to get the package to build using clang.
 
-As of revision 325:  the non-atlas variant is built with -ff2c in the FFLAGS, 
+The non-atlas variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
 <<
 DescPackaging:  <<
@@ -457,10 +456,8 @@ variables, and the individual octave-forge  packages have to make copies
 of the octave scripts during their build process and edit them to use the
 package's name.
 
-We don't build the FLTK backend since we are allowing for Aqua and X11 variants
-of that bundle in the fltk-backend-{aqua|x11}.
-
-As of revision 325:  
+We remove the FLTK backend modules since we are allowing for Aqua and X11 
+variants of those in the fltk-backend-{aqua|x11}-oct343 packages.
 
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
 The non-atlas variant depends on non-atlas variants (only) of these.
@@ -481,15 +478,7 @@ installed manually as well as via Fink, and is critical for 10.6/i386 (and 10.5
 the information in oct-conf.h gets hardcoded into the Octave interpreter 
 executable, and some octave-forge packages get information from that.
 
-As of revision 326:
-
-Get rid of the ugly construction previously used for setting the BLAS and 
-LAPACK libraries.
-
-Fix issue in which BLAS_LIBS wasn't getting properly encoded for the x86_64 
-non-atlas variant.
-
-Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
+Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 <<
 Homepage: http://www.octave.org/
