@@ -177,6 +177,7 @@ InstallScript: <<
  cd %i/bin
  # create convenience symlink
  ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
+ # generate versioned executables
 <<
 InfoDocs: %{Ni}.info
 RuntimeVars: <<
@@ -206,12 +207,12 @@ SplitOff: <<
 		(%type_raw[-atlas] != -atlas) qrupdate-shlibs (>= 1.1.1-5)
 	<<
 	Files: <<
-		lib/%{Ni}-%v
+		lib/%{Ni}/%v/lib{cruft,octave,octinterp}.0.dylib
 	<<
 	Shlibs: <<
 		%p/lib/%{Ni}/%v/libcruft.0.dylib 0.0.0 %n (>=3.4.3-1)
-		%p/lib/%{Ni}/%v/lib%{Ni}.dylib 0.0.0 %n (>=3.4.3-1)
-		%p/lib/%{Ni}/%v/liboctinterp.dylib 0.0.0 %n (>=3.4.3-1)
+		%p/lib/%{Ni}/%v/lib%{Ni}.0.dylib 0.0.0 %n (>=3.4.3-1)
+		%p/lib/%{Ni}/%v/liboctinterp.0.dylib 0.0.0 %n (>=3.4.3-1)
 	<<
 	DescDetail: <<
 	This package contains shared libraries which are used by the Octave
