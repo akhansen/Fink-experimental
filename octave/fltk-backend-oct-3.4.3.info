@@ -19,7 +19,8 @@ BuildDepends: <<
 	(%type_pkg[-ui] = -x11) fltk-x11, 
 	(%type_pkg[-ui] = -x11) x11-dev,
 	(%type_pkg[-ui] = -aqua) fltk13-aqua,
-	arpack, glpk-dev, hdf5.7, readline5, libncurses5, fftw3 (>= 3.1.1-7), 
+	arpack | arpack-atlas,
+	glpk-dev, hdf5.7, readline5, libncurses5, fftw3 (>= 3.1.1-7), 
     libcurl4, libftgl2, qhull6-dev, qrupdate | qrupdate-atlas, flag-sort,
 	pcre, gcc46-compiler, suitesparse-metis, fink (>= 0.30.0), sed,
 	graphicsmagick-dev, freetype219, libftgl2
@@ -37,24 +38,21 @@ UseMaxBuildJobs: false
 
 PatchFile: octave-glpk.patch
 PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
-#PatchFile2: %{ni}%type_pkg[oct].patch
-#PatchFile2-MD5: 4897b35503d3ffa49f3f5547669feb29
-PatchFile3: octave-10.7.patch
-PatchFile3-MD5: 8304ed39a2c8783f01c81133971166e8
-PatchFile4: fltk-backend-x11.patch
-PatchFile4-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
+PatchFile2: octave-10.7.patch
+PatchFile2-MD5: 8304ed39a2c8783f01c81133971166e8
+PatchFile3: fltk-backend-x11.patch
+PatchFile3-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
 
 PatchScript: <<
 	#!/bin/sh -ev
 	patch -p1 < %{PatchFile}
-#	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
     # Needed for 10.7 only, but shouldn't hurt on earlier OSes
 	if [ "%type_pkg[-ui]" = "-aqua" ]
 	then
-		patch -p1 < %{PatchFile3}
+		patch -p1 < %{PatchFile2}
 		perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	else
-		patch -l -p1 < %{PatchFile4}
+		patch -l -p1 < %{PatchFile3}
 	fi
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
@@ -79,8 +77,7 @@ using std::size_t;' liboctave/oct-alloc.h
 	done
 	# missing qualifier to dependent-name member-function
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' liboctave/oct-inttypes.h
-    perl -pi -e 's/scripts doc/scripts/; s/INSTALL.OCTAVE//' Makefile
-<<
+ <<
 
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
