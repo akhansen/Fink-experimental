@@ -209,9 +209,9 @@ SplitOff: <<
 		lib/%{Ni}/%v/lib{cruft,%{Ni},octinterp}.0.dylib
 	<<
 	Shlibs: <<
-		%p/lib/%{Ni}/%v/libcruft.0.dylib 0.0.0 %n (>=3.4.3-1)
-		%p/lib/%{Ni}/%v/lib%{Ni}.0.dylib 0.0.0 %n (>=3.4.3-1)
-		%p/lib/%{Ni}/%v/liboctinterp.0.dylib 0.0.0 %n (>=3.4.3-1)
+		%p/lib/%{Ni}/%v/libcruft.0.dylib 1.0.0 %n (>=3.4.3-1)
+		%p/lib/%{Ni}/%v/lib%{Ni}.0.dylib 1.0.0 %n (>=3.4.3-1)
+		%p/lib/%{Ni}/%v/liboctinterp.0.dylib 1.0.0 %n (>=3.4.3-1)
 	<<
 	DescDetail: <<
 	This package contains shared libraries which are used by the Octave
