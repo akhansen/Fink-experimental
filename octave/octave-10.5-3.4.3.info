@@ -6,8 +6,6 @@ Revision: 101
 Distribution: 10.5
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
-# disable atlas on 10.7 distro file until atlas is available
-
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
 Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
 
@@ -43,8 +41,6 @@ PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
 PatchFile4: %{ni}-GM.patch
 PatchFile4-MD5: 1c884892aa835b5fc0aa76960328b5c4
-PatchFile5: %{ni}-10.7.patch
-PatchFile5-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -77,9 +73,6 @@ PatchScript: <<
 	# Make sure GraphicsMagick gets activated properly.
 	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
-	# fix lack of CGDisplayBitsPerPixel
-	patch -p1 < %{PatchFile5}
-	perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
 	# wrong include dir for qhull6
@@ -105,6 +98,8 @@ using std::size_t;' liboctave/oct-alloc.h
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' \
 		liboctave/oct-inttypes.h
 	sed -i.orig -e 's|template static|template|g' liboctave/eigs-base.cc
+	# avoid ccache-default's compiler wrappers
+	perl -pi -e 's|%p(/bin/g[c,+]{2})|/usr$1|g' src/oct-conf.h.in mkoctfile.in
 <<
 
 SetCC: flag-sort -r gcc
