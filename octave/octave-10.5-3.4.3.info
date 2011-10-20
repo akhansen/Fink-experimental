@@ -102,8 +102,8 @@ using std::size_t;' liboctave/oct-alloc.h
 	perl -pi -e 's|%p(/bin/g[c,+]{2})|/usr$1|g' src/oct-conf.h.in mkoctfile.in
 <<
 
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
+SetCC: flag-sort -r gcc-4.2
+SetCXX: flag-sort -r g++-4.2
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick -lmetis
 ConfigureParams: <<

@@ -1,6 +1,6 @@
 Info2: <<
 Package: fltk-backend%type_pkg[-ui]-oct%type_pkg[oct]
-Type: -ui (-x11 -aqua), oct(3.4.3)
+Type: -ui (-x11 -aqua), oct(3.4.3), gcc(4.6)
 Version: 3.4.3
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
