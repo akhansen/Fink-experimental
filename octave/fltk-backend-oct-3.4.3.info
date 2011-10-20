@@ -67,8 +67,8 @@ using std::size_t;' liboctave/oct-alloc.h
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' liboctave/oct-inttypes.h
 <<
 
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
+SetCC: flag-sort -r gcc-4.2
+SetCXX: flag-sort -r g++-4.2
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick -lmetis
 ConfigureParams: <<
