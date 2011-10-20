@@ -229,7 +229,7 @@ SplitOff: <<
  	on %{Ni}%type_pkg[oct]%type_pkg[-atlas]-dev.  In addition, it will need to BuildDepend on
  	hdf5-oldapi and fftw3.
 	<<
-	DocFiles: BUGS ChangeLog README ROADMAP SENDING-PATCHES COPYING
+	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 <<
 SplitOff2: <<
 	Package: octave%type_pkg[oct]%type_pkg[-atlas]-dev
@@ -278,7 +278,7 @@ SplitOff2: <<
 	We Make up an extra mkoctfile which uses a Fink gcc for packages that need
 	stuff which isn't included in Xcode.
 	<<
-	DocFiles: BUGS ChangeLog README ROADMAP SENDING-PATCHES COPYING
+	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 <<
 
 Splitoff3: <<
@@ -355,7 +355,7 @@ Splitoff3: <<
  
 		pkg global_list %p/var/octave/%v/octave_packages
 <<
-	DocFiles: BUGS ChangeLog README ROADMAP SENDING-PATCHES COPYING
+	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 <<
 
 Description: MATLAB-like language for computations
