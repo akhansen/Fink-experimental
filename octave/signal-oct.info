@@ -11,163 +11,167 @@ DescDetail: <<
 This package contains signal processing tools, including filtering, windowing
 and display functions.
 It provides the following additional functions:
-Signals:
-	diric
-	gauspuls
-	gmonopuls
-	pulstran
-	tripuls
-	rectpuls
-	sawtooth
-	square
-	chirp
-	strips
-	specgram
-	buffer
-	mexihat
-	meyeraux
-	morlet
-	shanwavf
-	cmorwavf
-Filtering:
-	filtfilt
-	filtic
-	latcfilt
-	sgolayfilt
-	sosfilt
-	medfilt1
-Filter analysis:
-	freqs
-	freqs_plot
-	freqspace
-	grpdelay
-	impz
-	zplane
-Filter conversion:
-	ac2poly
-	poly2ac
-	ac2rc
-	rc2ac
-	poly2rc
-	rc2poly
-	convmtx
-	latc2tf
-	residuez
-	residued
-	sos2ss
-	sos2tf
-	sos2zp
-	ss2sos
-	tf2latc
-	tf2sos
-	zp2sos
-	polystab
-IIR Filter design:
-	besself
-	butter
-	cheby1
-	cheby2
-	ellip
-	ncauer
-	maxflat
-	buttord
-	cheb1ord
-	cheb2ord
-	ellipord
-	besselap
-	sftrans
-	bilinear
-	impinvar
-	ellipdemo
-FIR filter design:
-	fir1
-	fir2
-	fircls
-	fircls1
-	firls
-	firrcos
-	intfilt
-	kaiserord
-	cremez
-	remez
-	remezord
-	sgolay
-	qp_kaiser
-Transforms:
-	czt
-	dctmtx
-	dct2
-	idct2
-	dct
-	idct
-	dst
-	idst
-	dftmtx
-	hilbert
-	rceps
-	cceps
-	icceps
-	cplxreal
-	bitrevorder
-	dwt
-	fht
-	ifht
-Power spectrum analysis:
-	pwelch
-	tfe
-	tfestimate
-	cohere
-	csd
-	ar_psd
-	cpsd
-	mscohere
-	pburg
-	pyulear
-	xcorr
-	xcorr2
-	xcov
-	__power
-Window functions:
-	window
-	barthannwin
-	blackmanharris
-	blackmannuttall
-	bohmanwin
-	boxcar
-	chebwin
-	flattopwin
-	hann
-	kaiser
-	nuttallwin
-	triang
-	gaussian
-	gausswin
-	tukeywin
-	rectwin
-	welchwin
-	parzenwin
-System identification:
-	arburg
-	aryule
-	invfreq
-	invfreqs
-	invfreqz
-	levinson
-	lpc
-	rlevinson
-	stmcb
-Sample rate change:
-	decimate
-	interp
-	downsample
-	upsample
-	resample
-	upfirdn
-Utility:
-	buffer
-	fracshift
-	wkeep
-	wrev
+Signals
+        diric
+        gauspuls
+        gmonopuls
+        pulstran
+        tripuls
+        rectpuls
+        sawtooth
+        square
+        chirp
+        strips
+        specgram
+        buffer
+        mexihat
+        meyeraux
+        morlet
+        shanwavf
+        cmorwavf
+Filtering
+        filtfilt
+        filtic
+        latcfilt
+        sgolayfilt
+        sosfilt
+        medfilt1
+Filter analysis
+        freqs
+        freqs_plot
+        freqspace
+        grpdelay
+        impz
+        zplane
+        fwhm
+Filter conversion
+        ac2poly
+        poly2ac
+        ac2rc
+        rc2ac
+        poly2rc
+        rc2poly
+        convmtx
+        latc2tf
+        residuez
+        residued
+        sos2ss
+        sos2tf
+        sos2zp
+        ss2sos
+        tf2latc
+        tf2sos
+        zp2sos
+        polystab
+IIR Filter design
+        besself
+        butter
+        cheby1
+        cheby2
+        ellip
+        ncauer
+        maxflat
+        buttord
+        cheb1ord
+        cheb2ord
+        ellipord
+        besselap
+        sftrans
+        bilinear
+        impinvar
+        ellipdemo
+FIR filter design
+        fir1
+        fir2
+        fircls
+        fircls1
+        firls
+        firrcos
+        intfilt
+        kaiserord
+        cremez
+        remez
+        remezord
+        sgolay
+        qp_kaiser
+        cl2bp
+Transforms
+        czt
+        dctmtx
+        dct2
+        idct2
+        dct
+        idct
+        dst
+        idst
+        dftmtx
+        hilbert
+        rceps
+        cceps
+        icceps
+        cplxreal
+        bitrevorder
+        dwt
+        fht
+        ifht
+Power spectrum analysis
+        pwelch
+        tfe
+        tfestimate
+        cohere
+        csd
+        ar_psd
+        cpsd
+        mscohere
+        pburg
+        pyulear
+        xcorr
+        xcorr2
+        xcov
+        __power
+Window functions
+        window
+        barthannwin
+        blackmanharris
+        blackmannuttall
+        bohmanwin
+        boxcar
+        chebwin
+        flattopwin
+        hann
+        kaiser
+        nuttallwin
+        triang
+        gaussian
+        gausswin
+        tukeywin
+        rectwin
+        welchwin
+        parzenwin
+System identification
+        arburg
+        aryule
+        invfreq
+        invfreqs
+        invfreqz
+        levinson
+        lpc
+        rlevinson
+        stmcb
+Sample rate change
+        decimate
+        interp
+        downsample
+        upsample
+        resample
+        upfirdn
+Utility
+        buffer
+        fracshift
+        wkeep
+        wrev
+        zerocrossing
+        sampled2continuous
 <<
 License: GPL
 
@@ -193,9 +197,29 @@ Depends: <<
 Conflicts: octave-forge
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.8-999)
 
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 Source-MD5: 808a4b5d3c7953e1ac66ef870693cfa5
 
+DescPackaging: <<
+This package:
+Patch cl2bp_lib.h so that it explictly reads in string.h .
+
+Common for all octave-forge packages:
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+
+<<
+
 #### Insert required changes here ####
+
+PatchScript: <<
+perl -pi -e "s|(#include \<assert\.h\>)|#include <string.h>\n\1|" src/cl2bp_lib.h
+<<
 
 ######################################
 
@@ -203,7 +227,6 @@ Source-MD5: 808a4b5d3c7953e1ac66ef870693cfa5
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -243,14 +266,4 @@ PostInstScript:  <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
 
-DescPackaging: <<
-Common for all octave-forge packages.
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
 <<

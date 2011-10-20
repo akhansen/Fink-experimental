@@ -10,6 +10,180 @@ Description: Communications functions for Octave
 DescDetail: <<
 Digital Communications, Error Correcting Codes (Channel Code), Source Code
 functions, Modulation and Galois Fields.
+
+The package provides the following functions:
+Random Signals:
+        awgn
+        biterr
+        eyediagram
+        randerr
+        randint
+        randsrc
+        scatterplot
+        symerr
+        wgn
+        bsc
+Source Coding:
+        arithenco
+        arithdeco
+        compand
+        dpcmdeco
+        dpcmenco
+        dpcmopt
+        huffmandeco
+        huffmandict
+        huffmanenco
+        lloyds
+        lz77deco
+        lz77enco
+        quantiz
+        shannonfanodict
+        shannonfanoenco
+        shannonfanodeco
+        rleenco
+        rledeco
+        riceenco
+        ricedeco
+        fiboenco
+        fibodeco
+        fibosplitstream
+        golombenco
+        golombdeco
+Block Interleavers:
+        intrlv
+        algintrlv
+        helscanintrlv
+        matintrlv
+        randintrlv
+        deintrlv
+        matdeintrlv
+        randdeintrlv
+Block Coding:
+        bchdeco
+        bchenco
+        bchpoly
+        convenc
+        cyclgen
+        cyclpoly
+        decode
+        encode
+        egolaydec
+        egolayenc
+        egolaygen
+        gen2par
+        hammgen
+        reedmullerdec
+        reedmullerenc
+        reedmullergen
+        rsgenpoly
+        rsdec
+        rsdecof
+        rsenc
+        rsencof
+        systematize
+        syndtable
+        vitdec
+Modulations
+        ademod
+        ademodce
+        amod
+        amodce
+        ammod
+        amdemod
+        apkconst
+        ddemod
+        ddemodce
+        demodmap
+        dmod
+        dmodce
+        fmmod
+        fmdemod
+        genqammod
+        genqamdemod
+        modmap
+        pamdemod
+        pammod
+        pskdemod
+        pskmod
+        qaskdeco
+        qaskenco
+        qammod
+        qamdemod
+Special Filters
+        hank2sys
+        hilbiir
+        rcosflt
+        rcosiir
+        rcosine
+        rcosfir
+Galois Fields of Even Characateristic
+        all
+        any
+        cosets
+        conv
+        convmtx
+        deconv
+        det
+        dftmtx
+        diag
+        exp
+        gf
+        fft
+        filter
+        gftable
+        gfweight
+        ifft
+        inv
+        inverse
+        isequal
+        log
+        lu
+        prod
+        sqrt
+        rank
+        reshape
+        roots
+        sum
+        sumsq
+        isempty
+        isgalois
+        isprimitive
+        length
+        minpol
+        polyval
+        primpoly
+        size
+Galois Fields of Odd Characteristic
+        gfadd
+        gfconv
+        gfcosets
+        gfdeconv
+        gfdiv
+        gffilter
+        gflineq
+        gfminpol
+        gfmul
+        gfpretty
+        gfprimck
+        gfprimdf
+        gfprimfd
+        gfrank
+        gfrepcov
+        gfroots
+        gfsub
+        gftrunc
+        gftuple
+Utility Functions
+        comms
+        bi2de
+        de2bi
+        oct2dec
+        istrellis
+        poly2trellis
+        vec2mat
+        qfunc
+        qfuncinv
+        marcumq
 <<
 License: GPL
 
@@ -36,9 +210,25 @@ Conflicts: octave-forge
 
 Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
 
+DescPackaging: <<
+This package:
+Appears not to use mkoctfile to figure out where libhdf5 is, so we nudge it
+via CPPFLAGS, LDFLAGS, and LIBS.
+
+Common for all octave-forge packages:
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
+
 #### Insert required changes here ####
 
-#@CHANGES@
+TarFilesRename: communications:communications-1.1.0
+SetLIBS: -lhdf5
 
 ######################################
 
@@ -48,8 +238,8 @@ Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
-NoSetCPPFLAGS: true
-NoSetLDFLAGS: true
+#NoSetCPPFLAGS: true
+#NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
@@ -61,7 +251,7 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 
@@ -86,14 +276,4 @@ PostInstScript:  <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
 
-DescPackaging: <<
-Common for all octave-forge packages.
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
 <<

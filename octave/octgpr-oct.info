@@ -1,7 +1,7 @@
 Info2: <<
 Package: octgpr-oct%type_pkg[oct]
 Version: 1.2.0
-Type: oct (3.4.2), forge (octgpr)
+Type: oct (3.4.3), forge (octgpr)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
@@ -11,6 +11,17 @@ DescDetail: <<
 The package allows interpolating and smoothing scattered multidimensional data
 using Gaussian Process Regression (also known as Kriging). Projected Gaussian
 Process regression is also experimentally supported.
+
+It provides the following functions:
+OctGPR:
+	gpr_train
+	gpr_predict
+	pgp_train
+	pgp_predict
+	pdist2_mw
+Examples:
+	demo_octgpr
+	rbf_centers
 <<
 License: GPL
 
@@ -69,7 +80,18 @@ NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
-CompileScript:  OCTAVE=%p/bin/octave-%type_raw[oct] %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+CompileScript: <<
+#!/bin/sh -ev
+export CC=`which cc`
+export CXX=`which c++`
+export OCTAVE=%p/bin/octave-%type_raw[oct]
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+cd ..
+tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+cd %b
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
+<<
 
 InstallScript: << 
 	#!/bin/sh -ev
