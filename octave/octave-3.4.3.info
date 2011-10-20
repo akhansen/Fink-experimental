@@ -32,7 +32,7 @@ Conflicts: <<
 	%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5) 
 	<<
 Replaces: %{Ni}, %{Ni}-atlas, %{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
-UseMaxBuildJobs: false
+UseMaxBuildJobs: true
 
 PatchFile: %{ni}-glpk.patch
 PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
