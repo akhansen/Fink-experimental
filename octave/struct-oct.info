@@ -1,15 +1,27 @@
 Info2: <<
-Package: communications-oct%type_pkg[oct]
-Version: 1.1.0
-Type: oct (3.4.3), forge (communications)
-Revision: 1
+Package: struct-oct%type_pkg[oct]
+Version: 1.0.9
+Type: oct (3.2.4 3.4.3), forge (struct)
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/communications/index.html 
-Description: Communications functions for Octave
+Homepage: http://octave.sourceforge.net/optim/index.html 
+Description: Structure manipulations functions for Octave
 DescDetail: <<
-Digital Communications, Error Correcting Codes (Channel Code), Source Code
-functions, Modulation and Galois Fields.
+Additional Structure manipulations functions for Octave.
+This package provides the following additional functions:
+
+Structure handling:
+	getfields
+	setfields
+	tars
+	arefields
+	fields2cell
+	cell2fields
+	fieldempty
+	structcat
+Tests:
+	test_struct
 <<
 License: GPL
 
@@ -23,22 +35,21 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+  fftw3,   
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
+  ( %type_pkg[oct] != 305 ) hdf5.7
  <<
-Depends: <<
-  signal-oct%type_pkg[oct],
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
+Depends: << 
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
+  miscellaneous-oct%type_pkg[oct]
+<<
 Conflicts: octave-forge
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.4-999)
 
-Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
+Source-MD5: b067676d6360dbed7995658fa4266076
 
 #### Insert required changes here ####
-
-#@CHANGES@
 
 ######################################
 
@@ -61,7 +72,7 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 

@@ -1,15 +1,36 @@
 Info2: <<
-Package: communications-oct%type_pkg[oct]
-Version: 1.1.0
-Type: oct (3.4.3), forge (communications)
-Revision: 1
+Package: miscellaneous-oct%type_pkg[oct]
+Version: 1.0.11
+Type: oct (3.2.4 3.4.3), forge (miscellaneous)
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/communications/index.html 
-Description: Communications functions for Octave
+Homepage: http://octave.sourceforge.net/general/index.html 
+Description: Miscellaneous package for octave
 DescDetail: <<
-Digital Communications, Error Correcting Codes (Channel Code), Source Code
-functions, Modulation and Galois Fields.
+Miscellaneous tools that don't fit somewhere else.
+This package provides the following additional functions:
+        apply
+        asci
+        cell2cell
+        partarray
+        csv2latex
+        chebyshevpoly
+        hermitepoly
+        infoskeleton
+        laguerrepoly
+        legendrepoly
+        match
+        nze
+        reduce
+        slurp_file
+        units
+        zagzig
+        zigzag
+        csvconcat
+        csvexplode
+        server
+        publish
 <<
 License: GPL
 
@@ -23,22 +44,22 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
-Depends: <<
-  signal-oct%type_pkg[oct],
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+  fftw3, hdf5.7
+<<
+Depends: << 
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
   <<
-Conflicts: octave-forge
+Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)	
 
-Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
+Source-MD5: 278c3a0faeb146b042daf2f843084c08
 
 #### Insert required changes here ####
 
-#@CHANGES@
+# clang doesn't like variable arrays of non-Plain-Old-Data
+SetCXX: llvm-g++
+setCC: llvm-gcc
 
 ######################################
 
@@ -61,7 +82,7 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 

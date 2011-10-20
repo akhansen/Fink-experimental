@@ -74,7 +74,7 @@ PatchScript: <<
 							src/oct-conf.h.in mkoctfile.in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
-	sed -i.bak -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
+	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lack of CGDisplayBitsPerPixel
 	patch -p1 < %{PatchFile5}

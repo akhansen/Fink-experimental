@@ -1,7 +1,7 @@
 Info2: <<
 Package: octcdf-oct%type_pkg[oct]
 Version: 1.1.2
-Type: oct (3.4.2), forge (octcdf)
+Type: oct (3.4.3), forge (octcdf)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
@@ -61,9 +61,11 @@ Depends: <<
 Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
 
-Source-MD5: cbfb1ca26d383f97423d80672c0714ab
+Source-MD5: f202571bdd3688d0da1215fb8dd02fa0
 
 #### Insert required changes here ####
+
+TarFilesRename: octcdf:octcdf-1.1.2
 
 ######################################
 
@@ -83,7 +85,12 @@ CompileScript: <<
 export CC=`which cc`
 export CXX=`which c++`
 export OCTAVE=%p/bin/octave-%type_raw[oct]
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+cd ..
+tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+cd %b
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 

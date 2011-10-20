@@ -1,15 +1,34 @@
 Info2: <<
-Package: communications-oct%type_pkg[oct]
-Version: 1.1.0
-Type: oct (3.4.3), forge (communications)
+Package: specfun-oct%type_pkg[oct]
+Version: 1.0.9
+Type: oct (3.4.3), forge (specfun)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/communications/index.html 
-Description: Communications functions for Octave
+Homepage: http://octave.sourceforge.net/specfun/index.html 
+Description: Special functions for Octave
 DescDetail: <<
-Digital Communications, Error Correcting Codes (Channel Code), Source Code
-functions, Modulation and Galois Fields.
+Includes the following special functions:
+	Ci
+    Si
+    cosint
+    dirac
+    ellipj
+    ellipke
+    erfcinv
+    erfcx
+    expint
+    expint_E1
+    expint_Ei
+    heaviside
+    laguerre
+    lambertw
+    psi
+    sinint
+    test_ellipj
+    test_sncndn
+    zeta
+    ellipj
 <<
 License: GPL
 
@@ -23,22 +42,20 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+  fftw3,   
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
+  ( %type_pkg[oct] != 305 ) hdf5.7
  <<
-Depends: <<
-  signal-oct%type_pkg[oct],
+Depends: << 
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
   <<
-Conflicts: octave-forge
+Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
 
-Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
+Source-MD5: 264ab3748fa01aed0efde413b629f63d
 
 #### Insert required changes here ####
-
-#@CHANGES@
 
 ######################################
 
@@ -61,11 +78,15 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 
 	#!/bin/sh -ev
+	# remove function which is built in for octave >= 3.4.3
+	if [ "%type_pkg[oct]" == "343" ] 
+		then rm %b/../bld/share/octave/3.4.3/packages/specfun-1.0.9/erfcx.m
+	fi
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
 	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
 	# copy template scripts

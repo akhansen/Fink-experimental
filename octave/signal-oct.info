@@ -1,15 +1,173 @@
 Info2: <<
-Package: communications-oct%type_pkg[oct]
-Version: 1.1.0
-Type: oct (3.4.3), forge (communications)
+Package: signal-oct%type_pkg[oct]
+Version: 1.0.11
+Type: oct (3.4.3), forge (signal)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/communications/index.html 
-Description: Communications functions for Octave
+Homepage: http://octave.sourceforge.net/signal/index.html 
+Description: Signal processing toolkit for Octave
 DescDetail: <<
-Digital Communications, Error Correcting Codes (Channel Code), Source Code
-functions, Modulation and Galois Fields.
+This package contains signal processing tools, including filtering, windowing
+and display functions.
+It provides the following additional functions:
+Signals:
+	diric
+	gauspuls
+	gmonopuls
+	pulstran
+	tripuls
+	rectpuls
+	sawtooth
+	square
+	chirp
+	strips
+	specgram
+	buffer
+	mexihat
+	meyeraux
+	morlet
+	shanwavf
+	cmorwavf
+Filtering:
+	filtfilt
+	filtic
+	latcfilt
+	sgolayfilt
+	sosfilt
+	medfilt1
+Filter analysis:
+	freqs
+	freqs_plot
+	freqspace
+	grpdelay
+	impz
+	zplane
+Filter conversion:
+	ac2poly
+	poly2ac
+	ac2rc
+	rc2ac
+	poly2rc
+	rc2poly
+	convmtx
+	latc2tf
+	residuez
+	residued
+	sos2ss
+	sos2tf
+	sos2zp
+	ss2sos
+	tf2latc
+	tf2sos
+	zp2sos
+	polystab
+IIR Filter design:
+	besself
+	butter
+	cheby1
+	cheby2
+	ellip
+	ncauer
+	maxflat
+	buttord
+	cheb1ord
+	cheb2ord
+	ellipord
+	besselap
+	sftrans
+	bilinear
+	impinvar
+	ellipdemo
+FIR filter design:
+	fir1
+	fir2
+	fircls
+	fircls1
+	firls
+	firrcos
+	intfilt
+	kaiserord
+	cremez
+	remez
+	remezord
+	sgolay
+	qp_kaiser
+Transforms:
+	czt
+	dctmtx
+	dct2
+	idct2
+	dct
+	idct
+	dst
+	idst
+	dftmtx
+	hilbert
+	rceps
+	cceps
+	icceps
+	cplxreal
+	bitrevorder
+	dwt
+	fht
+	ifht
+Power spectrum analysis:
+	pwelch
+	tfe
+	tfestimate
+	cohere
+	csd
+	ar_psd
+	cpsd
+	mscohere
+	pburg
+	pyulear
+	xcorr
+	xcorr2
+	xcov
+	__power
+Window functions:
+	window
+	barthannwin
+	blackmanharris
+	blackmannuttall
+	bohmanwin
+	boxcar
+	chebwin
+	flattopwin
+	hann
+	kaiser
+	nuttallwin
+	triang
+	gaussian
+	gausswin
+	tukeywin
+	rectwin
+	welchwin
+	parzenwin
+System identification:
+	arburg
+	aryule
+	invfreq
+	invfreqs
+	invfreqz
+	levinson
+	lpc
+	rlevinson
+	stmcb
+Sample rate change:
+	decimate
+	interp
+	downsample
+	upsample
+	resample
+	upfirdn
+Utility:
+	buffer
+	fracshift
+	wkeep
+	wrev
 <<
 License: GPL
 
@@ -23,22 +181,21 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+  fftw3,   
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
+  ( %type_pkg[oct] != 305 ) hdf5.7
  <<
-Depends: <<
-  signal-oct%type_pkg[oct],
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
+Depends: << 
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
+  optim-oct%type_pkg[oct], specfun-oct%type_pkg[oct]
+<<
 Conflicts: octave-forge
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.8-999)
 
-Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
+Source-MD5: 808a4b5d3c7953e1ac66ef870693cfa5
 
 #### Insert required changes here ####
-
-#@CHANGES@
 
 ######################################
 
@@ -61,7 +218,7 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 <<
 
 InstallScript: << 
