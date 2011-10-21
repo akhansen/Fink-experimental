@@ -24,7 +24,8 @@ BuildDepends: <<
     libcurl4, libftgl2, qhull6-dev, qrupdate | qrupdate-atlas, flag-sort,
 	pcre, gcc46-compiler, suitesparse-metis, fink (>= 0.30.0), sed,
 	graphicsmagick-dev, freetype219, libftgl2,
-	darwin ( >=9.2.0-1 )
+	darwin ( >=9.2.0-1 ),
+	(%m = x86_64) atlas
 <<
 Depends: <<
 	(%type_pkg[-ui] = -x11) fltk-x11-shlibs,  
@@ -96,6 +97,14 @@ CompileScript: <<
  		 export CXX='flag-sort -r g++'
  	else export CC='flag-sort -r gcc-4.2'
  		 export CXX='flag-sort -r g++-4.2'
+ fi
+if [ "%m" == "x86_64" ]
+ then 
+ 	a='--with-lapack=%p/lib/liblapack.dylib --with-blas=%p/lib/libf77blas.dylib'
+    export FFLAGS='-O3'
+ else 
+	a='--with-lapack=-Wl,-framework,Accelerate --with-blas=-Wl,-framework,Accelerate'
+	export FFLAGS='-O3 -ff2c'
  fi
  a='--with-lapack=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib --with-blas=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib'
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
