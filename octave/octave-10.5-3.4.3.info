@@ -4,6 +4,7 @@ Type: -atlas (boolean), oct(3.4.3), gcc (4.6)
 Version: 3.4.3
 Revision: 101
 Distribution: 10.5
+Architecture: (%type_pkg[-atlas] != -atlas) powerpc, (%type_pkg[-atlas] != -atlas) i386
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
@@ -476,6 +477,8 @@ executable, and some octave-forge packages get information from that.
 
 Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
+
+Fails to configure against vecLib on x86_64, at least with gcc46-4.6.1-1
 <<
 Homepage: http://www.octave.org/
 License: GPL
