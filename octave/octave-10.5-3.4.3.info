@@ -40,7 +40,7 @@ PatchFile2-MD5: 0261f43929818d8472f462e12bde4c62
 PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
 PatchFile4: %{ni}-GM.patch
-PatchFile4-MD5: 1c884892aa835b5fc0aa76960328b5c4
+PatchFile4-MD5: 7f016e7d32fa32a0b2962f35892f52a9
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
