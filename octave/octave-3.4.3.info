@@ -1,9 +1,11 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]
-Type: -atlas (boolean), oct(3.4.3), gcc (4.6)
+Type: -atlas (.), oct(3.4.3), gcc (4.6)
 Version: 3.4.3
-Revision: 201
+Revision: 301
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+
+# disable atlas on 10.7 distro file until atlas is available
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
 Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
@@ -40,6 +42,8 @@ PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
 PatchFile4: %{ni}-GM.patch
 PatchFile4-MD5: 1c884892aa835b5fc0aa76960328b5c4
+PatchFile5: %{ni}-10.7.patch
+PatchFile5-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -72,6 +76,8 @@ PatchScript: <<
 	# Make sure GraphicsMagick gets activated properly.
 	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
+	# fix lack of CGDisplayBitsPerPixel
+	patch -p1 < %{PatchFile5}
 	perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
@@ -105,7 +111,7 @@ SetCXX: flag-sort -r g++
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick -lmetis
 ConfigureParams: <<
-	F77=%p/bin/gfortran-fsf-%type_raw[gcc] --host=%m-apple-darwin --build=%m-apple-darwin \
+	F77=%p/bin/gfortran-fsf-4.6 --host=%m-apple-darwin --build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' --mandir='${prefix}/share/man' --libexecdir='${prefix}/lib' \
 	--enable-shared --enable-dl --disable-static --without-mpi --with-hdf5 --with-fftw \
 	--x-libraries=/usr/X11/lib --x-includes=/usr/X11/include
@@ -123,7 +129,7 @@ CompileScript: <<
  	a='--with-lapack=%p/lib/liblapack.dylib --with-blas=%p/lib/libf77blas.dylib'
     export FFLAGS='-O3'
  fi
- FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
+ FLIBDIR="%p/lib/gcc4.6/lib"
  ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a
  make
 <<
