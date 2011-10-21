@@ -52,7 +52,7 @@ PatchScript: <<
 	# fix executable names in versioned manpages
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
 	#Fink-specific structural changes
-	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile3} | patch -p1 
+	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
 	sed -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
