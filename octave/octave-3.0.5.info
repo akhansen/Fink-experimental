@@ -2,10 +2,9 @@ Info2: <<
 Package: octave%type_pkg[-atlas]
 Type: -atlas (boolean), oct(3.0.5), gcc (4.6)
 Version: 3.0.5
-Revision: 329
+Revision: 229
+Distribution: 10.6
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
-
-# disable atlas on 10.7 distro file until atlas is available
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.bz2
 Source-MD5: bfba44eeda8fa6e29c2bbcd2604c34eb
@@ -83,8 +82,8 @@ ConfigureParams: <<
 <<
 CompileScript: <<
  #!/bin/sh -ev
- export CFLAGS='-O3'
- export CXXFLAGS='-O3'
+ export CFLAGS='-O3 -MD'
+ export CXXFLAGS='-O3 -MD'
  export FFLAGS='-O3'
  if [ "%type_pkg[-atlas]" == "" ]
  then 
@@ -108,9 +107,11 @@ InstallScript: <<
  #!/bin/sh -ev
  export MAKEFLAGS=-j1
  make install DESTDIR=%d
+ # Install versioned manpages
+ cp doc/interpreter/*-%v.1 %i/share/man/man1
  # Install Fink-specific octaverc which points at our oct-versioned
  # package directory.
- cp %b/%{Ni}rc %i/share/%{Ni}/%v/m/startup
+ cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
  mkdir -p %i/var/%{Ni}/%v/
  # install examples
  mkdir -p %i/share/%{Ni}/%v/doc/examples
@@ -222,8 +223,8 @@ SplitOff2: <<
 		include/%{Ni}-%v
 		bin/mkoctfile*
 		bin/octave-config*
-		share/man/man1/mkoctfile.1
-		share/man/man1/octave-config.1
+		share/man/man1/mkoctfile*.1
+		share/man/man1/octave-config*.1
 	<<
 	
 	DescDetail: <<
@@ -277,6 +278,8 @@ Splitoff3: <<
 		bin/%{Ni}-%v
 		bin/%{Ni}-bug-%v
 		var/%{Ni}/%v
+		share/man/man1/%{Ni}-%v.1
+		share/man/man1/%{Ni}-bug-%v.1
 	<<
 	DescDetail: <<
 	The %{Ni}%type_pkg[oct]%type_pkg[-atlas] package contains versioned executables, as well as all of the 
@@ -379,7 +382,7 @@ run the following command in your script:
 DescPort: <<
 Thanks to Per Persson for most (if not all) of the work on the macos X port.
 
-As of revision 325:  the non-atlas variant is built with -ff2c in the FFLAGS, 
+As of revision 225:  the non-atlas variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
 <<
 DescPackaging:  <<
@@ -407,7 +410,7 @@ variables, and the individual octave-forge  packages have to make copies
 of the octave scripts during their build process and edit them to use the
 package's name.
 
-As of revision 325:  
+As of revision 225:  
 
 Patch oct-conf.h, mkoctfile, and octave-bug not to put "flag-sort -r" in the 
 name of the compiler used, and to use the full path of Fink's compiler wrappers.
@@ -418,7 +421,7 @@ installed manually as well as via Fink, and is critical for 10.6/i386 (and 10.5
 the information in oct-conf.h gets hardcoded into the Octave interpreter 
 executable, and some octave-forge packages get information from that.
 
-As of revision 326:
+As of revision 226:
 
 Get rid of the ugly construction previously used for setting the BLAS and 
 LAPACK libraries.
@@ -426,7 +429,7 @@ LAPACK libraries.
 Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
-As of revision 329:
+As of revision 229:
 Actually _install_ the manpages for the versioned executables.
 <<
 Homepage: http://www.octave.org/
