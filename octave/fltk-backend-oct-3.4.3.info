@@ -128,7 +128,6 @@ DescPort: <<
 	Rip out #if defined ... #elif ... #endif branches in display.cc that don't pertain to X11.
 <<
 DescPackaging:  <<
-	Misbuilds with clang, so use llvm-gcc instead.
 	Currently we build all of octave and then only install the fltk-related octfiles.  
 <<
 <<
