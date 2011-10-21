@@ -4,6 +4,7 @@ Type: -atlas (boolean), oct(3.4.3), gcc (4.6)
 Version: 3.4.3
 Revision: 201
 Distribution: 10.6
+Architecture: (%type_pkg[-atlas] != -atlas) i386
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
