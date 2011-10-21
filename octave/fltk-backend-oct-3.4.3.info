@@ -90,7 +90,7 @@ CompileScript: <<
  export CFLAGS='-O3'
  export CXXFLAGS='-O3'
  export FFLAGS='-O3'
- os=`/usr/bin/uname -r | cut d. -f1`
+ os=`/usr/bin/uname -r | cut -d. -f1`
  # we always need gcc >= 4.2
  if [ $os ge 10 ]
  	then export CC='flag-sort -r gcc'
