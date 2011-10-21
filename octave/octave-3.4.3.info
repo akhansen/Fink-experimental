@@ -71,7 +71,7 @@ PatchScript: <<
 							src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
-	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
+	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
