@@ -72,7 +72,7 @@ PatchScript: <<
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
 		then sed -i.bak -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
-							src/oct-conf.h.in mkoctfile.in
+							src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
 	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
