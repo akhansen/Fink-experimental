@@ -68,8 +68,6 @@ using std::size_t;' liboctave/oct-alloc.h
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' liboctave/oct-inttypes.h
 <<
 
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick -lmetis
 ConfigureParams: <<
@@ -91,6 +89,14 @@ CompileScript: <<
  export CFLAGS='-O3'
  export CXXFLAGS='-O3'
  export FFLAGS='-O3'
+ os=`/usr/bin/uname -r | cut d. -f1`
+ # we always need gcc >= 4.2
+ if [ $os ge 10 ]
+ 	then export CC='flag-sort -r gcc'
+ 		 export CXX='flag-sort -r g++'
+ 	else export CC='flag-sort -r gcc-4.2'
+ 		 export CXX='flag-sort -r g++-4.2'
+ fi
  a='--with-lapack=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib --with-blas=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib'
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a

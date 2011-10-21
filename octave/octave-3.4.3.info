@@ -6,8 +6,6 @@ Revision: 201
 Distribution: 10.6
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
-# disable atlas on 10.7 distro file until atlas is available
-
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
 Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
 
@@ -43,8 +41,6 @@ PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
 PatchFile4: %{ni}-GM.patch
 PatchFile4-MD5: 7f016e7d32fa32a0b2962f35892f52a9
-PatchFile5: %{ni}-10.7.patch
-PatchFile5-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -56,9 +52,9 @@ PatchScript: <<
 	# fix executable names in versioned manpages
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
 	#Fink-specific structural changes
-	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile3} | patch -p1 
+	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -i -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
+	sed -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
@@ -77,9 +73,6 @@ PatchScript: <<
 	# Make sure GraphicsMagick gets activated properly.
 	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
-	# fix lack of CGDisplayBitsPerPixel
-	patch -p1 < %{PatchFile5}
-	perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
 	# wrong include dir for qhull6
