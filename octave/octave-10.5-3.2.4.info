@@ -484,6 +484,8 @@ package's name.
 We remove the FLTK backend module since we are allowing for Aqua and X11
 variants of that in the fltk-backend-{aqua|x11}-oct324 packages.
 
+Patch various files to avoid encoding the ccache-default compiler wrappers.
+
 As of revision 125:  
 
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
@@ -514,6 +516,7 @@ Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
 As of revision 129:
+
 Build everything and then delete fltk-backend.oct in the InstallScript to make
 sure that the docs are properly set up.
 

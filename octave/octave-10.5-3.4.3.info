@@ -4,7 +4,7 @@ Type: -atlas (boolean), oct(3.4.3), gcc (4.6)
 Version: 3.4.3
 Revision: 101
 Distribution: 10.5
-Architecture: (%type_pkg[-atlas] != -atlas) powerpc, (%type_pkg[-atlas] != -atlas) i386
+Architecture: (%type_raw[-atlas] != -atlas) powerpc, (%type_raw[-atlas] != -atlas) i386
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
@@ -21,7 +21,8 @@ BuildDepends: <<
 	(%type_raw[-atlas] != -atlas) qrupdate (>=1.1.1-5),
 	(%type_raw[-atlas] = -atlas) arpack-atlas (>= 96patched-6),
 	(%type_raw[-atlas] != -atlas) arpack (>= 96patched-6),
-	darwin ( >=9.2.0-1)
+	darwin ( >=9.2.0-1),
+	xcode (>=3.1-1)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev, imagemagick10-dev
@@ -420,6 +421,15 @@ Cleanups from David Fang to get the package to build using clang.
 
 The non-atlas variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
+
+It fails to configure against vecLib on x86_64, at least with gcc46-4.6.1-1,
+so we restrict x86_64 to use the -atlas variant.
+
+It requires GCC > 4.0.1 to build, so we use GCC-4.2 and require an appropriate
+xcode dependency.
+
+To allow for simple --with-lapack and --with-blas, we require OS 10.5.2 or later,
+as that is when an ld bug introduced in 10.5.0 was fixed.
 <<
 DescPackaging:  <<
 Not sane (and now not even compilable) to use private code
@@ -457,6 +467,8 @@ package's name.
 We remove the FLTK backend modules since we are allowing for Aqua and X11 
 variants of those in the fltk-backend-{aqua|x11}-oct343 packages.
 
+Patch various files to avoid encoding the ccache-default compiler wrappers.
+
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
 The non-atlas variant depends on non-atlas variants (only) of these.
 
@@ -478,9 +490,6 @@ executable, and some octave-forge packages get information from that.
 
 Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
-
-Fails to configure against vecLib on x86_64, at least with gcc46-4.6.1-1,
-so we restrict x86_64 to use the -atlas variant.
 <<
 Homepage: http://www.octave.org/
 License: GPL
