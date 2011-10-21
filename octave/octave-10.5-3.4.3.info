@@ -40,8 +40,8 @@ PatchFile2: %{ni}-%v-manpages.patch
 PatchFile2-MD5: 0261f43929818d8472f462e12bde4c62
 PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
-PatchFile4: %{ni}-GM.patch
-PatchFile4-MD5: 7f016e7d32fa32a0b2962f35892f52a9
+#PatchFile4: %{ni}-GM.patch
+#PatchFile4-MD5: 7f016e7d32fa32a0b2962f35892f52a9
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -72,7 +72,7 @@ PatchScript: <<
 							src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
-	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
+#	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
