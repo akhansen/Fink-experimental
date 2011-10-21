@@ -23,7 +23,8 @@ BuildDepends: <<
 	glpk-dev, hdf5.7, readline5, libncurses5, fftw3 (>= 3.1.1-7), 
     libcurl4, libftgl2, qhull6-dev, qrupdate | qrupdate-atlas, flag-sort,
 	pcre, gcc46-compiler, suitesparse-metis, fink (>= 0.30.0), sed,
-	graphicsmagick-dev, freetype219, libftgl2
+	graphicsmagick-dev, freetype219, libftgl2,
+	darwin ( >=9.2.0-1 )
 <<
 Depends: <<
 	(%type_pkg[-ui] = -x11) fltk-x11-shlibs,  
@@ -94,7 +95,7 @@ CompileScript: <<
  export CFLAGS='-O3'
  export CXXFLAGS='-O3'
  export FFLAGS='-O3'
- a='--with-lapack=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib --with-blas=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib'
+ a='--with-lapack=-Wl,-framework,Accelerate --with-blas=-Wl,-framework,Accelerate'
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a
  #make
