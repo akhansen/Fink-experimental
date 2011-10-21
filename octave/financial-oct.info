@@ -1,27 +1,48 @@
 Info2: <<
-Package: @PACKAGE@-oct%type_pkg[oct]
-Version: @VERSION@
-Type: oct (@OCT@), forge (@PACKAGE@)
+Package: financial-oct%type_pkg[oct]
+Version: 0.3.2
+Type: oct (3.0.5 3.2.4 3.4.3), forge (financial)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/@PACKAGE@/index.html 
-Description: @DESCRIPTION@
+Homepage: http://octave.sourceforge.net/financial/index.html 
+Description: Financial functions for Octave
 DescDetail: <<
-@DESCDETAIL@
+Financial manipulation and plotting functions.
 
 This package provides the following functions:
+	__fetch_google__
+	__fetch_yahoo__
+	bolling
+	dateaxis
+	effrr
+	fetch
+	fv
+	fvl
+	google
+	hhigh
+	highlow
+	irr
+	llow
+	mirr
+	movavg
+	negvolidx
+	nomrr
+	nper
+	npv
+	onbalvol
+	pmt
+	pointfig
+	posvolidx
+	pv
+	pvl
+	rate
+	rsindex
+	taxedrr
+	vol
+	yahoo
 <<
-
 License: GPL
-
-# default source
-Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory that you get from the first
-# Source above.
-Source-MD5: @SOURCE_MD5@
 
 # All octave-forge packages have to have the following BuildDepends:
 #  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
@@ -37,27 +58,28 @@ BuildDepends: <<
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
-<<
+ <<
 Depends: <<
+  time-oct%type_pkg[oct],
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-<<
+  <<
 Conflicts: octave-forge
 
+Source-MD5: ea871683241da80f766b9af006b78865
+
 DescPackaging: <<
-Common for all octave-forge packages:
+Common for all octave-forge packages.
 
 We read in postinst and prerm template scripts installed by octaveN and modify
 them to use the name of this package because Octave's package manager can't 
 cope with non-literal arguments.
 
 The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template, or when the package name contains 
-underscores.
+using this .info file as a template.
 <<
 
 #### Insert required changes here ####
 
-#TarFilesRename: @PACKAGE@:@PACKAGE@-@VERSION@
 #@CHANGES@
 
 ######################################
@@ -65,6 +87,8 @@ underscores.
 # Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
+
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

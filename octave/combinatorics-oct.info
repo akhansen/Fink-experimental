@@ -1,126 +1,19 @@
 Info2: <<
-Package: control-oct%type_pkg[oct]
-Version: 2.2.0
-Type: oct (3.4.3), forge (control)
+Package: combinatorics-oct%type_pkg[oct]
+Version: 1.0.9
+Type: oct (3.0.5 3.2.4 3.4.3), forge (combinatorics)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/control/index.html 
-Description: Octave control tools
+Homepage: http://octave.sourceforge.net/combinatorics/index.html 
+Description: Combinatorics functions for Octave
 DescDetail: <<
-Octave control systems package increasingly based on the SLICOT Fortran library
+Combinatorics functions, incuding partitioning.
 
-This package provides the following functions:
-Examples
-        MDSSystem
-        optiPID
-Linear Time Invariant Models
-        dss
-        frd
-        ss
-        tf
-        zpk
-Model Data Access
-        @lti/dssdata
-        @lti/frdata
-        @lti/get
-        @lti/set
-        @lti/ssdata
-        @lti/tfdata
-        @lti/zpkdata
-Model Conversions
-        @lti/c2d
-        @lti/d2c
-        @lti/prescale
-        @lti/xperm
-Model Interconnections
-        @lti/append
-        @lti/blkdiag
-        @lti/connect
-        @lti/feedback
-        @lti/lft
-        @lti/mconnect
-        @lti/parallel
-        @lti/series
-Model Characteristics
-        ctrb
-        @lti/dcgain
-        gram
-        hsvd
-        @lti/isct
-        isctrb
-        isdetectable
-        @lti/isdt
-        @lti/isminimumphase
-        isobsv
-        @lti/issiso
-        isstabilizable
-        @lti/isstable
-        @lti/norm
-        obsv
-        @lti/pole
-        pzmap
-        @lti/size
-        @lti/zero
-Model Simplification
-        @lti/minreal
-        @lti/sminreal
-Time Domain Analysis
-        covar
-        gensig
-        impulse
-        initial
-        lsim
-        step
-Frequency Domain Analysis
-        bode
-        bodemag
-        @lti/freqresp
-        margin
-        nichols
-        nyquist
-        sigma
-Pole Placement
-        place
-        rlocus
-Linear-Quadratic Control
-        dlqr
-        estim
-        kalman
-        lqr
-Robust Control
-        augw
-        h2syn
-        hinfsyn
-        mixsyn
-        ncfsyn
-Matrix Equation Solvers
-        care
-        dare
-        dlyap
-        dlyapchol
-        lyap
-        lyapchol
-Overloaded Operators
-        @lti/horzcat
-        @lti/inv
-        @lti/minus
-        @lti/mldivide
-        @lti/mpower
-        @lti/mrdivide
-        @lti/mtimes
-        @lti/plus
-        @lti/subsasgn
-        @lti/subsref
-        @lti/transpose
-        @lti/uminus
-        @lti/vertcat
-Miscellaneous
-        strseq
-        test_control
-        BMWengine
-        Boeing707
-        WestlandLynx
+The package provides the following functions:
+	partint
+	partcnt
+	combs
 <<
 License: GPL
 
@@ -144,11 +37,11 @@ Depends: <<
   <<
 Conflicts: octave-forge
 
-Source-MD5: 43bd222e6b7496dcc98aa8e071f1cdf8
+Source-MD5: 3dd36eb5cbc5511be0d72250ebb28799
 
 #### Insert required changes here ####
 
-TarFilesRename: control:control-2.2.0
+#@CHANGES@
 
 ######################################
 

@@ -1,27 +1,59 @@
 Info2: <<
-Package: @PACKAGE@-oct%type_pkg[oct]
-Version: @VERSION@
-Type: oct (@OCT@), forge (@PACKAGE@)
+Package: fuzzy-logic-toolkit-oct%type_pkg[oct]
+Version: 0.2.4
+Type: oct (3.2.4 3.4.3), forge (fuzzy-logic-toolkit)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/@PACKAGE@/index.html 
-Description: @DESCRIPTION@
+Homepage: http://octave.sourceforge.net/fuzzy-logic-toolkit/index.html 
+Description: Fuzzy logic toolkit for Octave
 DescDetail: <<
-@DESCDETAIL@
+A mostly MATLAB-compatible fuzzy logic toolkit for Octave.
 
-This package provides the following functions:
+The package provides the following:
+Evaluation:
+        defuzz
+        evalfis
+        evalmf
+Plotting:
+        gensurf
+        plotmf
+File Input/Output of Fuzzy Inference Systems:
+        readfis
+        writefis
+Command-Line Creation and Modification of Fuzzy Inference Systems:
+        addmf
+        addrule
+        addvar
+        newfis
+        rmmf
+        rmvar
+        setfis
+Text Representation of Fuzzy Inference Systems:
+        getfis
+        showfis
+        showrule
+Membership Functions:
+        dsigmf
+        gauss2mf
+        gaussmf
+        gbellmf
+        pimf
+        psigmf
+        sigmf
+        smf
+        trapmf
+        trimf
+        zmf
+Complete Fuzzy Inference System Demos:
+        cubic_approx_demo
+        heart_demo_1
+        heart_demo_2
+        linear_tip_demo
+        mamdani_tip_demo
+        sugeno_tip_demo
 <<
-
 License: GPL
-
-# default source
-Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory that you get from the first
-# Source above.
-Source-MD5: @SOURCE_MD5@
 
 # All octave-forge packages have to have the following BuildDepends:
 #  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
@@ -43,28 +75,30 @@ Depends: <<
 <<
 Conflicts: octave-forge
 
+Source-MD5: 18e16bca3ee0346f0453f8280085e8d8
+
 DescPackaging: <<
-Common for all octave-forge packages:
+Common for all octave-forge packages.
 
 We read in postinst and prerm template scripts installed by octaveN and modify
 them to use the name of this package because Octave's package manager can't 
 cope with non-literal arguments.
 
 The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template, or when the package name contains 
-underscores.
+using this .info file as a template.
 <<
 
 #### Insert required changes here ####
 
-#TarFilesRename: @PACKAGE@:@PACKAGE@-@VERSION@
-#@CHANGES@
+TarFilesRename: fuzzy-logic-toolkit:fuzzy-logic-toolkit-0.2.4
 
 ######################################
 
 # Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
+
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

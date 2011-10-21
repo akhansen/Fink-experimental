@@ -1,27 +1,96 @@
 Info2: <<
-Package: @PACKAGE@-oct%type_pkg[oct]
-Version: @VERSION@
-Type: oct (@OCT@), forge (@PACKAGE@)
+Package: geometry-oct%type_pkg[oct]
+Version: 1.1.3
+Type: oct (3.4.3), forge (geometry)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/@PACKAGE@/index.html 
-Description: @DESCRIPTION@
+Homepage: http://octave.sourceforge.net/geometry/index.html 
+Description:Library for geometric computing in Octave
 DescDetail: <<
-@DESCDETAIL@
+Library for geometric computing extending MatGeom functions. Useful to create,
+transform, manipulate and display geometric primitives.
 
 This package provides the following functions:
+Geometry 2D
+        angle2Points
+        angle3Points
+        angleAbsDiff
+        angleDiff
+        angles2d
+        angleSort
+        boxes2d
+        cbezier2poly
+        centroid
+        clipEdge
+        clipLine
+        clipPoints
+        clipRay
+        createBasisTransform
+        createHomothecy
+        createLine
+        createLineReflection
+        createRay
+        createRotation
+        createScaling
+        createTranslation
+        deg2rad
+        distancePoints
+        drawBezierCurve
+        drawBox
+        drawEdge
+        drawLine
+        drawPoint
+        drawRay
+        edgeAngle
+        fitAffineTransform2d
+        intersectBoxes
+        intersectLineEdge
+        intersectLines
+        isCounterClockwise
+        isParallel
+        isPerpendicular
+        isPointOnEdge
+        isPointOnRay
+        lineAngle
+        linePosition
+        mergeBoxes
+        midPoint
+        minDistancePoints
+        normalizeAngle
+        normalizeVector
+        pointOnLine
+        points2d
+        polarPoint
+        rad2deg
+        randomPointInBox
+        rays2d
+        rotateVector
+        transformEdge
+        transformLine
+        transformPoint
+        transforms2d
+        transformVector
+        vectorAngle
+        vectorNorm
+        vectors2d
+Input
+        svgload
+        svgnormalize
+        svgpath2polygon
+Output
+        data2geo
 <<
 
 License: GPL
 
 # default source
-Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
+#Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
 # this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
 # replacing "Individual Package Releases" with the  relevant directory that you get from the first
 # Source above.
-Source-MD5: @SOURCE_MD5@
+Source-MD5: e0065679c4f537f2d14db2a0cc88d87f
 
 # All octave-forge packages have to have the following BuildDepends:
 #  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
@@ -57,7 +126,7 @@ underscores.
 
 #### Insert required changes here ####
 
-#TarFilesRename: @PACKAGE@:@PACKAGE@-@VERSION@
+TarFilesRename: geometry:geometry-1.1.3
 #@CHANGES@
 
 ######################################
