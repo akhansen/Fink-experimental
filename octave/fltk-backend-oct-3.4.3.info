@@ -120,12 +120,8 @@ DocFiles: COPYING
 Homepage: http://www.octave.org/
 License: GPL
 DescPort: <<
-	Aqua variant:
-	Apply fix from http://lukassen.wordpress.com/2010/01/18/taming-snow-leopard-cgdisplaybitsperpixel-deprication/ ,
-	with improvements from Peter O'Gorman and Daniel Macks, to display.cc to work around the lack of 
-	CGDisplayBitsPerPixel on 10.7.
-	X11 variant:
-	Rip out #if defined ... #elif ... #endif branches in display.cc that don't pertain to X11.
+	Fails to configure on 10.5/x86_64 and 10.6/x86_64 against the Accelerate framework,
+	so we force the use of atlas even though it's not actually used in this package.
 <<
 DescPackaging:  <<
 	Currently we build all of octave and then only install the fltk-related octfiles.  
