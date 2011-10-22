@@ -24,7 +24,7 @@ BuildDepends: <<
     libcurl4, libftgl2, qhull6-dev, qrupdate | qrupdate-atlas, flag-sort,
 	pcre, gcc46-compiler, suitesparse-metis, fink (>= 0.30.0), sed,
 	graphicsmagick-dev, freetype219, libftgl2,
-	darwin ( >=9.2.0-1 ),
+	darwin (>= 9.2.0-1), xcode (>= 3.1-1)
 	(%m = x86_64) atlas
 <<
 Depends: <<
@@ -98,6 +98,7 @@ CompileScript: <<
  	else export CC='flag-sort -r gcc-4.2'
  		 export CXX='flag-sort -r g++-4.2'
  fi
+ #use atlas on x86_64, veclib elsewhere
  if [ "%m" = "x86_64" ]
  then 
  	a='--with-lapack=%p/lib/liblapack.dylib --with-blas=%p/lib/libf77blas.dylib'
@@ -119,8 +120,11 @@ DocFiles: COPYING
 Homepage: http://www.octave.org/
 License: GPL
 DescPort: <<
-	Fails to configure on 10.5/x86_64 and 10.6/x86_64 against the Accelerate framework,
+	Fails to configure on 10.5/x86_64 and 10.6/x86_64 against the vecLib framework,
 	so we force the use of atlas even though it's not actually used in this package.
+	
+	Requires GCC>4.0.1 to build, so we use an appropriately versioned BuildDepends 
+	on Xcode
 <<
 DescPackaging:  <<
 	Currently we build all of octave and then only install the fltk-related octfiles.  
