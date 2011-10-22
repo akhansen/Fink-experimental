@@ -430,6 +430,7 @@ Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
 As of revision 229:
+
 Actually _install_ the manpages for the versioned executables.
 <<
 Homepage: http://www.octave.org/
