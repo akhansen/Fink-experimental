@@ -1,0 +1,132 @@
+Info2: <<
+Package: fltk-backend%type_pkg[-ui]-oct%type_pkg[oct]
+Type: -ui (-x11 -aqua), oct(3.4.3), gcc(4.6)
+Version: 3.4.3
+Revision: 1
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Description: Graphics backend for octave-%type_raw[oct]
+DescDetail:  <<
+We build the FLTK ocfiles separately to allow for variants that use Aqua and
+X11.  Install fltk-backend-aqua-oct%type_pkg[oct] if you want the Aqua 
+interface or fltk-backend-x11-oct%type_pkg[oct] if you want the X11 one.
+<<
+
+Source: mirror:gnu:octave/octave-%v.tar.gz
+Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
+SourceDirectory: octave-%v
+
+BuildDepends: <<
+	(%type_pkg[-ui] = -x11) fltk-x11, 
+	(%type_pkg[-ui] = -x11) x11-dev,
+	(%type_pkg[-ui] = -aqua) fltk13-aqua,
+	arpack | arpack-atlas,
+	glpk-dev, hdf5.7, readline5, libncurses5, fftw3 (>= 3.1.1-7), 
+    libcurl4, libftgl2, qhull6-dev, qrupdate | qrupdate-atlas, flag-sort,
+	pcre, gcc46-compiler, suitesparse-metis, fink (>= 0.30.0), sed,
+	graphicsmagick-dev, freetype219, libftgl2,
+	darwin (>= 9.2.0-1), xcode (>= 3.1-1)
+	(%m = x86_64) atlas
+<<
+Depends: <<
+	(%type_pkg[-ui] = -x11) fltk-x11-shlibs,  
+	(%type_pkg[-ui] = -x11) x11,
+	(%type_pkg[-ui] = -aqua) fltk13-aqua-shlibs
+<<
+BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
+GCC: 4.0
+Conflicts: fltk-backend-aqua-oct%type_pkg[oct], fltk-backend-x11-oct%type_pkg[oct]
+Replaces: fltk-backend-aqua-oct%type_pkg[oct], fltk-backend-x11-oct%type_pkg[oct]
+UseMaxBuildJobs: false
+
+PatchFile: octave-glpk.patch
+PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
+
+PatchScript: <<
+	#!/bin/sh -ev
+	patch -p1 < %{PatchFile}
+	# fix lib name for qhull6
+	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
+	# wrong include dir for qhull6
+	for f in `grep -l -r "qhull_a\.h" src`
+		do sed -i.orig -e '/include/s|qhull/|lib&|' $f
+	done
+	# more patching by fangism
+	# silence some warnings
+	sed -i.orig -e '/ibasea/s|\*ibasea, ||' \
+		-e '/ibasea/s| ibasea =.*||' \
+		liboctave/oct-sort.cc
+	# should this accompany -D_THREAD_SAFE? in CFLAGS,CXXFLAGS
+	sed -i.orig '/#include.*Range\.h/i\
+#define	_REENTRANT' liboctave/lo-specfun.cc
+	# need size_t from <cstddef>
+	sed -i.orig -e '/#define octave_oct_alloc_h/a\
+using std::size_t;' liboctave/oct-alloc.h
+	# needed by clang++, safe for g++: using-declaration as typedef
+	for f in liboctave/DiagArray2.h liboctave/intNDArray.h
+	do sed -i.orig -e '/using.*element_type;/s|using|& typename|' $f
+	done
+	# missing qualifier to dependent-name member-function
+	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' liboctave/oct-inttypes.h
+<<
+
+SetLDFLAGS: -Wl,-dead_strip_dylibs
+SetLIBS: -lGraphicsMagick -lmetis
+ConfigureParams: <<
+	F77=%p/bin/gfortran-fsf-%type_raw[gcc] --host=%m-apple-darwin --build=%m-apple-darwin \
+	--infodir='${prefix}/share/info' --mandir='${prefix}/share/man' --libexecdir='${prefix}/lib' \
+	--enable-shared --enable-dl  --with-hdf5 \
+	(%type_pkg[-ui] = -x11 ) --with-x \
+	(%type_pkg[-ui] = -x11 ) --x-libraries=/usr/X11/lib \ 
+	(%type_pkg[-ui] = -x11 ) --x-includes=/usr/X11/include \ 
+	(%type_pkg[-ui] = -x11 ) --without-framework-carbon \
+	(%type_pkg[-ui] = -aqua ) --without-x \
+	(%type_pkg[-ui] = -aqua ) --with-framework-carbon \
+	--disable-static \
+	--disable-dependency-tracking
+<<
+
+CompileScript: <<
+ #!/bin/sh -ev
+ export CFLAGS='-O3'
+ export CXXFLAGS='-O3'
+ export FFLAGS='-O3'
+ os=`/usr/bin/uname -r | cut -d. -f1`
+ # we always need gcc >= 4.2
+ if [ $os ge 10 ]
+ 	then export CC='flag-sort -r gcc'
+ 		 export CXX='flag-sort -r g++'
+ 	else export CC='flag-sort -r gcc-4.2'
+ 		 export CXX='flag-sort -r g++-4.2'
+ fi
+ #use atlas on x86_64, veclib elsewhere
+ if [ "%m" = "x86_64" ]
+ then 
+ 	a='--with-lapack=%p/lib/liblapack.dylib --with-blas=%p/lib/libf77blas.dylib'
+    export FFLAGS='-O3'
+ else 
+	a='--with-lapack=-Wl,-framework,Accelerate --with-blas=-Wl,-framework,Accelerate'
+	export FFLAGS='-O3 -ff2c'
+ fi
+ FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
+ ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a
+ make
+<<
+
+InstallScript: <<
+mkdir -p %i/lib/octave/%v/oct/%m-apple-darwin
+cp src/DLD-FUNCTIONS/__{fltk_uigetfile,init_fltk}__.oct %i/lib/octave/%v/oct/%m-apple-darwin/
+<<
+DocFiles: COPYING
+Homepage: http://www.octave.org/
+License: GPL
+DescPort: <<
+	Fails to configure on 10.5/x86_64 and 10.6/x86_64 against the vecLib framework,
+	so we force the use of atlas even though it's not actually used in this package.
+	
+	Requires GCC>4.0.1 to build, so we use an appropriately versioned BuildDepends 
+	on Xcode
+<<
+DescPackaging:  <<
+	Currently we build all of octave and then only install the fltk-related octfiles.  
+<<
+<<
