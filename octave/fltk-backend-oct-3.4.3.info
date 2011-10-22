@@ -77,7 +77,7 @@ using std::size_t;' liboctave/oct-alloc.h
 	done
 	# missing qualifier to dependent-name member-function
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' liboctave/oct-inttypes.h
- <<
+<<
 
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
@@ -124,7 +124,6 @@ DescPort: <<
 	Rip out #if defined ... #elif ... #endif branches in display.cc that don't pertain to X11.
 <<
 DescPackaging:  <<
-	Misbuilds with clang, so use llvm-gcc instead.
 	Currently we build all of octave and then only install the fltk-related octfiles.  
 <<
 <<
