@@ -515,6 +515,11 @@ LAPACK libraries.
 Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
+As of revision 127:
+
+Since 'gcc' isn't wrapped by a Fink compiler wrapper on 10.5, we modify 
+encoded references to ccache-default's %p/bin/cc to use /usr/bin/gcc instead.
+
 As of revision 129:
 
 Build everything and then delete fltk-backend.oct in the InstallScript to make
