@@ -56,7 +56,7 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
+	sed -i -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
@@ -188,7 +188,7 @@ InstallScript: <<
  				%i/bin/%{ni}-bug-%v
  fi
  # avoid ccache-default's compiler wrappers
- perl -pi -e 's|%p(/bin/gcc)|/usr$1|g' %i/bin/%{ni}-bug-%v
+ perl -pi -e 's|%p(/bin/g[c+]{2})|/usr$1|g' src/oct-conf.h.in mkoctfile.in
  # generate Fink-gcc enabled mkoctfile
  cp %i/bin/mkoctfile-%type_raw[oct] %i/bin/mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
  perl -pi -e \
