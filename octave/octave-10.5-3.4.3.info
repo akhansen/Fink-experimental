@@ -55,7 +55,7 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
+	sed -i.bak -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
@@ -419,10 +419,10 @@ Cleanups from David Fang to get the package to build using clang.
 The non-atlas variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
 
-It fails to configure against vecLib on x86_64, at least with gcc46-4.6.1-1,
+It fails to configure against vecLib on 10.<7 x86_64, at least with gcc46-4.6.1-1,
 so we restrict x86_64 to use the -atlas variant.
 
-It requires GCC > 4.0.1 to build, so we use GCC-4.2 and require an appropriate
+It requires GCC > 4.0.1 to build on 10.5, so we use GCC-4.2 and require an appropriate
 xcode dependency.
 
 To allow for simple --with-lapack and --with-blas, we require OS 10.5.2 or later,
