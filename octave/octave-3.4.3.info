@@ -40,10 +40,8 @@ PatchFile2: %{ni}-%v-manpages.patch
 PatchFile2-MD5: 0261f43929818d8472f462e12bde4c62
 PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
-PatchFile4: %{ni}-GM.patch
-PatchFile4-MD5: 1c884892aa835b5fc0aa76960328b5c4
-PatchFile5: %{ni}-10.7.patch
-PatchFile5-MD5: 8304ed39a2c8783f01c81133971166e8
+PatchFile4: %{ni}-10.7.patch
+PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -55,9 +53,9 @@ PatchScript: <<
 	# fix executable names in versioned manpages
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
 	#Fink-specific structural changes
-	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile3} | patch -p1 
+	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -i -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
+	sed -i.bak -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
@@ -71,13 +69,12 @@ PatchScript: <<
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
 		then sed -i.bak -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
-							src/oct-conf.h.in mkoctfile.in
+							src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
-	sed -i -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lack of CGDisplayBitsPerPixel
-	patch -p1 < %{PatchFile5}
+	patch -p1 < %{PatchFile4}
 	perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	# fix lib name for qhull6
 	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
@@ -113,7 +110,7 @@ SetLIBS: -lGraphicsMagick -lmetis
 ConfigureParams: <<
 	F77=%p/bin/gfortran-fsf-%type_raw[gcc] --host=%m-apple-darwin --build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' --mandir='${prefix}/share/man' --libexecdir='${prefix}/lib' \
-	--enable-shared --enable-dl --disable-static --without-mpi --with-hdf5 --with-fftw \
+	--enable-shared --enable-dl --disable-static --with-hdf5 \
 	--x-libraries=/usr/X11/lib --x-includes=/usr/X11/include
 <<
 CompileScript: <<
@@ -428,12 +425,6 @@ Not sane (and now not even compilable) to use private code
 from glpk. Import the functions needed so can still use it
 even when glpk stops exporting its internals. See:
 	http://octave.1599824.n4.nabble.com/GLPK-interface-was-Re-Multithreaded-Atlas-td1654632.html
-
-Patch the graphicsmagick interface to use InitializeMagick before doing anything:
-
-http://sourceforge.net/tracker/?func=detail&aid=3104518&group_id=73485&atid=537937
-
-This was not mandatory in prior versions of GraphicsMagick, but now it is.
  
 Set the GNUTERM environment variable to AquaTerm because autodetection
 of DISPLAY seems to cause options to be fed to our gnuplot that it doesn't understand.
