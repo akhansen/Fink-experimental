@@ -108,9 +108,11 @@ InstallScript: <<
  #!/bin/sh -ev
  export MAKEFLAGS=-j1
  make install DESTDIR=%d
+ # Install versioned manpages
+ cp doc/interpreter/*-%v.1 %i/share/man/man1
  # Install Fink-specific octaverc which points at our oct-versioned
  # package directory.
- cp %b/%{Ni}rc %i/share/%{Ni}/%v/m/startup
+ cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
  mkdir -p %i/var/%{Ni}/%v/
  # install examples
  mkdir -p %i/share/%{Ni}/%v/doc/examples
@@ -222,8 +224,8 @@ SplitOff2: <<
 		include/%{Ni}-%v
 		bin/mkoctfile*
 		bin/octave-config*
-		share/man/man1/mkoctfile.1
-		share/man/man1/octave-config.1
+		share/man/man1/mkoctfile*.1
+		share/man/man1/octave-config*.1
 	<<
 	
 	DescDetail: <<
@@ -277,6 +279,8 @@ Splitoff3: <<
 		bin/%{Ni}-%v
 		bin/%{Ni}-bug-%v
 		var/%{Ni}/%v
+		share/man/man1/%{Ni}-%v.1
+		share/man/man1/%{Ni}-bug-%v.1
 	<<
 	DescDetail: <<
 	The %{Ni}%type_pkg[oct]%type_pkg[-atlas] package contains versioned executables, as well as all of the 
@@ -427,6 +431,7 @@ Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
 As of revision 329:
+
 Actually _install_ the manpages for the versioned executables.
 <<
 Homepage: http://www.octave.org/
