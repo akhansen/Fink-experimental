@@ -1,11 +1,7 @@
 Info2: <<
 Package: nan%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 2.4.4
-<<<<<<< HEAD
 Type: oct (3.0.5 3.2.4 3.4.3), forge (nan), -atlas (boolean)
-=======
-Type: oct (3.0.5 3.2.4 3.4.3), forge (nan), -atlas (.)
->>>>>>> master
 Revision: 3
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types

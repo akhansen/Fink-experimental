@@ -95,11 +95,7 @@ CompileScript: <<
  export CFLAGS='-O3'
  export CXXFLAGS='-O3'
  export FFLAGS='-O3'
-<<<<<<< HEAD
  a='--with-lapack=-Wl,-framework,Accelerate --with-blas=-Wl,-framework,Accelerate'
-=======
- a='--with-lapack=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib --with-blas=-Wl,-framework,Accelerate,-dylib_file,/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib:/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib'
->>>>>>> master
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  ./configure FLIBS="${FLIBDIR}/libgfortran.dylib" %c $a
  #make
