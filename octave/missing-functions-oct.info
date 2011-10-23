@@ -1,126 +1,20 @@
 Info2: <<
-Package: control-oct%type_pkg[oct]
-Version: 2.2.0
-Type: oct (3.4.3), forge (control)
+Package: missing-functions-oct%type_pkg[oct]
+Version: 1.0.2
+Type: oct (3.0.5 3.2.4 3.4.3), forge (missing-functions)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/control/index.html 
-Description: Octave control tools
+Homepage: http://octave.sourceforge.net/missing-functions/index.html 
+Description: Find functions in Matlab but not in Octave
 DescDetail: <<
-Octave control systems package increasingly based on the SLICOT Fortran library
-
+Find functions that are in Matlab but not in Octave.
 This package provides the following functions:
-Examples
-        MDSSystem
-        optiPID
-Linear Time Invariant Models
-        dss
-        frd
-        ss
-        tf
-        zpk
-Model Data Access
-        @lti/dssdata
-        @lti/frdata
-        @lti/get
-        @lti/set
-        @lti/ssdata
-        @lti/tfdata
-        @lti/zpkdata
-Model Conversions
-        @lti/c2d
-        @lti/d2c
-        @lti/prescale
-        @lti/xperm
-Model Interconnections
-        @lti/append
-        @lti/blkdiag
-        @lti/connect
-        @lti/feedback
-        @lti/lft
-        @lti/mconnect
-        @lti/parallel
-        @lti/series
-Model Characteristics
-        ctrb
-        @lti/dcgain
-        gram
-        hsvd
-        @lti/isct
-        isctrb
-        isdetectable
-        @lti/isdt
-        @lti/isminimumphase
-        isobsv
-        @lti/issiso
-        isstabilizable
-        @lti/isstable
-        @lti/norm
-        obsv
-        @lti/pole
-        pzmap
-        @lti/size
-        @lti/zero
-Model Simplification
-        @lti/minreal
-        @lti/sminreal
-Time Domain Analysis
-        covar
-        gensig
-        impulse
-        initial
-        lsim
-        step
-Frequency Domain Analysis
-        bode
-        bodemag
-        @lti/freqresp
-        margin
-        nichols
-        nyquist
-        sigma
-Pole Placement
-        place
-        rlocus
-Linear-Quadratic Control
-        dlqr
-        estim
-        kalman
-        lqr
-Robust Control
-        augw
-        h2syn
-        hinfsyn
-        mixsyn
-        ncfsyn
-Matrix Equation Solvers
-        care
-        dare
-        dlyap
-        dlyapchol
-        lyap
-        lyapchol
-Overloaded Operators
-        @lti/horzcat
-        @lti/inv
-        @lti/minus
-        @lti/mldivide
-        @lti/mpower
-        @lti/mrdivide
-        @lti/mtimes
-        @lti/plus
-        @lti/subsasgn
-        @lti/subsref
-        @lti/transpose
-        @lti/uminus
-        @lti/vertcat
-Miscellaneous
-        strseq
-        test_control
-        BMWengine
-        Boeing707
-        WestlandLynx
+	__functionstatus__
+	__matlabfunctionlist__
+	__missingmatlab2txt__
+	missingfunctionstatus
+	missingmatlabfunctions
 <<
 License: GPL
 
@@ -134,8 +28,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
  <<
@@ -144,11 +37,11 @@ Depends: <<
   <<
 Conflicts: octave-forge
 
-Source-MD5: 43bd222e6b7496dcc98aa8e071f1cdf8
+Source-MD5: d975028d2a0fa9778b4ffedd4c1abba2
 
 #### Insert required changes here ####
 
-TarFilesRename: control:control-2.2.0
+#@CHANGES@
 
 ######################################
 
@@ -168,10 +61,15 @@ CompileScript: <<
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
-cd ..
-tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
+if [ "%type_pkg[oct]" = "343" ]
+then
+	cd ..
+	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+	cd %b
+	pkgsrc=%type_raw[forge]-%v.tar.gz
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 

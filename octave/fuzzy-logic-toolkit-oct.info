@@ -1,82 +1,57 @@
 Info2: <<
-Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
-Version: 2.0.0
-<<<<<<< HEAD
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (boolean)
-=======
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (.)
->>>>>>> master
-Revision: 3
+Package: fuzzy-logic-toolkit-oct%type_pkg[oct]
+Version: 0.2.4
+Type: oct (3.2.4 3.4.3), forge (fuzzy-logic-toolkit)
+Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
-Description: Additional linear algebra code for Octave.
+Homepage: http://octave.sourceforge.net/fuzzy-logic-toolkit/index.html 
+Description: Fuzzy logic toolkit for Octave
 DescDetail: <<
-Additional linear algebra code, including general SVD and matrix functions.
+A mostly MATLAB-compatible fuzzy logic toolkit for Octave.
 
-This package provides the following functions:
-Matrix functions:
-        condeig
-        funm
-        thfm
-        cartprod
-        rotparams
-        rotv
-        mgorth
-Matrix factorization:
-        gsvd
-Test:
-        test_gsvd
-Block sparse matrices:
-        @blksparse/blksparse
-        @blksparse/blksize
-        @blksparse/ctranspose
-        @blksparse/display
-        @blksparse/full
-        @blksparse/minus
-        @blksparse/mtimes
-        @blksparse/mldivide
-        @blksparse/mrdivide
-        @blksparse/plus
-        @blksparse/size
-        @blksparse/sparse
-        @blksparse/subsref
-        @blksparse/transpose
-        @blksparse/uminus
-        @blksparse/uplus
-Iterative techniques:
-        bicg
-        pgmres
-Kronecker Products:
-        @kronprod/kronprod
-        @kronprod/rows
-        @kronprod/columns
-        @kronprod/numel
-        @kronprod/size
-        @kronprod/display
-        @kronprod/disp
-        @kronprod/issquare
-        @kronprod/issparse
-        @kronprod/isreal
-        @kronprod/iscomplex
-        @kronprod/ismatrix
-        @kronprod/sparse
-        @kronprod/full
-        @kronprod/transpose
-        @kronprod/ctranspose
-        @kronprod/uplus
-        @kronprod/uminus
-        @kronprod/plus
-        @kronprod/minus
-        @kronprod/times
-        @kronprod/rdivide
-        @kronprod/mldivide
-        @kronprod/mtimes
-        @kronprod/mpower
-        @kronprod/inv
-        @kronprod/det
-        @kronprod/rank
-        @kronprod/trace
+The package provides the following:
+Evaluation:
+        defuzz
+        evalfis
+        evalmf
+Plotting:
+        gensurf
+        plotmf
+File Input/Output of Fuzzy Inference Systems:
+        readfis
+        writefis
+Command-Line Creation and Modification of Fuzzy Inference Systems:
+        addmf
+        addrule
+        addvar
+        newfis
+        rmmf
+        rmvar
+        setfis
+Text Representation of Fuzzy Inference Systems:
+        getfis
+        showfis
+        showrule
+Membership Functions:
+        dsigmf
+        gauss2mf
+        gaussmf
+        gbellmf
+        pimf
+        psigmf
+        sigmf
+        smf
+        trapmf
+        trimf
+        zmf
+Complete Fuzzy Inference System Demos:
+        cubic_approx_demo
+        heart_demo_1
+        heart_demo_2
+        linear_tip_demo
+        mamdani_tip_demo
+        sugeno_tip_demo
 <<
 License: GPL
 
@@ -90,23 +65,17 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7, 
-  ( %type_raw[-atlas] = -atlas ) atlas
+  ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas], 
-  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
 <<
-Conflicts: <<
-octave-forge,
-linear-algebra-oct-atlas%type_pkg[oct],
-linear-algebra-oct%type_pkg[oct]
-<<
+Conflicts: octave-forge
 
-Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7
+Source-MD5: 18e16bca3ee0346f0453f8280085e8d8
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -121,7 +90,7 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
-TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
+TarFilesRename: fuzzy-logic-toolkit:fuzzy-logic-toolkit-0.2.4
 
 ######################################
 
@@ -129,7 +98,7 @@ TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/Individual Package Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

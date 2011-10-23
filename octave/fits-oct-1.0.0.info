@@ -1,173 +1,20 @@
 Info2: <<
-Package: signal-oct%type_pkg[oct]
-Version: 1.0.10
-Type: oct (3.2.4), forge (signal)
+Package: fits-oct%type_pkg[oct]
+Version: 1.0.0
+Type: oct (3.2.4 3.0.5), forge (fits)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/signal/index.html 
-Description: Signal processing toolkit for Octave
+Homepage: http://octave.sourceforge.net/general/index.html 
+Description: FITS interface for Octave
 DescDetail: <<
-This package contains signal processing tools, including filtering, windowing
-and display functions.
-It provides the following additional functions:
-Signals:
-	diric
-	gauspuls
-	gmonopuls
-	pulstran
-	tripuls
-	rectpuls
-	sawtooth
-	square
-	chirp
-	strips
-	specgram
-	buffer
-	mexihat
-	meyeraux
-	morlet
-	shanwavf
-	cmorwavf
-Filtering:
-	filtfilt
-	filtic
-	latcfilt
-	sgolayfilt
-	sosfilt
-	medfilt1
-Filter analysis:
-	freqs
-	freqs_plot
-	freqspace
-	grpdelay
-	impz
-	zplane
-Filter conversion:
-	ac2poly
-	poly2ac
-	ac2rc
-	rc2ac
-	poly2rc
-	rc2poly
-	convmtx
-	latc2tf
-	residuez
-	residued
-	sos2ss
-	sos2tf
-	sos2zp
-	ss2sos
-	tf2latc
-	tf2sos
-	zp2sos
-	polystab
-IIR Filter design:
-	besself
-	butter
-	cheby1
-	cheby2
-	ellip
-	ncauer
-	maxflat
-	buttord
-	cheb1ord
-	cheb2ord
-	ellipord
-	besselap
-	sftrans
-	bilinear
-	impinvar
-	ellipdemo
-FIR filter design:
-	fir1
-	fir2
-	fircls
-	fircls1
-	firls
-	firrcos
-	intfilt
-	kaiserord
-	cremez
-	remez
-	remezord
-	sgolay
-	qp_kaiser
-Transforms:
-	czt
-	dctmtx
-	dct2
-	idct2
-	dct
-	idct
-	dst
-	idst
-	dftmtx
-	hilbert
-	rceps
-	cceps
-	icceps
-	cplxreal
-	bitrevorder
-	dwt
-	fht
-	ifht
-Power spectrum analysis:
-	pwelch
-	tfe
-	tfestimate
-	cohere
-	csd
-	ar_psd
-	cpsd
-	mscohere
-	pburg
-	pyulear
-	xcorr
-	xcorr2
-	xcov
-	__power
-Window functions:
-	window
-	barthannwin
-	blackmanharris
-	blackmannuttall
-	bohmanwin
-	boxcar
-	chebwin
-	flattopwin
-	hann
-	kaiser
-	nuttallwin
-	triang
-	gaussian
-	gausswin
-	tukeywin
-	rectwin
-	welchwin
-	parzenwin
-System identification:
-	arburg
-	aryule
-	invfreq
-	invfreqs
-	invfreqz
-	levinson
-	lpc
-	rlevinson
-	stmcb
-Sample rate change:
-	decimate
-	interp
-	downsample
-	upsample
-	resample
-	upfirdn
-Utility:
-	buffer
-	fracshift
-	wkeep
-	wrev
+The Octave-FITS package provides functions for reading, and writing FITS 
+(Flexible Image Transport System) files. The package supports uses the 
+libcfitsio library.
+It includes the following additional functions:
+read_fits_image
+save_fits_image
+save_fits_image_multi_ext
 <<
 License: GPL
 
@@ -182,20 +29,21 @@ License: GPL
 
 BuildDepends: <<
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
-  fftw3,   
+  fftw3, cfitsio,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7
  <<
 Depends: << 
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
-  optim-oct%type_pkg[oct], specfun-oct%type_pkg[oct]
-<<
-Conflicts: octave-forge
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.8-999)
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+  <<
+Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.0-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.0-999)
 
-Source-MD5: 154902997a4e605c2fedf2335c397bc7
+Source-MD5: 7cfcf6c8f91dddda40698bdc5ba5c735
 
 #### Insert required changes here ####
+
+TarFilesRename: fits:fits-1.0.0
 
 ######################################
 

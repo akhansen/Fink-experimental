@@ -1,82 +1,45 @@
 Info2: <<
-Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
-Version: 2.0.0
-<<<<<<< HEAD
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (boolean)
-=======
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (.)
->>>>>>> master
-Revision: 3
+Package: java-oct%type_pkg[oct]
+Version: 1.2.8
+Type: oct (3.2.4 3.4.3), forge (java)
+Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
-Description: Additional linear algebra code for Octave.
+Homepage: http://octave.sourceforge.net/java/index.html 
+Description: Java interface for Octave
 DescDetail: <<
-Additional linear algebra code, including general SVD and matrix functions.
+Provides Java interface with OO-like Java objects manipulation
 
-This package provides the following functions:
-Matrix functions:
-        condeig
-        funm
-        thfm
-        cartprod
-        rotparams
-        rotv
-        mgorth
-Matrix factorization:
-        gsvd
-Test:
-        test_gsvd
-Block sparse matrices:
-        @blksparse/blksparse
-        @blksparse/blksize
-        @blksparse/ctranspose
-        @blksparse/display
-        @blksparse/full
-        @blksparse/minus
-        @blksparse/mtimes
-        @blksparse/mldivide
-        @blksparse/mrdivide
-        @blksparse/plus
-        @blksparse/size
-        @blksparse/sparse
-        @blksparse/subsref
-        @blksparse/transpose
-        @blksparse/uminus
-        @blksparse/uplus
-Iterative techniques:
-        bicg
-        pgmres
-Kronecker Products:
-        @kronprod/kronprod
-        @kronprod/rows
-        @kronprod/columns
-        @kronprod/numel
-        @kronprod/size
-        @kronprod/display
-        @kronprod/disp
-        @kronprod/issquare
-        @kronprod/issparse
-        @kronprod/isreal
-        @kronprod/iscomplex
-        @kronprod/ismatrix
-        @kronprod/sparse
-        @kronprod/full
-        @kronprod/transpose
-        @kronprod/ctranspose
-        @kronprod/uplus
-        @kronprod/uminus
-        @kronprod/plus
-        @kronprod/minus
-        @kronprod/times
-        @kronprod/rdivide
-        @kronprod/mldivide
-        @kronprod/mtimes
-        @kronprod/mpower
-        @kronprod/inv
-        @kronprod/det
-        @kronprod/rank
-        @kronprod/trace
+The package includes the following functions:
+Java Interface:
+	java_exit
+	java_invoke
+	java_get
+	java_init
+	java_set
+	java_new
+	javaaddpath
+	javarmpath
+	javaclasspath
+	javamem
+	javaArray
+	java2mat
+	java_convert_matrix
+	java_unsigned_conversion
+	java_debug
+	javaObject
+	javaMethod
+	javamethods
+	javafields
+Dialog Boxes:
+	msgbox.m
+	errordlg.m
+	helpdlg.m
+	inputdlg.m
+	listdlg.m
+	msgbox.m
+	questdlg.m
+	warndlg.m
 <<
 License: GPL
 
@@ -90,23 +53,19 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7, 
-  ( %type_raw[-atlas] = -atlas ) atlas
+  system-java-dev
 <<
 Depends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas], 
-  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
+  system-java
 <<
-Conflicts: <<
-octave-forge,
-linear-algebra-oct-atlas%type_pkg[oct],
-linear-algebra-oct%type_pkg[oct]
-<<
+Conflicts: octave-forge
 
-Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7
+Source-MD5: e94bcb73e21f2e8f3e5cf43c143ba029
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -121,15 +80,24 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
-TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
+TarFilesRename: java:java-1.2.8
+PatchScript: <<
+	perl -pi -e "s/echo \-n/echo/g; s/ECHO_N='-n'/ECHO_N=/" src/configure src/configure.base
+	perl -pi -e 's|JAVA_INCS=".*"|JAVA_INCS="-I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"|' src/configure
+<<
 
+DescPort: <<
+	Get rid of nonportable "echo -n" which screws up the configuration.
+	Patch JAVA_INCS actually to be the current *correct* include path
+	for Apple's Java
+<<
 ######################################
 
 # Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/Individual Package Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

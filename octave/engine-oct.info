@@ -1,83 +1,12 @@
 Info2: <<
-Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
-Version: 2.0.0
-<<<<<<< HEAD
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (boolean)
-=======
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (.)
->>>>>>> master
-Revision: 3
+Package: engine-oct%type_pkg[oct]
+Version: 1.0.9
+Type: oct (3.0.5 3.2.4 3.4.3), forge (engine)
+Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
-Description: Additional linear algebra code for Octave.
-DescDetail: <<
-Additional linear algebra code, including general SVD and matrix functions.
-
-This package provides the following functions:
-Matrix functions:
-        condeig
-        funm
-        thfm
-        cartprod
-        rotparams
-        rotv
-        mgorth
-Matrix factorization:
-        gsvd
-Test:
-        test_gsvd
-Block sparse matrices:
-        @blksparse/blksparse
-        @blksparse/blksize
-        @blksparse/ctranspose
-        @blksparse/display
-        @blksparse/full
-        @blksparse/minus
-        @blksparse/mtimes
-        @blksparse/mldivide
-        @blksparse/mrdivide
-        @blksparse/plus
-        @blksparse/size
-        @blksparse/sparse
-        @blksparse/subsref
-        @blksparse/transpose
-        @blksparse/uminus
-        @blksparse/uplus
-Iterative techniques:
-        bicg
-        pgmres
-Kronecker Products:
-        @kronprod/kronprod
-        @kronprod/rows
-        @kronprod/columns
-        @kronprod/numel
-        @kronprod/size
-        @kronprod/display
-        @kronprod/disp
-        @kronprod/issquare
-        @kronprod/issparse
-        @kronprod/isreal
-        @kronprod/iscomplex
-        @kronprod/ismatrix
-        @kronprod/sparse
-        @kronprod/full
-        @kronprod/transpose
-        @kronprod/ctranspose
-        @kronprod/uplus
-        @kronprod/uminus
-        @kronprod/plus
-        @kronprod/minus
-        @kronprod/times
-        @kronprod/rdivide
-        @kronprod/mldivide
-        @kronprod/mtimes
-        @kronprod/mpower
-        @kronprod/inv
-        @kronprod/det
-        @kronprod/rank
-        @kronprod/trace
-<<
+Homepage: http://octave.sourceforge.net/engine/index.html 
+Description: External interface library for Octave
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -90,23 +19,17 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7, 
-  ( %type_raw[-atlas] = -atlas ) atlas
-<<
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+ <<
 Depends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas], 
-  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
-<<
-Conflicts: <<
-octave-forge,
-linear-algebra-oct-atlas%type_pkg[oct],
-linear-algebra-oct%type_pkg[oct]
-<<
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+  <<
+Conflicts: octave-forge
 
-Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7
+Source-MD5: 077ec874eb6ff573e86448a1c4620a1d
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -121,7 +44,7 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
-TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
+#@CHANGES@
 
 ######################################
 
@@ -129,7 +52,7 @@ TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/Individual Package Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
