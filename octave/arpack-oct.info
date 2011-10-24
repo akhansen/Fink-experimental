@@ -3,7 +3,7 @@ Package: arpack%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 1.0.8
 # No atlas on 10.7 yet
 Type: oct (3.0.5), forge (arpack), -atlas (.)
-Revision: 3
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/arpack/index.html 
