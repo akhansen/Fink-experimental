@@ -86,34 +86,34 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -i -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
+	sed -i.orig -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i 	-e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
- 			-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
- 			-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
- 			-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
- 			-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 			-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
+ 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
+ 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
-		then sed -i -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
+		then sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
 						src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
-	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
+	perl -pi.orig -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lack of CGDisplayBitsPerPixel
 	if [ "%type_pkg[-x11]" != "-x11" ]
 	then
 		patch -p1 < %{PatchFile4}
-		perl -pi -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
+		perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 	else
 		patch -l -p1 < %{PatchFile5}
 	fi
 	# fix lib name for qhull6
-	perl -pi -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
+	perl -pi.orig -e 's|(qhull[/.])|lib\1|g ; s|lqhull|lqhull6|' configure
 	# wrong include dir for qhull6
 	for f in `grep -l -r "qhull_a\.h" src`
 		do sed -i.orig -e '/include/s|qhull/|lib&|' $f
