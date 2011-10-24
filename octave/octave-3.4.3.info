@@ -21,7 +21,7 @@ BuildDepends: <<
 	readline5,  
 	sed,
 	suitesparse-metis,
-	fink (>=0.30.0-1),
+	fink (>= 0.30.0-1),
 	fink-package-precedence,
 	flag-sort,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua,
@@ -29,7 +29,7 @@ BuildDepends: <<
 	(%type_raw[-x11] = -x11) 		x11-dev,	
 	(%type_raw[-atlas] != -atlas) 	qrupdate (>=1.1.1-5),
 	(%type_raw[-atlas] != -atlas) 	arpack (>= 96patched-6),
-	(%type_raw[-atlas] = -atlas) 	atlas, 
+	(%type_raw[-atlas] = -atlas) 	atlas (>= 3.8.1-1), 
 	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas (>=1.1.1-5),
 	(%type_raw[-atlas] = -atlas) 	arpack-atlas (>= 96patched-6)
 <<
@@ -86,21 +86,21 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -i.bak -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in 
+	sed -i -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i.bak 	-e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 	sed -i 	-e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
+ 			-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
+ 			-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
+ 			-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
+ 			-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
+ 			-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
-		then sed -i.bak -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
-							src/oct-conf.h.in src/mkoctfile*in
+		then sed -i -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
+						src/oct-conf.h.in src/mkoctfile*in
 	fi
 	# Make sure GraphicsMagick gets activated properly.
 	perl -pi -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
@@ -147,15 +147,15 @@ SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick -lmetis
 
 ConfigureParams: <<
-	(%type_raw[-atlas] != -atlas) --with-lapack=-Wl,-framework,Accelerate \
-	(%type_raw[-atlas] != -atlas) --with-blas=-Wl,-framework,Accelerate \
- 	(%type_raw[-atlas] = -atlas) --with-lapack=%p/lib/liblapack.dylib \
- 	(%type_raw[-atlas] = -atlas) --with-blas=%p/lib/libf77blas.dylib \
-	(%type_raw[-x11] != -x11) --with-framework-carbon \
-	(%type_raw[-x11] = -x11) --without-framework-carbon \
-	 --with-x \
-	 --x-libraries=/usr/X11/lib \
-	 --x-includes=/usr/X11/include \
+	(%type_raw[-atlas] != -atlas)	--with-lapack=-Wl,-framework,Accelerate \
+	(%type_raw[-atlas] != -atlas)	--with-blas=-Wl,-framework,Accelerate \
+ 	(%type_raw[-atlas] = -atlas)	--with-lapack=%p/lib/liblapack.dylib \
+ 	(%type_raw[-atlas] = -atlas)	--with-blas=%p/lib/libf77blas.dylib \
+	(%type_raw[-x11] != -x11)		--with-framework-carbon \
+	(%type_raw[-x11] = -x11)		--without-framework-carbon \
+	--with-x \
+	--x-libraries=/usr/X11/lib \
+	--x-includes=/usr/X11/include \
 	--with-magick=%p/lib/libGraphicsMagick.dylib \
 	--host=%m-apple-darwin \
 	--build=%m-apple-darwin \
@@ -244,15 +244,18 @@ SplitOff: <<
 		%{Ni}%type_pkg[oct]-x11-shlibs,
 		%{Ni}%type_pkg[oct]-atlas-shlibs,
 		%{Ni}%type_pkg[oct]-atlas-x11-shlibs,
-		(%type_raw[-atlas] = atlas) %{Ni} (<< 3.0.5-5), 
-		(%type_raw[-atlas] != atlas) %{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		(%type_raw[-atlas] = -atlas)	%{Ni} (<< 3.0.5-5), 
+		(%type_raw[-atlas] != -atlas)	%{Ni}-atlas (<< 3.0.5-5), 
+		%{Ni}3.0.2 ( << 3.0.2-5),
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Replaces: <<
-		(%type_raw[-atlas] = atlas) %{Ni}%type_pkg[oct]-shlibs, 
-		(%type_raw[-atlas] != atlas) %{Ni}%type_pkg[oct]-atlas-shlibs, 
-		%{Ni} (<< 3.0.5-5), %{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		(%type_raw[-atlas] = atlas)		%{Ni}%type_pkg[oct]-shlibs, 
+		(%type_raw[-atlas] != atlas) 	%{Ni}%type_pkg[oct]-atlas-shlibs, 
+		%{Ni} (<< 3.0.5-5),	
+		%{Ni}-atlas (<< 3.0.5-5), 
+		%{Ni}3.0.2 ( << 3.0.2-5),
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<	
 	Depends: << 
 		fftw3-shlibs, 
@@ -260,9 +263,9 @@ SplitOff: <<
 		readline5-shlibs, 
 		fontconfig2-shlibs,
 		freetype219-shlibs,
-		(%type_raw[-atlas] = -atlas) atlas-shlibs (>= 3.8.1-1),
-		(%type_raw[-atlas] = -atlas) qrupdate-atlas-shlibs (>= 1.1.1-5), 
-		(%type_raw[-atlas] != -atlas) qrupdate-shlibs (>= 1.1.1-5)
+		(%type_raw[-atlas] = -atlas)	atlas-shlibs (>= 3.8.1-1),
+		(%type_raw[-atlas] = -atlas) 	qrupdate-atlas-shlibs (>= 1.1.1-5), 
+		(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs (>= 1.1.1-5)
 	<<
 	Provides: <<
 		liboctave,
@@ -311,9 +314,10 @@ SplitOff2: <<
 		%{Ni}324-atlas-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
-		(%type_raw[-atlas] = atlas) %{Ni} (<< 3.0.5-5), 
-		(%type_raw[-atlas] != atlas) %{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
+		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
+		%{Ni}3.0.2 ( << 3.0.2-5), 
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Replaces: <<
 		%{Ni}%type_pkg[oct]-dev,
@@ -326,8 +330,10 @@ SplitOff2: <<
 		%{Ni}324-atlas-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
-		%{Ni} (<< 3.0.5-5), %{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5),
+		%{Ni} (<< 3.0.5-5)
+		%{Ni}-atlas (<< 3.0.5-5), 
+		%{Ni}3.0.2 ( << 3.0.2-5), 
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Provides: <<
 		liboctave-dev,
@@ -401,8 +407,10 @@ Splitoff3: <<
 		%{Ni}%type_pkg[oct]-x11,
 		%{Ni}%type_pkg[oct]-atlas,
 		%{Ni}%type_pkg[oct]-atlas-x11,
-		%{Ni} (<< 3.0.5-5), %{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		%{Ni} (<< 3.0.5-5), 
+		%{Ni}-atlas (<< 3.0.5-5), 
+		%{Ni}3.0.2 ( << 3.0.2-5), 
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Provides: <<
 									octave%type_pkg[oct]-interpreter,
@@ -523,12 +531,6 @@ Not sane (and now not even compilable) to use private code
 from glpk. Import the functions needed so can still use it
 even when glpk stops exporting its internals. See:
 	http://octave.1599824.n4.nabble.com/GLPK-interface-was-Re-Multithreaded-Atlas-td1654632.html
-
-Patch the graphicsmagick interface to use InitializeMagick before doing anything:
-
-http://sourceforge.net/tracker/?func=detail&aid=3104518&group_id=73485&atid=537937
-
-This was not mandatory in prior versions of GraphicsMagick, but now it is.
  
 Set the GNUTERM environment variable to AquaTerm because autodetection
 of DISPLAY seems to cause options to be fed to our gnuplot that it doesn't understand.
@@ -550,9 +552,6 @@ Unfortunately, Octave's 'pkg' tool doesn't seem to know how to deal with
 variables, and the individual octave-forge  packages have to make copies
 of the octave scripts during their build process and edit them to use the
 package's name.
-
-We remove the FLTK backend modules since we are allowing for Aqua and X11 
-variants of those in the fltk-backend-{aqua|x11}-oct343 packages.
 
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
 The non-atlas variant depends on non-atlas variants (only) of these.
@@ -580,6 +579,9 @@ We turn off building docs to save time, since we'd throw them out anyway
 because the package builds differently with and without TeX executables in
 the PATH.  However, this entails manual installation of the manpages and the
 GNU info file.
+
+We use Provides in a new namespace and new projections to avoid
+unwieldy | lists in the octave-forge packages.
 <<
 Homepage: http://www.octave.org/
 License: GPL
