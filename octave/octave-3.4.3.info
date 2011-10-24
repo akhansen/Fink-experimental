@@ -10,21 +10,20 @@ BuildDepends: <<
 	fftw3 (>= 3.1.1-7), 
 	fontconfig2-dev,
 	freetype219, 
-	glpk-dev,
 	gcc%type_pkg[gcc]-compiler, 
+	glpk-dev,
 	graphicsmagick-dev, 
 	hdf5.7, 
 	libcurl4,
 	libftgl2,
-	libncurses5,
 	pcre,
 	qhull6-dev, 
 	readline5,  
 	sed,
 	suitesparse-metis,
 	fink (>=0.30.0-1),
-	flag-sort,
 	fink-package-precedence,
+	flag-sort,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua,
 	(%type_raw[-x11] = -x11) 		fltk-x11,
 	(%type_raw[-x11] = -x11) 		x11-dev,	
@@ -72,7 +71,7 @@ PatchFile3: %{ni}.patch
 PatchFile3-MD5: adc4d6257e51ca5d8a45472c8ee036ca
 PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
-PatchFile5: fltk-backend-x11.patch
+PatchFile5: %{ni}-10.7-x11.patch
 PatchFile5-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
 PatchScript: <<
 	#!/bin/sh -ev
