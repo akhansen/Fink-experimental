@@ -25,14 +25,14 @@ BuildDepends: <<
 	fink (>=0.30.0-1),
 	flag-sort,
 	fink-package-precedence,
-	(%type_raw[-x11] != -x11) fltk13-aqua,
-	(%type_raw[-x11] = -x11) fltk-x11,
-	(%type_raw[-x11] = -x11) x11-dev,	
-	(%type_raw[-atlas] != -atlas) qrupdate (>=1.1.1-5),
-	(%type_raw[-atlas] != -atlas) arpack (>= 96patched-6),
-	(%type_raw[-atlas] = -atlas) atlas, 
-	(%type_raw[-atlas] = -atlas) qrupdate-atlas (>=1.1.1-5),
-	(%type_raw[-atlas] = -atlas) arpack-atlas (>= 96patched-6)
+	(%type_raw[-x11] != -x11) 		fltk13-aqua,
+	(%type_raw[-x11] = -x11) 		fltk-x11,
+	(%type_raw[-x11] = -x11) 		x11-dev,	
+	(%type_raw[-atlas] != -atlas) 	qrupdate (>=1.1.1-5),
+	(%type_raw[-atlas] != -atlas) 	arpack (>= 96patched-6),
+	(%type_raw[-atlas] = -atlas) 	atlas, 
+	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas (>=1.1.1-5),
+	(%type_raw[-atlas] = -atlas) 	arpack-atlas (>= 96patched-6)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev, imagemagick10-dev
@@ -368,7 +368,7 @@ SplitOff2: <<
 Splitoff3: <<
 	Package: octave%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]
 	Depends: <<
-	%{Ni}%type_pkg[oct]%type_pkg[-atlas]-shlibs (=%v-%r),
+	%{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-shlibs (=%v-%r),
 	ncurses, gnuplot | gnuplot-nox | gnuplot-nogtk,
 	fftw3-shlibs (>= 3.1.1-7), 
 	fontconfig2-shlibs,
@@ -380,11 +380,13 @@ Splitoff3: <<
 	pcre-shlibs, 
 	qhull6-shlibs,
 	readline5-shlibs,
-	(%type_raw[-atlas] != -atlas) arpack-shlibs (>= 96patched-6),
-	(%type_raw[-atlas] != -atlas) qrupdate-shlibs,
-	(%type_raw[-atlas] = -atlas) atlas-shlibs (>= 3.8.1-1),
-	(%type_raw[-atlas] = -atlas) arpack-atlas-shlibs (>= 96patched-6),
-	(%type_raw[-atlas] = -atlas) qrupdate-atlas-shlibs
+	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
+	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
+	(%type_raw[-atlas] != -atlas) 	arpack-shlibs (>= 96patched-6),
+	(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs,
+	(%type_raw[-atlas] = -atlas) 	atlas-shlibs (>= 3.8.1-1),
+	(%type_raw[-atlas] = -atlas) 	arpack-atlas-shlibs (>= 96patched-6),
+	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas-shlibs
 	<<
 	Conflicts: << 
 		%{Ni}%type_pkg[oct],
