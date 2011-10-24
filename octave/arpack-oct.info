@@ -43,6 +43,9 @@ Source-MD5: dbf767019e238c4a16ccc6cac2afe87c
 
 #### Insert required changes here ####
 
+SetCC: llvm-gcc-4.2
+SetCXX: llvm-g++-4.2
+
 ######################################
 
 # Do not change anything from this point down, unless absolutely necessary,
