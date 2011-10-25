@@ -86,7 +86,7 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
-	sed -i.orig -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 mkoctfile.in
+	sed -i.orig -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in
  	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
