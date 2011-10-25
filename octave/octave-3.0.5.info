@@ -1,11 +1,10 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]
+# disable atlas on 10.7 distro file until atlas is available
 Type: -atlas (.), oct(3.0.5), gcc (4.6)
 Version: 3.0.5
 Revision: 701
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
-
-# disable atlas on 10.7 distro file until atlas is available
 
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.bz2
 Source-MD5: bfba44eeda8fa6e29c2bbcd2604c34eb
@@ -124,7 +123,7 @@ InstallScript: <<
  cp -R examples %i/share/%{Ni}/%v/doc/examples
  # clear out hardcoded Fink sed.
  pushd %i/bin 
- for file in mkoctfile-%v %{Ni}-config-%v 
+ for file in mkoctfile-%v %{Ni}-bug-%v %{Ni}-config-%v 
  do 
  	perl -pi -e 's|%p/bin/sed|/usr/bin/sed|g' $file
  done
@@ -292,6 +291,8 @@ Splitoff3: <<
 		bin/%{Ni}-%v
 		bin/%{Ni}-bug-%v
 		var/%{Ni}/%v
+		share/man/man1/%{Ni}-%v.1
+		share/man/man1/%{Ni}-bug-%v.1
 	<<
 	DescDetail: <<
 	The %{Ni}%type_pkg[oct]%type_pkg[-atlas] package contains versioned executables, as well as all of the 
@@ -430,7 +431,8 @@ LAPACK libraries.
 Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
-As of revision 329:
+As of revision 701:
+
 Actually _install_ the manpages for the versioned executables.
 <<
 Homepage: http://www.octave.org/
