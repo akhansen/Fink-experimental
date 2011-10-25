@@ -1,8 +1,8 @@
 Info2: <<
 Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
-Version: 2.0.0
-Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (boolean)
-Revision: 4
+Version: 1.0.6
+Type: oct (3.0.5), forge (linear-algebra), -atlas (boolean)
+Revision: 5
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
@@ -12,67 +12,17 @@ Additional linear algebra code, including general SVD and matrix functions.
 
 This package provides the following functions:
 Matrix functions:
-        condeig
-        funm
-        thfm
-        cartprod
-        rotparams
-        rotv
-        mgorth
+	condeig
+	funm
+	thfm
+	outer
 Matrix factorization:
-        gsvd
+	gsvd
+	GramSchmidt
 Test:
-        test_gsvd
-Block sparse matrices:
-        @blksparse/blksparse
-        @blksparse/blksize
-        @blksparse/ctranspose
-        @blksparse/display
-        @blksparse/full
-        @blksparse/minus
-        @blksparse/mtimes
-        @blksparse/mldivide
-        @blksparse/mrdivide
-        @blksparse/plus
-        @blksparse/size
-        @blksparse/sparse
-        @blksparse/subsref
-        @blksparse/transpose
-        @blksparse/uminus
-        @blksparse/uplus
+	test_gsvd
 Iterative techniques:
-        bicg
-        pgmres
-Kronecker Products:
-        @kronprod/kronprod
-        @kronprod/rows
-        @kronprod/columns
-        @kronprod/numel
-        @kronprod/size
-        @kronprod/display
-        @kronprod/disp
-        @kronprod/issquare
-        @kronprod/issparse
-        @kronprod/isreal
-        @kronprod/iscomplex
-        @kronprod/ismatrix
-        @kronprod/sparse
-        @kronprod/full
-        @kronprod/transpose
-        @kronprod/ctranspose
-        @kronprod/uplus
-        @kronprod/uminus
-        @kronprod/plus
-        @kronprod/minus
-        @kronprod/times
-        @kronprod/rdivide
-        @kronprod/mldivide
-        @kronprod/mtimes
-        @kronprod/mpower
-        @kronprod/inv
-        @kronprod/det
-        @kronprod/rank
-        @kronprod/trace
+	bicg
 <<
 License: GPL
 
@@ -104,7 +54,7 @@ linear-algebra-oct-atlas%type_pkg[oct],
 linear-algebra-oct%type_pkg[oct]
 <<
 
-Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7
+Source-MD5: cb07f1a877c6de3795cb33e27c9a037f
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -119,36 +69,20 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
-TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
-
 ######################################
 
 # Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/Individual Package Releases/%type_raw[forge]-%v.tar.gz
+Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/R2008-08-24/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
-CompileScript: <<
-#!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3 appears not to want to install
-# from directories
-if [ "%type_pkg[oct]" = "343" ]
-then
-	cd ..
-	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar.gz
-else pkgsrc=%type_raw[forge]-%v
-fi
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
-<<
+CompileScript:  OCTAVE=%p/bin/octave-%type_raw[oct] %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
 
 InstallScript: << 
 	#!/bin/sh -ev
