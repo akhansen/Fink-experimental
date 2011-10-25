@@ -9,6 +9,14 @@ Homepage: http://octave.sourceforge.net/splines/index.html
 Description: Additional Cubic spline functions for Octave
 DescDetail: <<
 Additional Cubic spline functions.
+
+The package includes the following functions:
+	csapi
+	csape
+	fnplt
+	fnder
+	fnval
+	catmullrom
 <<
 
 License: GPL
