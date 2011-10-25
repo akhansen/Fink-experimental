@@ -1,0 +1,8 @@
+Each directory here contains a _project_, which may be one package, or more.
+
+ANN
+fltk13-x11
+octave:  contains all of the Octave interpreter and Octave-Forge packages.
+wxmaxima:  contains wxcocoa* and wxmaxima
+
+templates: contains the octave-forge package template.
