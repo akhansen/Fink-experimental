@@ -31,8 +31,19 @@ Source-MD5: @SOURCE_MD5@
 #
 # Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
 # not use the conditional, of course.
-# packages that use BLAS or LAPACK will need to specify the the
-# -atlas and -veclib variants separately.
+# Packages that use BLAS or LAPACK will need to specify the the
+# -atlas and -veclib variants separately:
+#
+#BuildDepends: <<
+#  (%type_raw[-atlas] = -atlas)	atlas,
+#  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev,
+#  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
+#
+#Depends: << 
+#  (%type_raw[-atlas] = -atlas)  atlas-shlibs,
+#  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas, 
+#  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib,
+
 
 BuildDepends: <<
   liboctave%type_pkg[oct]-dev 
