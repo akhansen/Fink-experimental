@@ -1,6 +1,6 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]
-Type: -atlas (boolean), oct(3.2.4), gcc (4.6)
+Type: -atlas (boolean), oct(3.2.4), gcc (4.6), -x11 (boolean)
 Version: 3.2.4
 Revision: 501
 Distribution: 10.5
