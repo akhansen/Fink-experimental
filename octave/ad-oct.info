@@ -58,7 +58,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-dev
+  liboctave%type_pkg[oct]-dev,
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
