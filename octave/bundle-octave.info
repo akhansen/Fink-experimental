@@ -91,6 +91,8 @@ vrml-oct%type_pkg[oct],
 xraylib-oct%type_pkg[oct],
 zenity-oct%type_pkg[oct]
 <<
+Conflicts: bundle-octave%type_pkg[oct], bundle-octave%type_pkg[oct]-atlas
+Replaces: bundle-octave%type_pkg[oct], bundle-octave%type_pkg[oct]-atlas
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 Description: Convenience bundle for Octave-%type_raw[oct]
 <<
