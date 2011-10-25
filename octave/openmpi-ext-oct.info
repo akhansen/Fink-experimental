@@ -2,7 +2,7 @@ Info2: <<
 Package: openmpi-ext-oct%type_pkg[oct]
 Version: 1.0.2
 Type: oct (3.2.4 3.4.3), forge (openmpi_ext)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/openmpi_ext/index.html 
@@ -48,14 +48,14 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  liboctave%type_pkg[oct]-dev
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7,
   openmpi-dev
 <<
 Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
+  octave%type_pkg[oct]-interpreter
   openmpi-shlibs
 <<
 Conflicts: octave-forge
@@ -64,7 +64,7 @@ Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Pack
 Source-MD5: 6fb8600eb111ffe536521ed18a305360
 
 DescPackaging: <<
-For this package:
+This package:
 
 There's no -lmpi_cxx at a point where a symbol from that library is needed, so
 we add this in explicitly.
@@ -122,6 +122,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
