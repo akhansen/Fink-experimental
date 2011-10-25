@@ -2,7 +2,7 @@ Info2: <<
 Package: bim-oct%type_pkg[oct]
 Version: 0.0.7
 Type: oct (3.0.5), forge (bim)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/bim/index.html 
@@ -32,6 +32,7 @@ Utilities
         BIMUbern
         BIMUlogm
 <<
+
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -44,15 +45,16 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, fftw3,
+  liboctave%type_pkg[oct]-dev, 
+  fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
  <<
 Depends: <<
   fpl-oct%type_pkg[oct],
   msh-oct%type_pkg[oct],
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
+  octave%type_pkg[oct]-interpreter
+<<
 Conflicts: octave-forge
 
 Source-MD5: a3661d541044f3b39a4ec4e343b52b23
