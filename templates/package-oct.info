@@ -24,7 +24,7 @@ Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.t
 Source-MD5: @SOURCE_MD5@
 
 # Most octave-forge packages need to have the following BuildDepends:
-# liboctave%type_pkg[oct]-dev
+# liboctave%type_pkg[oct]-dev,
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
