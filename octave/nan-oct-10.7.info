@@ -2,7 +2,7 @@ Info2: <<
 Package: nan%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 2.4.4
 Type: oct (3.0.5 3.2.4 3.4.3), forge (nan), -atlas (.)
-Revision: 3
+Revision: 4
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/nan/index.html 
@@ -83,17 +83,18 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas]-dev (>= 3.2.4-328),
-  ( type_raw[-atlas] = -atlas ) atlas,
+  (%type_raw[-atlas] = -atlas)	atlas,
+  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev,
+  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
   fftw3, 
   gcc46-compiler, 
-  fink (>= 0.24.12),
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7
   <<
 Depends: << 
-  octave%type_pkg[oct]%type_pkg[-atlas],
-  ( type_raw[-atlas] = -atlas ) atlas-shlibs,
+  (%type_raw[-atlas] = -atlas)  atlas-shlibs,
+  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas, 
+  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib,
   gcc46-shlibs
   <<
 Conflicts: <<
