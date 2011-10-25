@@ -1,6 +1,7 @@
 Info2: <<
 Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 1.0.6
+# No atlas on 10.7 yet
 Type: oct (3.0.5), forge (linear-algebra), -atlas (.)
 Revision: 4
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -49,9 +50,13 @@ Depends: <<
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib
 <<
 Conflicts: <<
-octave-forge,
-linear-algebra-oct-atlas%type_pkg[oct],
-linear-algebra-oct%type_pkg[oct]
+	octave-forge,
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
+<<
+Replaces: <<
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
 <<
 
 Source-MD5: cb07f1a877c6de3795cb33e27c9a037f

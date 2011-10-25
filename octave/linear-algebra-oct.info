@@ -100,9 +100,13 @@ Depends: <<
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib
 <<
 Conflicts: <<
-octave-forge,
-linear-algebra-oct-atlas%type_pkg[oct],
-linear-algebra-oct%type_pkg[oct]
+	octave-forge,
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
+<<
+Replaces: <<
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
 <<
 
 Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7

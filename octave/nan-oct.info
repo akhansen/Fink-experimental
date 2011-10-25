@@ -100,13 +100,13 @@ Depends: <<
 Conflicts: <<
 	octave-forge,
 	octave-forge-%type_raw[forge] (<< 1.0.7-999),
-	nan-oct%type_pkg[oct],
-	nan-atlas-oct%type_pkg[oct]
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
 <<
 Replaces: <<
 	octave-forge-%type_raw[forge] (<< 1.0.7-999),	
-	nan-oct%type_pkg[oct],
-	nan-atlas-oct%type_pkg[oct]
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
 <<
 
 Source-MD5: 2c55a3a453b62e1858328d2a681ba8b2
