@@ -35,8 +35,16 @@ Depends: <<
   (%type_raw[-atlas] = -atlas)  atlas-shlibs,
   (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas, 
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib
-  <<
-Conflicts: octave-forge
+<<
+Conflicts: <<
+	octave-forge,
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
+<<
+Replaces: <<
+	%type_raw[forge]-atlas-oct%type_pkg[oct],
+	%type_raw[forge]-oct%type_pkg[oct]
+<<
 
 Source-MD5: dbf767019e238c4a16ccc6cac2afe87c
 
