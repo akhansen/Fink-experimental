@@ -2,7 +2,7 @@ Info2: <<
 Package: mechanics-oct%type_pkg[oct]
 Version: 1.1.0
 Type: oct (3.4.3), forge (mechanics)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/mechanics/index.html 
@@ -39,12 +39,7 @@ Molecular Dynamics:
 
 License: GPL
 
-# default source
-# Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
 Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory that you get from the first
-# Source above.
 Source-MD5: 80ed75f277aea600ce7e2797a368e9eb
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -57,13 +52,12 @@ Source-MD5: 80ed75f277aea600ce7e2797a368e9eb
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  liboctave%type_pkg[oct]-dev,
   fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
+  hdf5.7 
 <<
 Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+  octave%type_pkg[oct]-interpreter
 <<
 Conflicts: octave-forge
 
@@ -122,6 +116,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
