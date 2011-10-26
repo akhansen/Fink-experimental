@@ -2,7 +2,7 @@ Info2: <<
 Package: geometry-oct%type_pkg[oct]
 Version: 1.2.0
 Type: oct (3.4.3), forge (geometry)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/geometry/index.html 
