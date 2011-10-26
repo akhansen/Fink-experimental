@@ -1,7 +1,7 @@
 Info2: <<
 Package: communications-oct%type_pkg[oct]
-Version: 1.1.0
-Type: oct (3.4.3), forge (communications)
+Version: 1.0.8
+Type: oct (3.0.5), forge (communications)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
@@ -120,31 +120,31 @@ Galois Fields of Even Characateristic:
         all
         any
         cosets
-        conv
-        convmtx
-        deconv
-        det
-        dftmtx
-        diag
-        exp
+        gconv
+        gconvmtx
+        gdeconv
+        gdet
+        gdftmtx
+        gdiag
+        gexp
         gf
-        fft
-        filter
+        gfft
+        gfilter
         gftable
         gfweight
-        ifft
-        inv
-        inverse
-        isequal
-        log
-        lu
-        prod
-        sqrt
-        rank
-        reshape
-        roots
-        sum
-        sumsq
+        gifft
+        ginv
+        ginverse
+        gisequal
+        glog
+        glu
+        gprod
+        gsqrt
+        grank
+        greshape
+        groots
+        gsum
+        gsumsq
         isempty
         isgalois
         isprimitive
@@ -203,32 +203,15 @@ BuildDepends: <<
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-  signal-oct%type_pkg[oct],
   octave%type_pkg[oct]-interpreter
-  <<
+<<
 Conflicts: octave-forge
 
-Source-MD5: 1ec83d2757d5aa7d65be4a4c29741eba
-
-DescPackaging: <<
-This package:
-Appears not to use mkoctfile to figure out where libhdf5 is, so we nudge it
-via CPPFLAGS, LDFLAGS, and LIBS.
-
-Common for all octave-forge packages:
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
+Source-MD5: fe01a0c78040496618c9d8fe0edac202
 
 #### Insert required changes here ####
 
-TarFilesRename: communications:communications-1.1.0
-SetLIBS: -lhdf5
+#@CHANGES@
 
 ######################################
 
@@ -238,8 +221,8 @@ SetLIBS: -lhdf5
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
-#NoSetCPPFLAGS: true
-#NoSetLDFLAGS: true
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
@@ -282,4 +265,14 @@ PostInstScript:  <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
 
+DescPackaging: <<
+Common for all octave-forge packages.
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
 <<
