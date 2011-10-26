@@ -1,5 +1,5 @@
 Info2: <<
-Package: bim-oct%type_pkg[oct]
+Package: bim-oct305
 Version: 0.0.7
 Type: oct (3.0.5), forge (bim)
 Revision: 2
@@ -103,7 +103,7 @@ PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-pre
 DescPackaging: <<
 Common for all octave-forge packages.
 
-We read in postinst and prerm template scripts installed by octaveN and modify
+We read in postinst and prerm template scripts installed by octave305 and modify
 them to use the name of this package because Octave's package manager can't 
 cope with non-literal arguments.
 

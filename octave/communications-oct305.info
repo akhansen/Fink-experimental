@@ -1,5 +1,5 @@
 Info2: <<
-Package: communications-oct%type_pkg[oct]
+Package: communications-oct305
 Version: 1.0.8
 Type: oct (3.0.5), forge (communications)
 Revision: 2
