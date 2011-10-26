@@ -18,6 +18,7 @@ BuildDepends: <<
 	libcurl4,
 	libftgl2,
 	pcre,
+	pkgconfig,
 	qhull6-dev, 
 	readline5,  
 	sed,
@@ -35,7 +36,7 @@ BuildDepends: <<
 	(%type_raw[-atlas] = -atlas) 	arpack-atlas (>= 96patched-6)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11] (=%v-%r)
-BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev, imagemagick10-dev
+BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
 Suggests: %{Ni}%type_pkg[oct]-docs
 Provides: <<
 								octave-interpreter,
@@ -129,7 +130,7 @@ using std::size_t;' liboctave/oct-alloc.h
 <<
 
 GCC: 4.0
-UseMaxBuildJobs: true
+UseMaxBuildJobs: false
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
 SetLDFLAGS: -Wl,-dead_strip_dylibs
@@ -145,7 +146,7 @@ ConfigureParams: <<
 	--with-x \
 	--x-libraries=/usr/X11/lib \
 	--x-includes=/usr/X11/include \
-	--with-magick=%p/lib/libGraphicsMagick.dylib \
+	--with-magick=GraphicsMagick \
 	--host=%m-apple-darwin \
 	--build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' \

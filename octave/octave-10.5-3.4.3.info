@@ -18,6 +18,7 @@ BuildDepends: <<
 	libcurl4,
 	libftgl2,
 	pcre,
+	pkgconfig,
 	qhull6-dev, 
 	readline5,  
 	sed,
@@ -36,7 +37,7 @@ BuildDepends: <<
 	(%type_raw[-atlas] = -atlas) 	arpack-atlas (>= 96patched-6)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11] (=%v-%r)
-BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev, imagemagick10-dev
+BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
 Suggests: %{Ni}%type_pkg[oct]-docs
 Provides: <<
 								octave-interpreter,
@@ -89,12 +90,12 @@ PatchScript: <<
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`gcc-4.2`\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`g++-4.2` -E\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXX%%|\"`g++-4.2`\"|" \
+ 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`g++-4.2`\"|" \
+ 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`g++-4.2`\"|" \
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`g++-4.2`\"|" src/oct-conf.h.in src/mkoctfile*in	
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
 		then sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
@@ -132,7 +133,7 @@ using std::size_t;' liboctave/oct-alloc.h
 <<
 
 GCC: 4.0
-UseMaxBuildJobs: true
+UseMaxBuildJobs: false
 SetCC: flag-sort -r gcc-4.2
 SetCXX: flag-sort -r g++-4.2
 SetLDFLAGS: -Wl,-dead_strip_dylibs
@@ -148,7 +149,7 @@ ConfigureParams: <<
 	--with-x \
 	--x-libraries=/usr/X11/lib \
 	--x-includes=/usr/X11/include \
-	--with-magick=%p/lib/libGraphicsMagick.dylib \
+	--with-magick=GraphicsMagick \
 	--host=%m-apple-darwin \
 	--build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' \
