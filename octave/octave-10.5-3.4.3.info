@@ -187,7 +187,6 @@ InfoTest: <<
 
 InstallScript: <<
  #!/bin/sh -ev
- export MAKEFLAGS=-j1
  make install DESTDIR=%d
  # Install manpages manually
  mkdir -p %i/share/man/man1
