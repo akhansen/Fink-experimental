@@ -1,34 +1,20 @@
 Info2: <<
-Package: octproj-oct%type_pkg[oct]
-Version: 1.0.2
-Type: oct (3.0.5 3.2.4 3.4.3), forge (octproj)
-Revision: 2
+Package: physicalconstants-oct%type_pkg[oct]
+Version: 0.1.7
+Type: oct (3.0.5 3.2.4 3.4.3), forge (physicalconstants)
+Revision: 4
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/octproj/index.html 
-Description: Cartographic projections for Octave
+Homepage: http://octave.sourceforge.net/physicalconstants/index.html 
+Description: Physical constants for octave
 DescDetail: <<
-This package allows one to call functions of PROJ.4 library for cartographic
-projections transformations.
-
-It provides the following functions:
-Category Kernel functions:
-	_op_transform
-	_op_fwd
-	_op_inv
-	_op_geod2geoc
-	_op_geoc2geod
-Category Driver functions:
-	op_transform
-	op_fwd
-	op_inv
-	op_geod2geoc
-	op_geoc2geod
-<<
+Database of physical constants.
+This package provides the additional physical_constant function.
+	<<
 License: GPL
 
-# All octave-forge packages have to have the following BuildDepends:
-#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+# Most octave-forge packages have to have the following BuildDepends:
+# liboctave%type_pkg[oct]-dev, 
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -40,33 +26,17 @@ BuildDepends: <<
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7,
-  proj
+  ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
-Depends: <<
+Depends: << 
   octave%type_pkg[oct]-interpreter
-  proj-shlibs
 <<
-Conflicts: octave-forge
+Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 0.1.7-999)
+Replaces: octave-forge-%type_raw[forge] (<< 0.1.7-999)
 
-Source-MD5: 0dfa1706e420700ea93bf2cebdab7a0f
-
-DescPackaging: <<
-Common for all octave-forge packages:
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template, or when the package name contains 
-underscores.
-<<
+Source-MD5: 808a9c50a0e77cdf31e62c968d82d85b
 
 #### Insert required changes here ####
-
-TarFilesRename: octproj:octproj-1.0.2
-#@CHANGES@
 
 ######################################
 
@@ -74,7 +44,7 @@ TarFilesRename: octproj:octproj-1.0.2
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -119,4 +89,15 @@ PostInstScript:  <<
 <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
+
+DescPackaging: <<
+Common for all octave-forge packages.
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
 <<

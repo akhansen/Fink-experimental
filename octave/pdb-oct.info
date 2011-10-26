@@ -1,34 +1,27 @@
 Info2: <<
-Package: octproj-oct%type_pkg[oct]
-Version: 1.0.2
-Type: oct (3.0.5 3.2.4 3.4.3), forge (octproj)
+Package: pdb-oct%type_pkg[oct]
+Version: 1.0.7
+Type: oct (3.0.5 3.2.4 3.4.3), forge (pdb)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/octproj/index.html 
-Description: Cartographic projections for Octave
+Homepage: http://octave.sourceforge.net/pdb/index.html 
+Description: Protein databank interface for Octave
 DescDetail: <<
-This package allows one to call functions of PROJ.4 library for cartographic
-projections transformations.
+Reads and display PDB-files from the Brookhaven protein databank
 
-It provides the following functions:
-Category Kernel functions:
-	_op_transform
-	_op_fwd
-	_op_inv
-	_op_geod2geoc
-	_op_geoc2geod
-Category Driver functions:
-	op_transform
-	op_fwd
-	op_inv
-	op_geod2geoc
-	op_geoc2geod
+This package includes the following functions:
+	read_pdb
+	plotpdb
+	write_pdb
+	strtoz
+	creadpdb
 <<
+
 License: GPL
 
-# All octave-forge packages have to have the following BuildDepends:
-#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+# Most octave-forge packages have to have the following BuildDepends:
+# liboctave%type_pkg[oct]-dev, 
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -40,16 +33,14 @@ BuildDepends: <<
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7,
-  proj
+  ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
-Depends: <<
+Depends: << 
   octave%type_pkg[oct]-interpreter
-  proj-shlibs
 <<
 Conflicts: octave-forge
 
-Source-MD5: 0dfa1706e420700ea93bf2cebdab7a0f
+Source-MD5: ff0f53e697849372199ff44ef0d95796
 
 DescPackaging: <<
 Common for all octave-forge packages:
@@ -65,16 +56,13 @@ underscores.
 
 #### Insert required changes here ####
 
-TarFilesRename: octproj:octproj-1.0.2
-#@CHANGES@
-
 ######################################
 
 # Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/R2009-05-08/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

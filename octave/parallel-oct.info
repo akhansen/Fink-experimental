@@ -1,34 +1,53 @@
 Info2: <<
-Package: octproj-oct%type_pkg[oct]
-Version: 1.0.2
-Type: oct (3.0.5 3.2.4 3.4.3), forge (octproj)
+Package: parallel-oct%type_pkg[oct]
+Version: 2.0.5
+Type: oct (3.0.5 3.2.4 3.4.3), forge (parallel)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/octproj/index.html 
-Description: Cartographic projections for Octave
+Homepage: http://octave.sourceforge.net/parallel/index.html 
+Description: @DESCRIPTION@
 DescDetail: <<
-This package allows one to call functions of PROJ.4 library for cartographic
-projections transformations.
+Parallel execution package for cluster computers. See also the openmpi_ext-oct
+package, maintained upstream by Riccardo Corradini. For parallel execution on 
+a single machine see e.g. the function parcellfun (author: Jaroslav Hajek) in
+the general-oct package.
 
-It provides the following functions:
-Category Kernel functions:
-	_op_transform
-	_op_fwd
-	_op_inv
-	_op_geod2geoc
-	_op_geoc2geod
-Category Driver functions:
-	op_transform
-	op_fwd
-	op_inv
-	op_geod2geoc
-	op_geoc2geod
+Parallel
+	send
+	recv
+	reval
+	server
+	getid
+	pserver
+	connect
+	sclose
+	scloseall
+	select_sockets
+Internal
+	__bw_lock_file__
+	__bw_is_locked__
+	__bw_unlock_file__
+	__bw_load_variable__
+	__bw_secure_save__
+	__bw_psend__
+	__bw_prcv__
+	__bw_scheduler__
+	__bw_computing_machine__
+	__internal_exit__
+General
+	select
+User
+	bw_start
+	bw_list
+	bw_retrieve
+	bw_clear
 <<
+
 License: GPL
 
-# All octave-forge packages have to have the following BuildDepends:
-#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+# Most octave-forge packages have to have the following BuildDepends:
+# liboctave%type_pkg[oct]-dev, 
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -40,18 +59,20 @@ BuildDepends: <<
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7,
-  proj
+  ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
-Depends: <<
+Depends: << 
   octave%type_pkg[oct]-interpreter
-  proj-shlibs
 <<
 Conflicts: octave-forge
 
-Source-MD5: 0dfa1706e420700ea93bf2cebdab7a0f
+Source-MD5: ac9a8aa764c489c413f0e354a752a49e
 
 DescPackaging: <<
+This package:
+Upstream forot to #include a header to build against Octave <= 3.2.4, so we
+patch that in.
+
 Common for all octave-forge packages:
 
 We read in postinst and prerm template scripts installed by octaveN and modify
@@ -65,8 +86,9 @@ underscores.
 
 #### Insert required changes here ####
 
-TarFilesRename: octproj:octproj-1.0.2
-#@CHANGES@
+PatchFile: %{ni}305.patch
+PatchFile-MD5: 419c7ec75b28650b9bda17aebf6463aa
+PatchScript: if [ "%type_pkg[oct]" = "305" ]; then  patch -p1 < %{PatchFile} ; fi
 
 ######################################
 
@@ -74,7 +96,7 @@ TarFilesRename: octproj:octproj-1.0.2
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
