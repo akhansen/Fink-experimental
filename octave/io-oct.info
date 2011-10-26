@@ -2,7 +2,7 @@ Info2: <<
 Package: io-oct%type_pkg[oct]
 Version: 1.0.15
 Type: oct (3.4.3), forge (io)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/io/index.html 
@@ -28,15 +28,16 @@ License: GPL
 # Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
 # not use the conditional, of course.
 
-BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
-  fftw3, hdf5.7
- <<
-Depends: << 
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
-Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
+BuildDepends: 
+  liboctave%type_pkg[oct]-dev,
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+<<
+Depends: <<
+  octave%type_pkg[oct]-interpreter
+<<
+Conflicts: octave-forge
 
 Source-MD5: 3fba00bacc838644b2bba4e9b728d673
 
@@ -84,6 +85,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
