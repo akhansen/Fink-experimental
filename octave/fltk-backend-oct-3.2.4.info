@@ -13,8 +13,8 @@ HomePage:  http://wiki.finkproject.org/index.php/Fink:Packaging:Obsolete_Package
 
 Depends: <<
 	fink-obsolete-packages,
-	(%type_raw[-ui] = -aqua) octave324 (>=3.2.4-500),
-	(%type_raw[-ui] = -x11) octave324-x11 (>=3.2.4-500)
+	(%type_raw[-ui] = -aqua) octave324-interpreter-aqua,
+	(%type_raw[-ui] = -x11) octave324-interpreter-atlas
 <<
 
 License: GPL
