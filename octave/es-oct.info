@@ -1,12 +1,18 @@
 Info2: <<
-Package: engine-oct%type_pkg[oct]
-Version: 1.0.9
-Type: oct (3.0.5 3.2.4 3.4.3), forge (engine)
+Package: es-oct%type_pkg[oct]
+Version: 0.0.4
+Type: oct (3.0.5 3.2.4), forge (es)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/engine/index.html 
-Description: External interface library for Octave
+Homepage: http://octave.sourceforge.net/es/index.html 
+Description: Octave Spanish package
+DescDetail: <<
+Spanish package for the construction of native language translations of Octave
+functions.
+
+Provides the "ayuda" function.
+<<
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -29,7 +35,7 @@ Depends: <<
   <<
 Conflicts: octave-forge
 
-Source-MD5: 077ec874eb6ff573e86448a1c4620a1d
+Source-MD5: 7f7d992bfda43a2689b690e6018355e9
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -44,7 +50,7 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
-#@CHANGES@
+TarFilesRename: es:es-0.0.4
 
 ######################################
 
@@ -59,21 +65,7 @@ NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
-CompileScript: <<
-#!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3 appears not to want to install
-# from directories
-if [ "%type_pkg[oct]" = "343" ]
-then
-	cd ..
-	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar.gz
-else pkgsrc=%type_raw[forge]-%v
-fi
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
-<<
+CompileScript:  OCTAVE=%p/bin/octave-%type_raw[oct] %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
 
 InstallScript: << 
 	#!/bin/sh -ev
