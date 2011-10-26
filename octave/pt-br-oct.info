@@ -1,18 +1,16 @@
 Info2: <<
-Package: odebvp-oct%type_pkg[oct]
-Version: 1.0.6
-Type: oct (3.0.5 3.2.4 3.4.3), forge (odebvp)
+Package: pt-br-oct%type_pkg[oct]
+Version: 1.0.9
+Type: oct (3.0.5 3.2.4), forge (pt_br)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/odebvp/index.html 
-Description: Boundary value solver for Octave
+Homepage: http://octave.sourceforge.net/pt_br/index.html 
+Description: Brazilian Portuguese Octave translations
 DescDetail: <<
-To approximate the solution of the boundary-value problem 
+Brazilian Portuguese translations of the help strings of the Octave functions.
 
-y''=p(x)*y' + q(x)*y+ r(x), a<=x<=b, y(a)=alpha, y(b)=beta 
-
-by the linear finite-diffence method.  It provides the lfdif frunction.
+Provides the 'ajuda' function.
 <<
 
 License: GPL
@@ -32,15 +30,15 @@ BuildDepends: <<
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
-Depends: <<
+Depends: << 
   octave%type_pkg[oct]-interpreter
 <<
 Conflicts: octave-forge
 
-Source-MD5: 7ace0e26b6a4b1abed4959c73eeaf133
+Source-MD5: 1e144114476aec04eb01a928daf39296
 
 DescPackaging: <<
-Common for all octave-forge packages:
+Common for all octave-forge packages.
 
 We read in postinst and prerm template scripts installed by octaveN and modify
 them to use the name of this package because Octave's package manager can't 
@@ -53,8 +51,7 @@ underscores.
 
 #### Insert required changes here ####
 
-#TarFilesRename: odebvp:odebvp-1.0.6
-#@CHANGES@
+TarFilesRename: pt_BR:pt_br-1.0.9
 
 ######################################
 
@@ -62,28 +59,14 @@ underscores.
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/R2009-05-08/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
-CompileScript: <<
-#!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3 appears not to want to install
-# from directories
-if [ "%type_pkg[oct]" = "343" ]
-then
-	cd ..
-	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar.gz
-else pkgsrc=%type_raw[forge]-%v
-fi
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
-<<
+CompileScript:  OCTAVE=%p/bin/octave-%type_raw[oct] %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
 
 InstallScript: << 
 	#!/bin/sh -ev
@@ -96,7 +79,6 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
-
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
