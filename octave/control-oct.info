@@ -2,7 +2,7 @@ Info2: <<
 Package: control-oct%type_pkg[oct]
 Version: 2.2.1
 Type: oct (3.4.3), forge (control)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/control/index.html 
