@@ -17,6 +17,7 @@ License: GPL
 
 # default source
 Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
+#Or Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
 # this will redirect like a fiend, and then you can replace it with a one-hop:
 # Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
 # replacing "Individual Package Releases" with the  relevant directory that you get from the first
