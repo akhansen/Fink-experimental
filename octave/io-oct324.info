@@ -1,8 +1,8 @@
 Info2: <<
 Package: io-oct%type_pkg[oct]
-Version: 1.0.15
-Type: oct (3.4.3), forge (io)
-Revision: 1
+Version: 1.0.9
+Type: oct (3.2.4), forge (io)
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/io/index.html 
@@ -37,13 +37,12 @@ BuildDepends: <<
 Depends: <<
   octave%type_pkg[oct]-interpreter
 <<
-Conflicts: octave-forge
+Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
 
-Source-MD5: 3fba00bacc838644b2bba4e9b728d673
+Source-MD5: a53eb6864746d230240745a8f82c0d0b
 
 #### Insert required changes here ####
-
-TarFilesRename: io:io-1.0.15
 
 ######################################
 

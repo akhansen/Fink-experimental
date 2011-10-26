@@ -1,8 +1,8 @@
 Info2: <<
-Package: io-oct%type_pkg[oct]
-Version: 1.0.9
-Type: oct (3.2.4), forge (io)
-Revision: 1
+Package: io-oct305
+Version: 1.0.7
+Type: oct (3.0.5), forge (io)
+Revision: 3
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/io/index.html 
@@ -15,6 +15,7 @@ This package provides the following additional functions:
 	dlmwrite
 	fexist
 	xlsread
+	dlmread
 	textread
 <<	
 License: GPL
@@ -30,7 +31,7 @@ License: GPL
 
 BuildDepends: <<
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
-  fftw3, hdf5.7
+  fftw3, hdf5.7-oldapi
  <<
 Depends: << 
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
@@ -38,7 +39,7 @@ Depends: <<
 Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
 
-Source-MD5: a53eb6864746d230240745a8f82c0d0b
+Source-MD5: 64206cdaaccfbd8809f8d7661709ff46
 
 #### Insert required changes here ####
 
