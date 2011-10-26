@@ -27,8 +27,7 @@ BuildDepends: <<
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
   fftw3, 
   gcc46-compiler, 
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7
+  hdf5.7
   <<
 Depends: << 
   (%type_raw[-atlas] = -atlas)  atlas-shlibs,
