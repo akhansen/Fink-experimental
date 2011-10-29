@@ -295,7 +295,7 @@ SplitOff2: <<
 	Depends: <<
 		octave%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-shlibs (=%v-%r), 
 		gcc%type_pkg[gcc]-compiler,
-		Xcode (>= 3.1-1)
+		xcode (>= 3.1-1)
 	<<
 	Conflicts: << 
 		%{Ni}%type_pkg[oct]-dev,
