@@ -90,12 +90,12 @@ PatchScript: <<
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`gcc-4.2`\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`g++-4.2` -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"`g++-4.2`\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`g++-4.2`\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`g++-4.2`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`g++-4.2`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"gcc-4.2\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"g++-4.2 -E\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXX%%|\"g++-4.2\"|" \
+ 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"g++-4.2\"|" \
+ 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"g++-4.2\"|" \
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"g++-4.2\"|" src/oct-conf.h.in src/mkoctfile*in	
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
 		then sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
