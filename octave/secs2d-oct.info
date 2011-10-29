@@ -119,7 +119,9 @@ BuildDepends: <<
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: << 
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
+  dx,
+  gmsh
 <<
 Conflicts: octave-forge
 
