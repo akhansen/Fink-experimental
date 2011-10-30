@@ -166,6 +166,13 @@ fi
 
 InstallScript: << 
 	#!/bin/sh -ev
+	# remove functions which is built in for octave >= 3.4.3
+	if [ "%type_pkg[oct]" >= "343" ] 
+		then
+		pushd %b/../bld/share/octave/%type_raw[oct]/packages/%type_raw[forge]-%v
+		rm fstat.m prctile.m
+		popd
+	fi
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
 	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
 	# copy template scripts
