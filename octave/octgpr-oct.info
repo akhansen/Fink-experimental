@@ -1,8 +1,13 @@
 Info2: <<
 Package: octgpr%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 1.2.0
+<<<<<<< HEAD
 Type: oct (3.4.3), forge (octgpr), -atlas (.)
 Revision: 2
+=======
+Type: oct (3.4.3), forge (octgpr), -atlas (boolean)
+Revision: 1
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/octgpr/index.html 
@@ -35,6 +40,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   (%type_raw[-atlas] = -atlas)	atlas,
   (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev, 
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
@@ -56,6 +62,19 @@ Replaces: <<
 	%type_raw[forge]-atlas-oct%type_pkg[oct],
 	%type_raw[forge]-oct%type_pkg[oct]
 <<
+=======
+  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7, 
+  ( %type_raw[-atlas] = -atlas ) atlas 
+<<
+Depends: <<
+  octave%type_pkg[oct]%type_pkg[-atlas],
+  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
+<<
+Conflicts: octave-forge, octgpr-oct%type_pkg[oct], octgpr-atlas-oct%type_pkg[oct]
+>>>>>>> master
 
 Source-MD5: a48954ac52b03f19bea6755ebefd7efa
 
@@ -100,7 +119,11 @@ if [ "%type_raw[-atlas]" = "-atlas" ]
 	# override mkoctfile's BLAS_LIBS for atlas case since it seems not 
 	# to be in the right format for _this_ package
 	blaslibs=`mkoctfile-%type_raw[oct] -p BLAS_LIBS | perl -p -e 's|%p/lib/lib(.*?).dylib|-l\1|g'`
+<<<<<<< HEAD
 	export BLAS_LIBS='-L%p/lib '$blaslibs 
+=======
+	export BLAS_LIBS='-L/sw/lib '$blaslibs 
+>>>>>>> master
 fi
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories

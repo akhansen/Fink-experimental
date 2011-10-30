@@ -1,6 +1,7 @@
 Info2: <<
 Package: linear-algebra%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 2.0.0
+<<<<<<< HEAD
 # No atlas on 10.7 yet
 Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (.)
 Revision: 4
@@ -8,6 +9,14 @@ Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
 Description: Additional linear algebra code for Octave
+=======
+Type: oct (3.2.4 3.4.3), forge (linear-algebra), -atlas (.)
+Revision: 3
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+# unfortunately, Homepage won't do types
+Homepage: http://octave.sourceforge.net/linear-algebra/index.html 
+Description: Additional linear algebra code for Octave.
+>>>>>>> master
 DescDetail: <<
 Additional linear algebra code, including general SVD and matrix functions.
 
@@ -87,6 +96,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   (%type_raw[-atlas] = -atlas)	atlas,
   (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev, 
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
@@ -107,6 +117,22 @@ Conflicts: <<
 Replaces: <<
 	%type_raw[forge]-atlas-oct%type_pkg[oct],
 	%type_raw[forge]-oct%type_pkg[oct]
+=======
+  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7, 
+  ( %type_raw[-atlas] = -atlas ) atlas
+<<
+Depends: <<
+  octave%type_pkg[oct]%type_pkg[-atlas], 
+  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
+<<
+Conflicts: <<
+octave-forge,
+linear-algebra-oct-atlas%type_pkg[oct],
+linear-algebra-oct%type_pkg[oct]
+>>>>>>> master
 <<
 
 Source-MD5: 518fda3ea4408e04af13ac2d7a9ee3a7
@@ -157,11 +183,14 @@ fi
 
 InstallScript: << 
 	#!/bin/sh -ev
+<<<<<<< HEAD
 	# remove function which is built in for octave >= 3.4.3
 	if [ "%type_pkg[oct]" >= "343" ] 
 		then rm %b/../bld/lib/octave/%type_raw[oct]/packages/%type_raw[forge]-%v/x86_64-apple-darwin-api-v45+/mgorth.oct
 	fi
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
+=======
+>>>>>>> master
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
 	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
 	# copy template scripts

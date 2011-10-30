@@ -1,8 +1,8 @@
 Info2: <<
 Package: control-oct%type_pkg[oct]
-Version: 2.2.0
+Version: 2.2.1
 Type: oct (3.4.3), forge (control)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/control/index.html 
@@ -122,6 +122,7 @@ Miscellaneous
         Boeing707
         WestlandLynx
 <<
+
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -134,21 +135,21 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
+<<
 Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
+  octave%type_pkg[oct]-interpreter
+<<
 Conflicts: octave-forge
 
-Source-MD5: 43bd222e6b7496dcc98aa8e071f1cdf8
+Source-MD5: ef8c24241504294b2706cf62ffa243e6
 
 #### Insert required changes here ####
 
-TarFilesRename: control:control-2.2.0
+TarFilesRename: control:control-2.2.1
 
 ######################################
 
@@ -168,10 +169,15 @@ CompileScript: <<
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
-cd ..
-tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
+if [ "%type_pkg[oct]" = "343" ]
+then
+	cd ..
+	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+	cd %b
+	pkgsrc=%type_raw[forge]-%v.tar.gz
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 

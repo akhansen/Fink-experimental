@@ -17,29 +17,43 @@ License: GPL
 
 # default source
 Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
+#Or Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
 # this will redirect like a fiend, and then you can replace it with a one-hop:
 # Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
 # replacing "Individual Package Releases" with the  relevant directory that you get from the first
 # Source above.
 Source-MD5: @SOURCE_MD5@
 
-# All octave-forge packages have to have the following BuildDepends:
-#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+# Most octave-forge packages need to have the following BuildDepends:
+# liboctave%type_pkg[oct]-dev,
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
 #
 # Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
 # not use the conditional, of course.
+# Packages that use BLAS or LAPACK will need to specify the the
+# -atlas and -veclib variants separately:
+#
+#BuildDepends: <<
+#  (%type_raw[-atlas] = -atlas)	atlas,
+#  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev,
+#  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
+#
+#Depends: << 
+#  (%type_raw[-atlas] = -atlas)  atlas-shlibs,
+#  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas, 
+#  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib,
+
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+  octave%type_pkg[oct]-interpreter
 <<
 Conflicts: octave-forge
 
