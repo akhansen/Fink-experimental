@@ -2,11 +2,7 @@ Info2: <<
 Package: dataframe-oct%type_pkg[oct]
 Version: 0.8.2
 Type: oct (3.2.4 3.4.3), forge (dataframe)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/dataframe/index.html 
@@ -37,10 +33,7 @@ The package provides the following additional functions:
 	@dataframe/uminus
 	@dataframe/uplus
 <<
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -53,22 +46,14 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-=======
   liboctave%type_pkg[oct]-dev, 
->>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
+<<
 Depends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-=======
   octave%type_pkg[oct]-interpreter
->>>>>>> master
-  <<
+<<
 Conflicts: octave-forge
 
 Source-MD5: a3f0791be2703ba6fad6ccf8500aed4a

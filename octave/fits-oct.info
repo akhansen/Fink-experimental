@@ -2,11 +2,7 @@ Info2: <<
 Package: fits-oct%type_pkg[oct]
 Version: 1.0.1
 Type: oct (3.4.3), forge (fits)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/general/index.html 
@@ -22,37 +18,16 @@ save_fits_image_multi_ext
 <<
 License: GPL
 
-# All octave-forge packages have to have the following BuildDepends:
-#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
-# fftw3, 
-# ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-# ( %type_pkg[oct] != 305 ) hdf5.7
-#
-# Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
-# not use the conditional, of course.
-
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
-  fftw3, cfitsio,
-=======
   liboctave%type_pkg[oct]-dev, 
   fftw3, 
   cfitsio,
->>>>>>> master
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7
- <<
+  hdf5.7
+<<
 Depends: << 
-<<<<<<< HEAD
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
-=======
   octave%type_pkg[oct]-interpreter
 <<
->>>>>>> master
-Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.0-999)
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.0-999)
+Conflicts: octave-forge
 
 Source-MD5: 42aaf15110f56e778e579082edfd87ce
 

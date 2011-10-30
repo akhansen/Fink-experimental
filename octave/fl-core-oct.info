@@ -2,11 +2,7 @@ Info2: <<
 Package: fl-core-oct%type_pkg[oct]
 Version: 1.0.0
 Type: oct (3.2.4 3.4.3), forge (fl-core)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/fl-core/index.html 
@@ -35,16 +31,6 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-  fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
-Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
-=======
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
@@ -53,7 +39,6 @@ Depends: <<
 Depends: <<
   octave%type_pkg[oct]-interpreter
 <<
->>>>>>> master
 Conflicts: octave-forge
 
 Source-MD5: 930dd490d1d306e361a8529cb4c8ce54
