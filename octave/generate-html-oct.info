@@ -1,12 +1,8 @@
 Info2: <<
 Package: generate-html-oct%type_pkg[oct]
 Version: 0.1.3
-Type: oct (3.2.4 3.4.3), forge (generate_html)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
+Type: oct (3.2.4 3.4.3), forge (generate_html)
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/generate_html/index.html 
@@ -41,21 +37,13 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-=======
   liboctave%type_pkg[oct]-dev, 
->>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-=======
   octave%type_pkg[oct]-interpreter
->>>>>>> master
 <<
 Conflicts: octave-forge
 

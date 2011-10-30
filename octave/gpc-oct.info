@@ -2,11 +2,7 @@ Info2: <<
 Package: gpc-oct%type_pkg[oct]
 Version: 0.1.7
 Type: oct (3.0.5 3.2.4 3.4.3), forge (gpc)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/gpc/index.html 
@@ -19,16 +15,7 @@ This package provides the gpc_plot function.
 
 License: GPL
 
-<<<<<<< HEAD
-# default source
-Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory that you get from the first
-# Source above.
-=======
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
->>>>>>> master
 Source-MD5: 099f5d169d0553a343d4b3bbed153ecb
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -41,21 +28,13 @@ Source-MD5: 099f5d169d0553a343d4b3bbed153ecb
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-=======
   liboctave%type_pkg[oct]-dev,
->>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-=======
   octave%type_pkg[oct]-interpreter
->>>>>>> master
 <<
 Conflicts: octave-forge
 
@@ -100,12 +79,7 @@ then
 	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 	cd %b
 	pkgsrc=%type_raw[forge]-%v.tar.gz
-<<<<<<< HEAD
-else 
-	pkgsrc=%type_raw[forge]-%v
-=======
 else pkgsrc=%type_raw[forge]-%v
->>>>>>> master
 fi
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
@@ -121,10 +95,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

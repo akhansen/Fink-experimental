@@ -2,11 +2,7 @@ Info2: <<
 Package: multicore-oct%type_pkg[oct]
 Version: 0.2.15
 Type: oct (3.0.5 3.2.4 3.4.3), forge (multicore)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/multicore/index.html 
@@ -32,10 +28,7 @@ This package provides the following functions:
 	testfun
 	testfun_octave
 <<
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -48,21 +41,13 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
-=======
   liboctave%type_pkg[oct]-dev, 
->>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-<<<<<<< HEAD
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-=======
   octave%type_pkg[oct]-interpreter
->>>>>>> master
 <<
 Conflicts: octave-forge
 
@@ -89,15 +74,7 @@ using this .info file as a template.
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-<<<<<<< HEAD
-# default source
 Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/R2009-06-07/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory.
-=======
-Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
->>>>>>> master
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -131,10 +108,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
