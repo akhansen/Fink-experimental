@@ -2,11 +2,7 @@ Info2: <<
 Package: odepkg%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 0.8.0
 Type: oct (3.2.4 3.4.3), forge (odepkg), -atlas (.)
-<<<<<<< HEAD
 Revision: 3
-=======
-Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/odepkg/index.html 
@@ -26,7 +22,6 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-<<<<<<< HEAD
   (%type_raw[-atlas] = -atlas)	atlas,
   (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas-dev,
   (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev, 
@@ -48,24 +43,6 @@ Conflicts: <<
 Replaces: <<
 	%type_raw[forge]-atlas-oct%type_pkg[oct],
 	%type_raw[forge]-oct%type_pkg[oct]
-=======
-  octave%type_pkg[oct]%type_pkg[-atlas]-dev, 
-  fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7,
-  gcc46-compiler,
-  ( %type_raw[-atlas] = -atlas ) atlas
-<<
-Depends: <<
-  octave%type_pkg[oct]%type_pkg[-atlas],
-  gcc46-shlibs,
-  ( %type_raw[-atlas] = -atlas ) atlas-shlibs
-<<
-Conflicts: <<
-octave-forge, 
-odepkg-atlas-oct%type_pkg[oct],
-odepkg-oct%type_pkg[oct]
->>>>>>> master
 <<
 
 Source-MD5: 002b1ce81488d8b5a654229e00aad45c
@@ -92,15 +69,7 @@ using this .info file as a template.
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-<<<<<<< HEAD
 Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-=======
-# default source
-#Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory
->>>>>>> master
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
