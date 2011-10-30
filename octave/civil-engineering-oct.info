@@ -2,7 +2,11 @@ Info2: <<
 Package: civil-engineering-oct%type_pkg[oct]
 Version: 1.0.7
 Type: oct (3.0.5 3.2.4 3.4.3), forge (civil-engineering)
+<<<<<<< HEAD
 Revision: 1
+=======
+Revision: 2
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/civil-engineering/index.html 
@@ -15,6 +19,10 @@ This package provides the following functions:
 	newmark
 	nlnewmark
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -27,6 +35,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
@@ -35,6 +44,16 @@ BuildDepends: <<
 Depends: <<
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
   <<
+=======
+  liboctave%type_pkg[oct]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+<<
+Depends: <<
+  octave%type_pkg[oct]-interpreter
+<<
+>>>>>>> master
 Conflicts: octave-forge
 
 Source-MD5: d04d56f6d85ae17911560b6021ce47a8
@@ -61,10 +80,22 @@ CompileScript: <<
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
+<<<<<<< HEAD
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
+=======
+if [ "%type_pkg[oct]" = "343" ]
+then
+	cd ..
+	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+	cd %b
+	pkgsrc=%type_raw[forge]-%v.tar.gz
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+>>>>>>> master
 <<
 
 InstallScript: << 
@@ -78,6 +109,10 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

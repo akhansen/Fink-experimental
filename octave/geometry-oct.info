@@ -1,8 +1,14 @@
 Info2: <<
 Package: geometry-oct%type_pkg[oct]
+<<<<<<< HEAD
 Version: 1.1.3
 Type: oct (3.4.3), forge (geometry)
 Revision: 1
+=======
+Version: 1.2.0
+Type: oct (3.4.3), forge (geometry)
+Revision: 2
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/geometry/index.html 
@@ -84,6 +90,7 @@ Output
 
 License: GPL
 
+<<<<<<< HEAD
 # default source
 #Source: http://voxel.dl.sourceforge.net/sourceforge/octave/%type_raw[forge]-%v.tar.gz
 # this will redirect like a fiend, and then you can replace it with a one-hop:
@@ -91,6 +98,10 @@ Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Pack
 # replacing "Individual Package Releases" with the  relevant directory that you get from the first
 # Source above.
 Source-MD5: e0065679c4f537f2d14db2a0cc88d87f
+=======
+Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
+Source-MD5: 7dff24b513715c20ea5fa890ef4237da
+>>>>>>> master
 
 # All octave-forge packages have to have the following BuildDepends:
 #  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
@@ -102,13 +113,21 @@ Source-MD5: e0065679c4f537f2d14db2a0cc88d87f
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+=======
+  liboctave%type_pkg[oct]-dev,
+>>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+=======
+  octave%type_pkg[oct]-interpreter
+>>>>>>> master
 <<
 Conflicts: octave-forge
 
@@ -126,7 +145,11 @@ underscores.
 
 #### Insert required changes here ####
 
+<<<<<<< HEAD
 TarFilesRename: geometry:geometry-1.1.3
+=======
+TarFilesRename: geometry:geometry-1.2.0
+>>>>>>> master
 #@CHANGES@
 
 ######################################
@@ -167,6 +190,10 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

@@ -2,7 +2,11 @@ Info2: <<
 Package: java-oct%type_pkg[oct]
 Version: 1.2.8
 Type: oct (3.2.4 3.4.3), forge (java)
+<<<<<<< HEAD
 Revision: 1
+=======
+Revision: 2
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/java/index.html 
@@ -41,6 +45,10 @@ Dialog Boxes:
 	questdlg.m
 	warndlg.m
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -53,14 +61,22 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+=======
+  liboctave%type_pkg[oct]-dev,
+>>>>>>> master
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7, 
   system-java-dev
 <<
 Depends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
+=======
+  octave%type_pkg[oct]-interpreter
+>>>>>>> master
   system-java
 <<
 Conflicts: octave-forge
@@ -131,6 +147,10 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

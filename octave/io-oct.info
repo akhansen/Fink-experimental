@@ -29,6 +29,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
   fftw3, hdf5.7
  <<
@@ -37,6 +38,17 @@ Depends: <<
   <<
 Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.7-999)
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.7-999)
+=======
+  liboctave%type_pkg[oct]-dev,
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+<<
+Depends: <<
+  octave%type_pkg[oct]-interpreter
+<<
+Conflicts: octave-forge
+>>>>>>> master
 
 Source-MD5: 3fba00bacc838644b2bba4e9b728d673
 
@@ -84,6 +96,10 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

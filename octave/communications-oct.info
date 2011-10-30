@@ -2,7 +2,7 @@ Info2: <<
 Package: communications-oct%type_pkg[oct]
 Version: 1.1.0
 Type: oct (3.4.3), forge (communications)
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/communications/index.html 
@@ -11,7 +11,7 @@ DescDetail: <<
 Digital Communications, Error Correcting Codes (Channel Code), Source Code
 functions, Modulation and Galois Fields.
 
-The package provides the following functions:
+This package provides the following functions:
 Random Signals:
         awgn
         biterr
@@ -83,7 +83,7 @@ Block Coding:
         systematize
         syndtable
         vitdec
-Modulations
+Modulations:
         ademod
         ademodce
         amod
@@ -109,14 +109,14 @@ Modulations
         qaskenco
         qammod
         qamdemod
-Special Filters
+Special Filters:
         hank2sys
         hilbiir
         rcosflt
         rcosiir
         rcosine
         rcosfir
-Galois Fields of Even Characateristic
+Galois Fields of Even Characateristic:
         all
         any
         cosets
@@ -153,7 +153,7 @@ Galois Fields of Even Characateristic
         polyval
         primpoly
         size
-Galois Fields of Odd Characteristic
+Galois Fields of Odd Characteristic:
         gfadd
         gfconv
         gfcosets
@@ -173,7 +173,7 @@ Galois Fields of Odd Characteristic
         gfsub
         gftrunc
         gftuple
-Utility Functions
+Utility Functions:
         comms
         bi2de
         de2bi
@@ -197,14 +197,14 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
+<<
 Depends: <<
   signal-oct%type_pkg[oct],
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+  octave%type_pkg[oct]-interpreter
   <<
 Conflicts: octave-forge
 
@@ -248,10 +248,15 @@ CompileScript: <<
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
-cd ..
-tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
+if [ "%type_pkg[oct]" = "343" ]
+then
+	cd ..
+	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+	cd %b
+	pkgsrc=%type_raw[forge]-%v.tar.gz
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 
@@ -265,6 +270,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

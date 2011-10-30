@@ -2,7 +2,11 @@ Info2: <<
 Package: fits-oct%type_pkg[oct]
 Version: 1.0.0
 Type: oct (3.2.4 3.0.5), forge (fits)
+<<<<<<< HEAD
 Revision: 1
+=======
+Revision: 2
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/general/index.html 
@@ -28,10 +32,17 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
   fftw3, cfitsio,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7
+=======
+  liboctave%type_pkg[oct]-dev, 
+  fftw3, cfitsio,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  octave%type_pkg[oct]-interpreter
+>>>>>>> master
  <<
 Depends: << 
   octave%type_pkg[oct] | octave%type_pkg[oct]-atlas

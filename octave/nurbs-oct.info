@@ -2,7 +2,11 @@ Info2: <<
 Package: nurbs-oct%type_pkg[oct]
 Version: 1.3.5
 Type: oct (3.2.4 3.4.3), forge (nurbs)
+<<<<<<< HEAD
 Revision: 2
+=======
+Revision: 1
+>>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/nurbs/index.html 
@@ -95,6 +99,7 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
+<<<<<<< HEAD
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
@@ -103,6 +108,15 @@ BuildDepends: <<
 <<
 Depends: <<
   octave%type_pkg[oct]-interpreter
+=======
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+<<
+Depends: <<
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
+>>>>>>> master
 <<
 Conflicts: octave-forge
 
@@ -110,7 +124,11 @@ Source-MD5: 8f1326d15ed8bc4d855659188fbda774
 
 DescPackaging: <<
 This package:
+<<<<<<< HEAD
 Wants omp.h, which is included with gcc4.2 but not 4.0.
+=======
+Wants omp.h, which is included with llvm-gcc, but not clang.
+>>>>>>> master
 
 Common for all octave-forge packages:
 
