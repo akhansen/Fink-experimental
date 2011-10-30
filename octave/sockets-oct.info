@@ -108,7 +108,6 @@ fi
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
-
 InstallScript: << 
 	#!/bin/sh -ev
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
