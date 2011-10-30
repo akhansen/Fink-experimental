@@ -1,8 +1,8 @@
 Info2: <<
-Package: struct-oct%type_pkg[oct]
-Version: 1.0.9
-Type: oct (3.2.4 3.4.3), forge (struct)
-Revision: 3
+Package: struct-oct305
+Version: 1.0.6
+Type: oct (3.0.5), forge (struct)
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/optim/index.html 
@@ -10,8 +10,12 @@ Description: Structure manipulations functions for Octave
 DescDetail: <<
 Additional Structure manipulations functions for Octave.
 This package provides the following additional functions:
-
-Structure handling:
+	
+Status:
+	Loaded
+---
+Provides:
+Structure handling
 	getfields
 	setfields
 	tars
@@ -20,10 +24,9 @@ Structure handling:
 	cell2fields
 	fieldempty
 	structcat
-Tests:
+Tests
 	test_struct
 <<
-
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -36,19 +39,19 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-dev, 
-  fftw3,
+  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
+  fftw3,   
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7
  <<
 Depends: << 
-  octave%type_pkg[oct]-interpreter,
+  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas,
   miscellaneous-oct%type_pkg[oct]
 <<
 Conflicts: octave-forge
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.4-999)
 
-Source-MD5: b067676d6360dbed7995658fa4266076
+Source-MD5: b7bbdd8af285b8d9bf8d88f5f58e4d86
 
 #### Insert required changes here ####
 
@@ -64,22 +67,7 @@ NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
-
-CompileScript: <<
-#!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3 appears not to want to install
-# from directories
-if [ "%type_pkg[oct]" = "343" ]
-then
-	cd ..
-	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar.gz
-else pkgsrc=%type_raw[forge]-%v
-fi
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
-<<
+CompileScript: %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
 
 InstallScript: << 
 	#!/bin/sh -ev
