@@ -2,34 +2,28 @@ Info2: <<
 Package: audio-oct%type_pkg[oct]
 Version: 1.1.4
 Type: oct (3.0.5 3.2.4 3.4.3), forge (audio)
-<<<<<<< HEAD
-Revision: 1
-=======
 Revision: 2
->>>>>>> master
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/audio/index.html 
 Description: Audio tools for Octave
 DescDetail: <<
 Audio recording, processing and playing tools.
-<<<<<<< HEAD
-<<
-=======
 
-Record and play
+This package includes the following additional functions:
+
+Record and play:
 	sound
 	soundsc
-Read and write
+Read and write:
 	auload
 	ausave
-Process
+Process:
 	auplot
 	au
 	clip
 <<
 
->>>>>>> master
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -40,24 +34,6 @@ License: GPL
 #
 # Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
 # not use the conditional, of course.
-<<<<<<< HEAD
-
-BuildDepends: <<
-  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev, fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
- <<
-Depends: <<
-  octave%type_pkg[oct] | octave%type_pkg[oct]-atlas
-  <<
-Conflicts: octave-forge
-
-Source-MD5: 643dac1ecf0f31c870b4bd9ce7bbd98c
-
-#### Insert required changes here ####
-
-DescPort: <<
-=======
 # Packages that use BLAS or LAPACK will need to specify the the
 # -atlas and -veclib variants separately:
 #
@@ -70,7 +46,6 @@ DescPort: <<
 #  (%type_raw[-atlas] = -atlas)  atlas-shlibs,
 #  (%type_raw[-atlas] = -atlas)	liboctave%type_pkg[oct]-atlas, 
 #  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib,
-
 
 BuildDepends: <<
   liboctave%type_pkg[oct]-dev,
@@ -98,7 +73,6 @@ underscores.
 #### Insert required changes here ####
 
 DescUsage: <<
->>>>>>> master
 Audio capture is linux-centric, so it isn't built on 
 OS X.
 <<
@@ -110,6 +84,7 @@ OS X.
 # in the same way.
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: 643dac1ecf0f31c870b4bd9ce7bbd98c
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -122,11 +97,14 @@ export OCTAVE=%p/bin/octave-%type_raw[oct]
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
 <<<<<<< HEAD
+<<<<<<< HEAD
 cd ..
 tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 cd %b
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 =======
+=======
+>>>>>>> master
 if [ "%type_pkg[oct]" = "343" ]
 then
 	cd ..
@@ -136,6 +114,9 @@ then
 else pkgsrc=%type_raw[forge]-%v
 fi
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+<<<<<<< HEAD
+>>>>>>> master
+=======
 >>>>>>> master
 <<
 
@@ -160,20 +141,4 @@ PostInstScript:  <<
 <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
-
-DescPackaging: <<
-This package:
-Somehow finds a reference to flag-sort, even though that has been scrubbed 
-from all of the text files in our Octave distros, so we have to set CC and CXX 
-explicitly.
-
-Common for all octave-forge packages:
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
 <<
