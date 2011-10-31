@@ -148,7 +148,7 @@ CompileScript: <<
 #!/bin/sh -ev
 export OCTAVE=%p/bin/octave-%type_raw[oct]
 osversion=`uname -r | cut -d. -f1`
-if [ $osversion eq 9 ]
+if [ $osversion -eq 9 ]
 	# set compilers on 10.5; probably not needed on octave-3.4.3, since
 	# we build with GCC-4.2 there.
 	then

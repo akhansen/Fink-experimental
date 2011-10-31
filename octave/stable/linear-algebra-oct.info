@@ -131,7 +131,7 @@ TarFilesRename: "linear-algebra":"linear-algebra-2.0.0"
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
 
-Source: http://downloads.sourceforge.net/project/octave/Octave Forge Packages/Individual Package Releases/%type_raw[forge]-%v.tar.gz
+Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -157,7 +157,7 @@ fi
 InstallScript: << 
 	#!/bin/sh -ev
 	# remove function which is built in for octave >= 3.4.3
-	if [ "%type_pkg[oct]" >= "343" ] 
+	if [ %type_pkg[oct] -ge 343 ] 
 		then rm %b/../bld/lib/octave/%type_raw[oct]/packages/%type_raw[forge]-%v/x86_64-apple-darwin-api-v45+/mgorth.oct
 	fi
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
