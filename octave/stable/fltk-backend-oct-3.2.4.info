@@ -14,7 +14,7 @@ HomePage:  http://wiki.finkproject.org/index.php/Fink:Packaging:Obsolete_Package
 Depends: <<
 	fink-obsolete-packages,
 	(%type_raw[-ui] = -aqua) octave324-interpreter-aqua,
-	(%type_raw[-ui] = -x11) octave324-interpreter-x11
+	(%type_raw[-ui] = -x11) octave324-interpreter-atlas
 <<
 
 License: GPL

@@ -22,6 +22,7 @@ This package provides the following functions:
 	ultimatecc
 	ultimatepanning
 <<
+
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
@@ -42,15 +43,7 @@ BuildDepends: <<
 Depends: <<
   octave%type_pkg[oct]-interpreter
 <<
-Conflicts: <<
-	octave-forge,
-	%type_raw[forge]-atlas-oct%type_pkg[oct],
-	%type_raw[forge]-oct%type_pkg[oct]
-<<
-Replaces: <<
-	%type_raw[forge]-atlas-oct%type_pkg[oct],
-	%type_raw[forge]-oct%type_pkg[oct]
-<<
+Conflicts: octave-forge
 
 Source-MD5: 32e0135e6b576e562487af5ce418ec83
 
@@ -73,14 +66,7 @@ SetMAKEFLAGS: -j1
 
 CompileScript: <<
 #!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct]
-if [ "%type_raw[-atlas]" = "-atlas" ]
-	then
-	# override mkoctfile's BLAS_LIBS for atlas case since it seems not 
-	# to be in the right format for _this_ package
-	blaslibs=`mkoctfile-%type_raw[oct] -p BLAS_LIBS | perl -p -e 's|%p/lib/lib(.*?).dylib|-l\1|g'`
-	export BLAS_LIBS='-L%p/lib '$blaslibs 
-fi
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
 cd ..

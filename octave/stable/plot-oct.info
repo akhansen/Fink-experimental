@@ -1,23 +1,21 @@
 Info2: <<
 Package: plot-oct%type_pkg[oct]
-Version: 1.0.8
+Version: 1.1.0
 Type: oct (3.0.5 3.2.4 3.4.3), forge (plot)
-Revision: 2
+Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/plot/index.html 
 Description: Additional plotting tools for Octave
 DescDetail: <<
 This package provides the following additional functions:
-colstyle
-dxfwrite
-ginput
-gtext
-hist2d
-tics				
-tricontour			
-waitforbuttonpress	
-zoom				
+	dxfwrite
+	gplot3
+	hist2d
+	plotdecimate
+	tics
+	tricontour
+	zoom
 <<
 
 License: GPL
@@ -43,9 +41,11 @@ Depends: <<
 Conflicts: octave-forge, octave-forge-%type_raw[forge] (<< 1.0.6-999)
 Replaces: octave-forge-%type_raw[forge] (<< 1.0.6-999)
 
-Source-MD5: d1b518eb8e4d1031fa63ad36a0e47d30
+Source-MD5: 2e75d4c9d880bf82e851963218bee96d
 
 #### Insert required changes here ####
+
+TarFilesRename: plot:plot-1.1.0
 
 ######################################
 

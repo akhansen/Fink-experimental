@@ -44,7 +44,7 @@ BuildDepends: <<
   proj
 <<
 Depends: <<
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
   proj-shlibs
 <<
 Conflicts: octave-forge

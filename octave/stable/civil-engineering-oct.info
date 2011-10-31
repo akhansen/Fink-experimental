@@ -62,10 +62,6 @@ CompileScript: <<
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
-cd ..
-tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
-cd %b
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v.tar.gz
 if [ "%type_pkg[oct]" = "343" ]
 then
 	cd ..

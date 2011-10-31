@@ -161,7 +161,6 @@ InstallScript: <<
 		then rm %b/../bld/lib/octave/%type_raw[oct]/packages/%type_raw[forge]-%v/x86_64-apple-darwin-api-v45+/mgorth.oct
 	fi
 	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
-	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
 	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
 	# copy template scripts
 	cp %p/share/octave/%type_raw[oct]/scripts/octave-forge-prerm %p/share/octave/%type_raw[oct]/scripts/octave-forge-postinst %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v

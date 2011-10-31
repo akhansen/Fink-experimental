@@ -56,7 +56,7 @@ BuildDepends: <<
   ( %type_pkg[oct] != 305 ) hdf5.7
 <<
 Depends: << 
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
   libnc-dap3-shlibs (>= 1:3.7.3-4)
   <<
 Conflicts: octave-forge

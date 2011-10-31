@@ -61,7 +61,7 @@ BuildDepends: <<
   system-java-dev
 <<
 Depends: <<
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
   system-java
 <<
 Conflicts: octave-forge
