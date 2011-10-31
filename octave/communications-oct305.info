@@ -116,7 +116,7 @@ Special Filters:
         rcosiir
         rcosine
         rcosfir
-Galois Fields of Even Characateristic:
+Galois Fields of Even Characteristic:
         all
         any
         cosets
@@ -203,7 +203,8 @@ BuildDepends: <<
   ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
 Depends: <<
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
+  signal-oct%type_pkg[oct]
 <<
 Conflicts: octave-forge
 

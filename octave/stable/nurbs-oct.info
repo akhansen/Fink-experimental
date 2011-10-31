@@ -83,6 +83,7 @@ Misc Utilities:
         rad2deg
 
 <<
+
 License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:

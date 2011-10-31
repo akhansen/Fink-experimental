@@ -25,7 +25,6 @@ License: GPL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  fink (>= 0.24.12),
   liboctave%type_pkg[oct]-dev, 
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
