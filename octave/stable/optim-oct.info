@@ -88,7 +88,7 @@ BuildDepends: <<
   ( %type_pkg[oct] != 305 ) hdf5.7
  <<
 Depends: << 
-  octave%type_pkg[oct]-interpreter
+  octave%type_pkg[oct]-interpreter,
   miscellaneous-oct%type_pkg[oct] (>= 1.0.11-1), 
   struct-oct%type_pkg[oct] (>= 1.0.9-1)
 <<
