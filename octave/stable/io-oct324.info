@@ -1,5 +1,5 @@
 Info2: <<
-Package: io-oct%type_pkg[oct]
+Package: io-oct324
 Version: 1.0.9
 Type: oct (3.2.4), forge (io)
 Revision: 2
