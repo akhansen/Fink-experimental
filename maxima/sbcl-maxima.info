@@ -1,8 +1,8 @@
 Info2: <<
 Package: sbcl-%type_pkg[sbcl]-maxima
 Architecture: x86_64
-Type: sbcl (1.0.51)
-Version: 1.0.51
+Type: sbcl (1.0.53), core (1.0.52)
+Version: 1.0.53
 Revision: 1
 License: BSD
 Description: ANSI Common Lisp implementation
@@ -19,19 +19,25 @@ BuildDepends: texinfo (>= 4.6), fink (>= 0.24.12)
 Recommends: gnupg | gnupg-idea | gnupg-testing
 
 Source: mirror:sourceforge:sbcl/sbcl-%v-source.tar.bz2
-Source-MD5: 08032cc777f1236953cb901e24775457
-Source2: mirror:sourceforge:sbcl/sbcl-1.0.48-x86-64-darwin-binary.tar.bz2
-Source2-MD5: 74573cc8d4670c1f3bd733a5875a1a75
+Source-MD5: 28bdb8d65b240bcc45370f19b781f9b8
+Source2: mirror:sourceforge:sbcl/sbcl-%type_raw[core]-x86-64-darwin-binary.tar.bz2
+Source2-MD5: ec5b6e8607735b60f3260cb913ffa509
 SourceDirectory: sbcl-%v
 SetCC: llvm-gcc
 
 PatchScript:  perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix/posix-tests.lisp
 
 CompileScript: <<
-  SBCL_ARCH="x86-64" sh make.sh "../sbcl-1.0.48-x86-64-darwin/src/runtime/sbcl \
-     	      --core ../sbcl-1.0.48-x86-64-darwin/output/sbcl.core \
+  #!/bin/sh -ev
+  if [ "%m" = "x86_64" ]
+  	then mym="x86-64"
+  	else mym=%m
+  fi	
+  SBCL_ARCH="x86-64" sh make.sh "../sbcl-%type_raw[core]-$mym-darwin/src/runtime/sbcl \
+     	      --core ../sbcl-%type_raw[core]-$mym-darwin/output/sbcl.core \
               --disable-debugger --sysinit /dev/null --userinit /dev/null"
-  cd doc/manual ; make html
+  cd doc/manual
+  make html
 <<
 
 InstallScript: <<
