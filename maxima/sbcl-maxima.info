@@ -1,7 +1,7 @@
 Info2: <<
 Package: sbcl-%type_pkg[sbcl]-maxima
 Architecture: x86_64
-Type: sbcl (1.0.53), core (1.0.52)
+Type: sbcl (1.0.53), intelbs (1.0.48)
 Version: 1.0.53
 Revision: 1
 License: BSD
@@ -20,8 +20,8 @@ Recommends: gnupg | gnupg-idea | gnupg-testing
 
 Source: mirror:sourceforge:sbcl/sbcl-%v-source.tar.bz2
 Source-MD5: 28bdb8d65b240bcc45370f19b781f9b8
-Source2: mirror:sourceforge:sbcl/sbcl-%type_raw[core]-x86-64-darwin-binary.tar.bz2
-Source2-MD5: ec5b6e8607735b60f3260cb913ffa509
+Source2: mirror:sourceforge:sbcl/sbcl-%type_raw[intelbs]-x86-64-darwin-binary.tar.bz2
+Source2-MD5: 74573cc8d4670c1f3bd733a5875a1a75
 SourceDirectory: sbcl-%v
 SetCC: llvm-gcc
 
@@ -29,12 +29,10 @@ PatchScript:  perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix
 
 CompileScript: <<
   #!/bin/sh -ev
-  if [ "%m" = "x86_64" ]
-  	then mym="x86-64"
-  	else mym=%m
-  fi	
-  SBCL_ARCH="x86-64" sh make.sh "../sbcl-%type_raw[core]-$mym-darwin/src/runtime/sbcl \
-     	      --core ../sbcl-%type_raw[core]-$mym-darwin/output/sbcl.core \
+  mym="x86-64"
+  bootstrapper=%type_raw[intelbs]
+  SBCL_ARCH=$mym sh make.sh "../sbcl-$bootstrapper-$mym-darwin/src/runtime/sbcl \
+     	      --core ../sbcl-$bootstrapper-$mym-darwin/output/sbcl.core \
               --disable-debugger --sysinit /dev/null --userinit /dev/null"
   cd doc/manual
   make html
