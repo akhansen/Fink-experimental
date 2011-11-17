@@ -21,7 +21,8 @@ freetype219, fink (>= 0.30.0),
 (%type_pkg[-ui] = -x11) glib2-dev,  
 (%type_pkg[-ui] = -x11) x11-dev, 
 aiksaurus-dev,
-boost1.46.1.cmake, pkgconfig
+boost1.46.1.cmake, pkgconfig,
+fink-package-precedence
 <<
 Conflicts: (%type_pkg[-ui] = -x11) %{ni}-qt, %{ni}2%type_pkg[-ui]
 Replaces:  (%type_pkg[-ui] = -x11) %{ni}-qt, %{ni}2%type_pkg[-ui] 
@@ -61,10 +62,10 @@ ConfigureParams:  <<
 (%type_pkg[-ui] = -mac) --without-x \
 (%type_pkg[-ui] = -x11) --with-packaging=posix \
 (%type_pkg[-ui] = -mac) --with-packaging=macosx \
---with-aspell --disable-dependency-tracking \
---disable-static --enable-shared --without-included-boost \
 (%type_pkg[-ui] = -x11) --x-libraries=/usr/X11R6/lib \
-(%type_pkg[-ui] = -x11) --x-includes=/usr/X11R6/include
+(%type_pkg[-ui] = -x11) --x-includes=/usr/X11R6/include \
+--with-aspell --enable-dependency-tracking \
+--disable-static --enable-shared --without-included-boost
 <<
 CompileScript: <<
  #!/bin/sh -ev
@@ -73,6 +74,7 @@ CompileScript: <<
  export QT4DIR=%p/lib/qt4%type_pkg[-ui]
  export OBJC="llvm-gcc -ObjC"
  %{default_script}
+ fink-package-precedence .
 <<
 InstallScript: <<
 #!/bin/sh -ev

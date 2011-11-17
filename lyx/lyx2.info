@@ -64,6 +64,7 @@ CompileScript: <<
  export CCACHE_DISABLE=1
  export QT4DIR=%p/lib/qt4%type_pkg[-ui]
  %{default_script}
+ fink-package-precedence .
 <<
 InstallScript: <<
 #!/bin/sh -ev
