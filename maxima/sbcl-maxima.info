@@ -23,12 +23,12 @@ Source-MD5: 28bdb8d65b240bcc45370f19b781f9b8
 Source2: mirror:sourceforge:sbcl/sbcl-%type_raw[intelbs]-x86-64-darwin-binary.tar.bz2
 Source2-MD5: 74573cc8d4670c1f3bd733a5875a1a75
 SourceDirectory: sbcl-%v
-SetCC: llvm-gcc
 
 PatchScript:  perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix/posix-tests.lisp
 
 CompileScript: <<
   #!/bin/sh -ev
+  export PATH=%p/bin:%p/sbin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/X11R6/bin
   mym="x86-64"
   bootstrapper=%type_raw[intelbs]
   SBCL_ARCH=$mym sh make.sh "../sbcl-$bootstrapper-$mym-darwin/src/runtime/sbcl \
@@ -80,6 +80,10 @@ DescPort: <<
 Uses a pre-compiled SBCL binary for bootstrapping.
 
 Doesn't like clang, so fall back to llvm-gcc.
+
+As of 1.0.53, we do this by explictly setting PATH, because the build
+appeared to be ignoring SetCC and friends--the error message was associated
+with building under clang.
 
 At one point, the HTML documentation for this package included a file
 whose name was so long that it was killing dpkg.  Thus, the following
