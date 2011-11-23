@@ -31,9 +31,9 @@ PatchScript:  <<
 #!/bin/sh -ev
 perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix/posix-tests.lisp
 # Fix BREG issue on i386.
-if [ "%m" = "i386" ]
-	then perl -pi -e 's|"b"|"r"|' src/runtime/x86-darwin-os.c
-fi
+#if [ "%m" = "i386" ]
+#	then perl -pi -e 's|"b"|"r"|' src/runtime/x86-darwin-os.c
+#fi
 <<
 
 CompileScript: <<
@@ -43,18 +43,17 @@ CompileScript: <<
   		mym="x86-64"
   		bootstrapper=%type_raw[intelbs] ;;
   	"i386" )
-  		mym=x86
+  		mym="x86"
   		bootstrapper=%type_raw[intelbs] ;;
   	"powerpc" )
   		mym=%m
   		bootstrapper=%type_raw[ppcbs] ;;
   esac
-  ulimit -s 8192 
   SBCL_ARCH=$mym sh make.sh "../sbcl-$bootstrapper-$mym-darwin/src/runtime/sbcl \
      	      --core ../sbcl-$bootstrapper-$mym-darwin/output/sbcl.core \
-              --disable-debugger --sysinit /dev/null --userinit /dev/null --prefix=${prefix}"
-  cd doc
-  ./make-doc.sh
+              --disable-debugger --sysinit /dev/null --userinit /dev/null"
+  cd doc/manual
+  make html
 <<
 
 InstallScript: <<
