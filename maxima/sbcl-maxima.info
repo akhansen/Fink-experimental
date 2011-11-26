@@ -29,6 +29,7 @@ SourceDirectory: sbcl-%v
 
 PatchScript:  <<
 #!/bin/sh -ev
+# fails when a directory with non-ASCII characters in its name is present in /
 perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix/posix-tests.lisp
 # Fix BREG issue on i386.
 #if [ "%m" = "i386" ]
@@ -52,6 +53,7 @@ CompileScript: <<
   SBCL_ARCH=$mym sh make.sh "../sbcl-$bootstrapper-$mym-darwin/src/runtime/sbcl \
      	      --core ../sbcl-$bootstrapper-$mym-darwin/output/sbcl.core \
               --disable-debugger --sysinit /dev/null --userinit /dev/null"
+              --disable-debugger --sysinit /dev/null --userinit /dev/null --prefix=${prefix}"
   cd doc/manual
   make html
 <<
@@ -92,6 +94,9 @@ Doesn't build info files, because of overlap with normal 'sbcl' package.
 Also leaves out manpages.
 
 Doesn't use threading from 'sbcl' because maxima doesn't like it.
+
+Remove test which fails if there's a directory in / with non-ASCII
+characters in its name.
 
 As of 1.0.53:  unify powerpc, i386, and x86_64 builds into one
 package description.  This means downloading 3 separate bootstrap 
