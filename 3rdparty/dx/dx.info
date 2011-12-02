@@ -44,9 +44,9 @@ if [ -x /usr/bin/gcc-4.2 ] ; then
 	export CC=/usr/bin/gcc-4.2
 else export CC=/usr/bin/clang
 fi
-if [ -x /usr/bin/gcc-4.2 ] ; then
-	export CC=/usr/bin/gcc-4.2
-else export CC=/usr/bin/clang
+if [ -x /usr/bin/g++-4.2 ] ; then
+	export CXX=/usr/bin/g++-4.2
+else export CXX=/usr/bin/clang++
 fi
 
 %p/bin/autoreconf -f -i
