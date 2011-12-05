@@ -1,7 +1,7 @@
 Info2: <<
 Package: sbcl-%type_pkg[sbcl]-maxima
-Type: sbcl (1.0.53), intelbs (1.0.48), ppcbs (1.0.47)
-Version: 1.0.53
+Type: sbcl (1.0.54), intelbs (1.0.48), ppcbs (1.0.47)
+Version: 1.0.54
 Revision: 1
 License: BSD
 Description: ANSI Common Lisp implementation
@@ -18,7 +18,7 @@ BuildDepends: texinfo (>= 4.6), fink (>= 0.24.12)
 Recommends: gnupg | gnupg-idea | gnupg-testing
 
 Source: mirror:sourceforge:sbcl/sbcl-%v-source.tar.bz2
-Source-MD5: 28bdb8d65b240bcc45370f19b781f9b8
+Source-MD5: b7e956a71d603bb714f71c2f7ef350f6
 Source2: mirror:sourceforge:sbcl/sbcl-%type_raw[intelbs]-x86-64-darwin-binary.tar.bz2
 Source2-MD5: 74573cc8d4670c1f3bd733a5875a1a75
 Source3: mirror:sourceforge:sbcl/sbcl-%type_raw[intelbs]-x86-darwin-binary.tar.bz2
@@ -27,16 +27,6 @@ Source4: mirror:sourceforge:sbcl/sbcl-%type_raw[ppcbs]-powerpc-darwin-binary.tar
 Source4-MD5: 02747afc7631a7ccdeede4b52b78072d
 SourceDirectory: sbcl-%v
 
-PatchScript:  <<
-#!/bin/sh -ev
-# fails when a directory with non-ASCII characters in its name is present in /
-perl -pi -e 's|\(deftest readdir.1|#-darwin\n$&|' contrib/sb-posix/posix-tests.lisp
-# Fix BREG issue on i386.
-#if [ "%m" = "i386" ]
-#	then perl -pi -e 's|"b"|"r"|' src/runtime/x86-darwin-os.c
-#fi
-<<
-
 CompileScript: <<
   #!/bin/sh -ev
   case "%m" in 
@@ -44,7 +34,7 @@ CompileScript: <<
   		mym="x86-64"
   		bootstrapper=%type_raw[intelbs] ;;
   	"i386" )
-  		mym="x86"
+  		mym=x86
   		bootstrapper=%type_raw[intelbs] ;;
   	"powerpc" )
   		mym=%m
@@ -52,7 +42,6 @@ CompileScript: <<
   esac
   SBCL_ARCH=$mym sh make.sh "../sbcl-$bootstrapper-$mym-darwin/src/runtime/sbcl \
      	      --core ../sbcl-$bootstrapper-$mym-darwin/output/sbcl.core \
-              --disable-debugger --sysinit /dev/null --userinit /dev/null"
               --disable-debugger --sysinit /dev/null --userinit /dev/null --prefix=${prefix}"
   cd doc/manual
   make html
@@ -98,7 +87,7 @@ Doesn't use threading from 'sbcl' because maxima doesn't like it.
 Remove test which fails if there's a directory in / with non-ASCII
 characters in its name.
 
-As of 1.0.53:  unify powerpc, i386, and x86_64 builds into one
+As of 1.0.54:  unify powerpc, i386, and x86_64 builds into one
 package description.  This means downloading 3 separate bootstrap 
 binaries, but avoids the annoyance of separate .info files.
 <<
