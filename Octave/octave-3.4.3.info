@@ -91,12 +91,12 @@ PatchScript: <<
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"gcc-fsf-%type_raw[gcc]\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"g++-fsf-%type_raw[gcc] -E\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXX%%|\"g++-fsf-%type_raw[gcc]\"|" \
+ 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"g++-fsf-%type_raw[gcc]\"|" \
+ 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"g++-fsf-%type_raw[gcc]\"|" \
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"g++-fsf-%type_raw[gcc]\"|" src/oct-conf.h.in src/mkoctfile*in	
 	# Add the BLAS C library for the -atlas variant.
 	if [ "%type_pkg[-atlas]" = "-atlas" ]
 		then sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
@@ -135,8 +135,8 @@ using std::size_t;' liboctave/oct-alloc.h
 
 GCC: 4.0
 UseMaxBuildJobs: true
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
+SetCC: flag-sort -r gcc-fsf-%type_raw[gcc]
+SetCXX: flag-sort -r g++-fsf-%type_raw[gcc]
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lGraphicsMagick
 
@@ -215,15 +215,6 @@ InstallScript: <<
  # install the octave-forge helper scripts
  cp %{Ni}-forge* %i/share/%{Ni}/%v/scripts
  chmod a+x %i/share/%{Ni}/%v/scripts/*
- # generate Fink-gcc enabled mkoctfile
- cp %i/bin/mkoctfile-%type_raw[oct] %i/bin/mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
- perl -pi -e \
- 's,(CC).*(gcc),\1\="%p/bin/\2-fsf-%type_raw[gcc],g; \
-  s,(.*=\").*(g\+\+),\1%p/bin/\2-fsf-%type_raw[gcc],g' \
-    %i/bin/mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] 
- cd %i/bin
- # create convenience symlink
- ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
 <<
 InfoDocs: %{Ni}.info
 RuntimeVars: <<
