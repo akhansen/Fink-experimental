@@ -177,7 +177,7 @@ CompileScript: <<
     export FFLAGS='-O3'
  fi
  %{default_script}
- fink-package-precedence ,
+ fink-package-precedence .
 <<
 
 InfoTest: <<
