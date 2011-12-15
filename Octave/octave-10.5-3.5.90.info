@@ -63,13 +63,14 @@ Replaces: <<
 	%{Ni}3.0.2-atlas ( << 3.0.2-5) 
 <<
 
-Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
-Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
+#Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
+Source-MD5: 54442245b840483f40b9c0f9026b1256
+Source: ftp://alpha.gnu.org/gnu/octave/%{Ni}-%v.tar.gz
 
 PatchFile: %{ni}-glpk.patch
 PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
 PatchFile2: %{ni}-3.4.3-manpages.patch
-PatchFile2-MD5: 0261f43929818d8472f462e12bde4c62
+PatchFile2-MD5: 213530118b9a34a947f01c6ddd6f4f2b
 PatchFile3: %{ni}.patch
 PatchFile3-MD5: 5a6fc121b863a789cb4bcb645ed0f24b
 PatchScript: <<
@@ -163,14 +164,14 @@ CompileScript: <<
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  export FLIBS="${FLIBDIR}/libgfortran.dylib"
- if [ "%type_pkg[-atlas]" == "" ]
+ if [ "%type_pkg[-atlas]" = "" ]
  then 
 	export FFLAGS='-O3 -ff2c'
  else 
     export FFLAGS='-O3'
  fi
  %{default_script}
- find . -name ".deps" | xargs fink-package-precedence 
+ fink-package-precedence .
 <<
 
 InfoTest: <<
