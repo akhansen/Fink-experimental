@@ -124,7 +124,7 @@ using std::size_t;' liboctave/oct-alloc.h
 <<
 
 GCC: 4.0
-UseMaxBuildJobs: true
+UseMaxBuildJobs: false
 SetCC: flag-sort -r gcc-fsf-%type_raw[gcc]
 SetCXX: flag-sort -r g++-fsf-%type_raw[gcc]
 SetLDFLAGS: -Wl,-dead_strip_dylibs
