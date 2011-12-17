@@ -1,6 +1,6 @@
-Package: wxcocoa292
-Version: 2.9.2
-Revision: 1.3
+Package: wxcocoa293
+Version: 2.9.2.20111110
+Revision: 1
 Distribution: 10.7
 License: GPL
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -48,22 +48,21 @@ BuildDepends: <<
 	system-sdk-10.6
 <<
 
-Conflicts: wxgtk, wxcocoa, wxmac, wxgtk2.8, wxmac28, wxmac28-unicode, wxcocoa29
-Replaces: wxgtk, wxcocoa, wxmac, wxgtk2.8, wxmac28, wxmac28-unicode, wxcocoa29
+Conflicts: wxgtk, wxcocoa, wxmac, wxgtk2.8, wxmac28, wxmac28-unicode, wxcocoa29, wxcocoa292
+Replaces: wxgtk, wxcocoa, wxmac, wxgtk2.8, wxmac28, wxmac28-unicode, wxcocoa29, wxcocoa292
 BuildDependsOnly: True
 
-Source: mirror:sourceforge:wxwindows/wxWidgets-%v.tar.bz2
-Source-MD5: d6cec5bd331ba90b74c1e2fcb0563620
-SourceDirectory: wxWidgets-%v
+Source: http://biolpc22.york.ac.uk/pub/Daily_HEAD/files/wxWidgets-2011-11-10.tar.gz
+Source-MD5: 1260572a32debfffdf1a436a858c81e0
+SourceDirectory: wxWidgets
 
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: %p/lib
 SetLDFLAGS: -I%b/lib
 UseMaxBuildJobs: true
 GCC: 4.0
-#SetCXX: llvm-g++
 
-#PatchFile: %n.patch
+#PatchFile: wxcocoa-10.7.patch
 #PatchFile-MD5:  2ea21482428221b2a3321e4c24ca810a
 PatchScript: <<
 	%{default_script}
@@ -71,6 +70,8 @@ PatchScript: <<
 	perl -pi.bak -e 's/-no-cpp-precomp//' configure*
 <<
 
+SetCC: llvm-gcc-4.2
+SetCXX: llvm-g++-4.2
 ConfigureParams: <<
 	--mandir=%p/share/man \
 	--enable-intl \
@@ -86,11 +87,12 @@ ConfigureParams: <<
 	--without-odbc \
 	--with-libiconv-prefix=%p \
 	--with-macosx-sdk=/Developer/SDKs/MacOSX10.6.sdk \
- 	--with-macosx-version-min=10.6 
+ 	--with-macosx-version-min=10.6
 <<
 CompileScript: <<
 	#!/bin/sh -ev
-	%{default_script}
+	env LDFLAGS=-L%p/lib ./configure %c
+	make
 	fink-package-precedence --depfile-ext='\.d' .
 <<
 InstallScript: <<
@@ -153,21 +155,21 @@ SplitOff: <<
 
 	Files: lib/libwx_*-%v*.dylib 
 	Shlibs: <<
-		%p/lib/libwx_baseu-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_baseu_net-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_baseu_xml-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_adv-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_aui-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_core-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_gl-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_html-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_media-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_propgrid-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_qa-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_ribbon-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_richtext-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_stc-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
-		%p/lib/libwx_osx_cocoau_xrc-2.9.2.dylib 1.0.0 %n (>= 2.9.2-1)
+		%p/lib/libwx_baseu-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_baseu_net-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_baseu_xml-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_adv-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_aui-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_core-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_gl-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_html-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_media-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_propgrid-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_qa-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_ribbon-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_richtext-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_stc-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
+		%p/lib/libwx_osx_cocoau_xrc-2.9.3.dylib 1.0.0 %n (>= 2.9.3-1+20111110)
 	<<
 	DocFiles: docs/preamble.txt docs/licence.txt docs/licendoc.txt docs/gpl.txt docs/lgpl.txt
 <<
