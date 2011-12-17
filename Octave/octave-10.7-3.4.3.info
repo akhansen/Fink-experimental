@@ -3,6 +3,7 @@ Package: octave%type_pkg[-atlas]%type_pkg[-x11]
 Type: -atlas (boolean), oct(3.4.3), gcc (4.6), -x11 (boolean)
 Version: 3.4.3
 Revision: 305
+Distribution: 10.7
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
