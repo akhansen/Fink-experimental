@@ -1,6 +1,5 @@
 Info2: <<
 Package: sbcl-%type_pkg[sbcl]-maxima
-Architecture: x86_64
 Type: sbcl (1.0.54), intelbs (1.0.48)
 Version: 1.0.54
 Revision: 1
