@@ -103,7 +103,7 @@ PatchScript: <<
 	perl -pi.orig -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lack of CGDisplayBitsPerPixel on 10.7
 	osversion=`uname -r | cut -d. -f1`
-	if [ $osversion -ge 10]
+	if [ $osversion -ge 10 ]
 	then
 		if [ "%type_pkg[-x11]" != "-x11" ]
 		then
