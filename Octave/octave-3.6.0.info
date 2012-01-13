@@ -98,20 +98,12 @@ PatchScript: <<
  				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
  				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
  				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
-	# Add the BLAS C library and correct LAPACK lib for the -atlas variant.
-#	if [ "%type_pkg[-atlas]" = "-atlas" ]
-#	then 
-#		sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"-L%p/lib -lf77blas -lcblas|' \
-#					-e 's|%%OCTAVE_CONF_LAPACK_LIBS%%|
-#						src/oct-conf.h.in src/mkoctfile*in
-#		
-#	fi
 	
 	# Make sure GraphicsMagick gets activated properly.
 	perl -pi.orig -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
 	# fix lack of CGDisplayBitsPerPixel on 10.7
 	osversion=`uname -r | cut -d. -f1`
-	if [ $osversion ge 11]
+	if [ $osversion -ge 10]
 	then
 		if [ "%type_pkg[-x11]" != "-x11" ]
 		then
