@@ -74,16 +74,20 @@ PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchFile5: %{ni}-10.7-x11.patch
 PatchFile5-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
+PatchFile6: %{ni}-qhull.patch
+PatchFile6-MD5: b3838e73c493d954390862544147ff9f
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
 	patch -p1 < %{PatchFile}
+
 	# create versioned manpages
 	cp doc/interpreter/%{Ni}.1 doc/interpreter/%{Ni}-%v.1
 	cp doc/interpreter/%{Ni}-config.1 doc/interpreter/%{Ni}-config-%v.1
 	cp doc/interpreter/mkoctfile.1 doc/interpreter/mkoctfile-%v.1
 	# fix executable names in versioned manpages
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
+
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
@@ -97,10 +101,14 @@ PatchScript: <<
  				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
  				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
  				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" \
+ 					src/oct-conf.h.in src/mkoctfile*in	
 	
 	# Make sure GraphicsMagick gets activated properly.
-	perl -pi.orig -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
+	perl -pi.orig -e \
+		's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' \
+			src/DLD-FUNCTIONS/__magick_read__.cc
+
 	# fix lack of CGDisplayBitsPerPixel on 10.7
 	osversion=`uname -r | cut -d. -f1`
 	if [ $osversion -ge 10 ]
@@ -113,6 +121,12 @@ PatchScript: <<
 			patch -l -p1 < %{PatchFile5}
 		fi
 	fi
+
+	# patching oct-qhull.h for qhull6
+	# fix lib name for qhull6 in configure 
+    perl -pi.orig -e 's|(qhull/)|lib\1|g ; s|lqhull|lqhull6|' configure 
+	patch -p1 < %{PatchFile6}
+
 	# more patching by fangism
 	# silence some warnings
 	sed -i.orig -e '/ibasea/s|\*ibasea, ||' \
@@ -127,14 +141,6 @@ using std::size_t;' liboctave/oct-alloc.h
 	sed -i.orig -e '/truncate_int/s|\(return\) \(truncate_int\)|\1 octave_int_base<T>::\2|' \
 		liboctave/oct-inttypes.h
 	sed -i.orig -e 's|template static|template|g' liboctave/eigs-base.cc
-	# patching oct-qhull.h for qhull6
-	# fix lib name for qhull6, as well as no-op HAVE_QHULL_LIBQHULL_H	 
-    perl -pi.orig -e '	s|(qhull/)|lib\1|g ; s|lqhull|lqhull6| ; \
-    					s|HAVE_QHULL_LIBQHULL_H|HAVE_LIBQHULL_LIBQHULL_H|' \
-    						configure src/DLD-FUNCTIONS/oct-qhull.h
-	# patching oct-qhull.h for qhull6
-	perl -pi -e '	s/(.*\(octave_oct_qhull_h.\)*)/#define qh_QHpointer 1\n\1/; \
-					s|qhull/libqhull|libqhull/libqhull|' src/DLD-FUNCTIONS/oct-qhull.h
 <<
 
 GCC: 4.0
