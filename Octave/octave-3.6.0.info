@@ -404,6 +404,7 @@ SplitOff2: <<
 			9)  if [ "%m" = "x86_64"]; then 
 					ln -s /usr/bin/gcc-4.2 oct-cc
 					ln -s /usr/bin/g++-4.2 oct-cxx ;;
+				fi
 			# fangism--feel free to update this
 			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
 		esac
