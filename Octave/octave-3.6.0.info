@@ -394,20 +394,47 @@ SplitOff2: <<
 	<<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 	PostInstScript: <<
-		osversion=`uname -r | cut -d. -f1`
 		cd %p/bin
+		osversion=`uname -r | cut -d. -f1`
 		case $osversion in
-			11) ln -s %p/var/lib/fink/path-prefix-clang/cc oct-cc
-				ln -s %p/var/lib/fink/path-prefix-clang/c++ oct-cxx ;;
-			10) ln -s %p/var/lib/fink/path-prefix-10.6/cc oct-cc
-				ln -s %p/var/lib/fink/path-prefix-10.6/c++ oct-cxx ;;
-			9)  if [ "%m" = "x86_64"]; then 
+			11) cat << EOF > oct-cc
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-clang/cc "$0"
+EOF
+cat << EOF > oct-cxx
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-clang/c++ "$0"
+EOF
+				;;
+			10) cat << EOF > oct-cc
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-10.6/cc "$0"
+EOF
+cat << EOF > %p/bin/oct-cxx
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-10.6/c++ "$0"
+EOF
+				;;
+			9)  if [ "%m" = "x86_64" ]
+					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
+				then 
+					cat << EOF > oct-cc
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "$0"
+EOF
+cat << EOF > %p/bin/oct-cxx
+#!/bin/sh -ev
+exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "$0"
+EOF
+			 	else
+			 		# default compilers on on powerpc and i386 are OK
 					ln -s /usr/bin/gcc-4.2 oct-cc
 					ln -s /usr/bin/g++-4.2 oct-cxx 
 				fi ;;
 			# fangism--feel free to update this
 			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
 		esac
+		if [ ! -h oct-cc ] ; then chmod a+x oct-cc oct-cxx
 	<<
 	PreRmScript: <<
 		if [ -h %p/bin/oct-cc ]
