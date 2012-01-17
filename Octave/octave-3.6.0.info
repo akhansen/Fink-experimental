@@ -399,20 +399,20 @@ SplitOff2: <<
 		case $osversion in
 			11) cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/cc "$0"
+exec %p/var/lib/fink/path-prefix-clang/cc "$@"
 EOF
 cat << EOF > oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/c++ "$0"
+exec %p/var/lib/fink/path-prefix-clang/c++ "$@"
 EOF
 				;;
 			10) cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/cc "$0"
+exec %p/var/lib/fink/path-prefix-10.6/cc "$@"
 EOF
 cat << EOF > %p/bin/oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/c++ "$0"
+exec %p/var/lib/fink/path-prefix-10.6/c++ ""
 EOF
 				;;
 			9)  if [ "%m" = "x86_64" ]
@@ -420,11 +420,11 @@ EOF
 				then 
 					cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "$0"
+exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "$@"
 EOF
 cat << EOF > %p/bin/oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "$0"
+exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "$@"
 EOF
 			 	else
 			 		# default compilers on on powerpc and i386 are OK
@@ -434,7 +434,7 @@ EOF
 			# fangism--feel free to update this
 			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
 		esac
-		if [ ! -h oct-cc ] ; then chmod a+x oct-cc oct-cxx
+		if [ ! -h oct-cc ] ; then chmod a+x oct-cc oct-cxx ; fi
 	<<
 	PreRmScript: <<
 		if [ -h %p/bin/oct-cc ]
