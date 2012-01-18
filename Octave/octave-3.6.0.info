@@ -17,7 +17,7 @@ BuildDepends: <<
 	libftgl2,
 	pcre,
 	pkgconfig,
-	qhull6-dev, 
+	qhull5-dev, 
 	readline5,  
 	sed,
 	suitesparse,
@@ -73,8 +73,8 @@ PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchFile5: %{ni}-10.7-x11.patch
 PatchFile5-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
-PatchFile6: %{ni}-qhull.patch
-PatchFile6-MD5: b3838e73c493d954390862544147ff9f
+#PatchFile6: %{ni}-qhull.patch
+#PatchFile6-MD5: b3838e73c493d954390862544147ff9f
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -122,12 +122,12 @@ PatchScript: <<
 	fi
 
 	# fix lib name for qhull6 in configure 
-    perl -pi.orig -e '	s|(qhull/)|lib\1|g; s|lqhull|lqhull6|' configure
+#    perl -pi.orig -e '	s|(qhull/)|lib\1|g; s|lqhull|lqhull6|' configure
     # fix macro for libqhull/liqhull.h in configure
-    perl -pi.bak -e 's,(.*HAVE_QHULL_LIBQHULL_H.*),\1 || defined (HAVE_LIBQHULL_LIBQHULL_H),g' \
-    					configure 
+#    perl -pi.bak -e 's,(.*HAVE_QHULL_LIBQHULL_H.*),\1 || defined (HAVE_LIBQHULL_LIBQHULL_H),g' \
+#    					configure 
 	# patching oct-qhull.h for qhull6
-	patch -p1 < %{PatchFile6}
+#	patch -p1 < %{PatchFile6}
 
 	# more patching by fangism
 	# silence some warnings
@@ -160,7 +160,7 @@ ConfigureParams: <<
 	--x-libraries=/usr/X11/lib \
 	--x-includes=/usr/X11/include \
 	--with-magick=GraphicsMagick \
-	--with-qhull-includedir=%p/include/libqhull \
+	--with-qhull-includedir=%p/include/qhull \
 	--host=%m-apple-darwin \
 	--build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' \
@@ -460,7 +460,7 @@ Splitoff3: <<
 	hdf5.7-shlibs,
 	libcurl4-shlibs, 
 	pcre-shlibs, 
-	qhull6-shlibs,
+	qhull5-shlibs,
 	readline5-shlibs,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
 	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
