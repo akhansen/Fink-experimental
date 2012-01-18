@@ -68,7 +68,7 @@ PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
 PatchFile2: %{ni}-3.4.3-manpages.patch
 PatchFile2-MD5: 213530118b9a34a947f01c6ddd6f4f2b
 PatchFile3: %{ni}.patch
-PatchFile3-MD5: 5a6fc121b863a789cb4bcb645ed0f24b
+PatchFile3-MD5: 5a470e2210abe88e3e2d3e9e614140bf
 PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchFile5: %{ni}-10.7-x11.patch
@@ -402,22 +402,22 @@ SplitOff2: <<
 		osversion=`uname -r | cut -d. -f1`
 		case $osversion in
 			11) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/cc,' \
-							%p/share/oct-compiler.in > %p/bin/oct-cc
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
 				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/c++,' \
-							%p/share/oct-compiler.in > %p/bin/oct-cxx
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 				chmod a+x oct-cc oct-cxx ;;
 			10) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
-							%p/share/oct-compiler.in > %p/bin/oct-cc
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
 				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
-							%p/share/oct-compiler.in > %p/bin/oct-cxx
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 				chmod a+x oct-cc oct-cxx ;;
 			9)  if [ "%m" = "x86_64" ]
 					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
 				then 
 					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
-								%p/share/oct-compiler.in > %p/bin/oct-cc
+								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
 					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
-								%p/share/oct-compiler.in > %p/bin/oct-cxx
+								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 					chmod a+x oct-cc oct-cxx
 			 	else
 			 		# default compilers on on powerpc and i386 build with proper arch.
@@ -627,11 +627,14 @@ package's name.
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
 The non-atlas variant depends on non-atlas variants (only) of these.
  
-Patch oct-conf.h, and mkoctfile to use compiler wrappers which are part of the
--dev package to avoid issues which would propagate as dependendencies, e.g. 
-encoding 'flag-sort' or a ccache-default compiler in the compiler name. These 
-are symlinks to Fink's compiler wrappers and are resolved in PostInstall so that
-they point to the right place for the system.
+Patch oct-conf.h and mkoctfile to use octave-specific compiler executables
+which are part of the -dev package to avoid issues which would propagate as 
+dependendencies, e.g. encoding 'flag-sort' or a ccache-default compiler in the
+compiler name. These go in the -dev package, and are either wrappers around 
+Fink's compiler wrappers or symlinks to the OS X compilers as appropriate 
+for the OS version.  They are resolved in the PostInstScript so that they
+set themselves appropriately for the OS version where Octave is installed, 
+rather than where it is built.
 
 Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
