@@ -212,6 +212,7 @@ InstallScript: <<
  # package directory.
  cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
  mkdir -p %i/var/%{Ni}/%v/
+
  # install examples
  mkdir -p %i/share/%{Ni}/%v/doc/examples
  cp -R examples %i/share/%{Ni}/%v/doc/examples
@@ -221,13 +222,15 @@ InstallScript: <<
  # install the octave-forge helper scripts
  cp %{Ni}-forge* %i/share/%{Ni}/%v/scripts
  chmod a+x %i/share/%{Ni}/%v/scripts/*
+ # move compiler wrapper over
+ cp %b/oct-compiler.in %i/share/%{Ni}/%v/scripts
+
  # clear out hardcoded Fink sed.
  pushd %i/bin 
  for file in mkoctfile-%v %{Ni}-config-%v 
  do
  	perl -pi -e 's|%p/bin/sed|/usr/bin/sed|g' $file
  done
- 
  # generate Fink-gcc enabled mkoctfile
  cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
  perl -pi -e \
@@ -375,6 +378,7 @@ SplitOff2: <<
 		bin/octave-config*
 		share/man/man1/mkoctfile*.1
 		share/man/man1/octave-config*.1
+		share/%{Ni}/%v/scripts/oct-compiler.in
 	<<
 	
 	DescDetail: <<
@@ -397,51 +401,39 @@ SplitOff2: <<
 		cd %p/bin
 		osversion=`uname -r | cut -d. -f1`
 		case $osversion in
-			11) cat << EOF > oct-cc
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/cc "'$@'"
-EOF
-cat << EOF > oct-cxx
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/c++ "'$@'"
-EOF
-				;;
-			10) cat << EOF > oct-cc
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/cc "'$@'"
-EOF
-cat << EOF > %p/bin/oct-cxx
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/c++ "'$@'"
-EOF
-				;;
+			11) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/cc,' \
+							%p/share/oct-compiler.in > %p/bin/oct-cc
+				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/c++,' \
+							%p/share/oct-compiler.in > %p/bin/oct-cxx
+				chmod a+x oct-cc oct-cxx ;;
+			10) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
+							%p/share/oct-compiler.in > %p/bin/oct-cc
+				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
+							%p/share/oct-compiler.in > %p/bin/oct-cxx
+				chmod a+x oct-cc oct-cxx ;;
 			9)  if [ "%m" = "x86_64" ]
 					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
 				then 
-					cat << EOF > oct-cc
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "'$@'"
-EOF
-cat << EOF > %p/bin/oct-cxx
-#!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "'$@'"
-EOF
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
+								%p/share/oct-compiler.in > %p/bin/oct-cc
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
+								%p/share/oct-compiler.in > %p/bin/oct-cxx
+					chmod a+x oct-cc oct-cxx
 			 	else
-			 		# default compilers on on powerpc and i386 are OK
+			 		# default compilers on on powerpc and i386 build with proper arch.
 					ln -s /usr/bin/gcc-4.2 oct-cc
 					ln -s /usr/bin/g++-4.2 oct-cxx 
 				fi ;;
 			# fangism--feel free to update this
 			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
 		esac
-		if [ ! -h oct-cc ] ; then chmod a+x oct-cc oct-cxx ; fi
 	<<
 	PreRmScript: <<
-		if [ -f %p/bin/oct-cc ]
+		if [ -e %p/bin/oct-cc ]
 			then rm %p/bin/oct-cc
 			else printf "%p/bin/oct-cc is not present.\n" 
 		fi
-		if [ -f %p/bin/oct-cxx ]
+		if [ -e %p/bin/oct-cxx ]
 			then rm %p/bin/oct-cxx
 			else printf "%p/bin/oct-cxx is not present.\n"
 		fi
