@@ -147,8 +147,6 @@ using std::size_t;' liboctave/oct-alloc.h
 
 GCC: 4.0
 UseMaxBuildJobs: false
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
 SetLDFLAGS: -Wl,-dead_strip_dylibs
 
 ConfigureParams: <<
@@ -176,6 +174,16 @@ ConfigureParams: <<
 <<
 CompileScript: <<
  #!/bin/sh -ev
+ # Needs GCC >= 4.2
+ osversion=`uname -r | cut -d. -f1`
+ if [$osversion eq 9]
+ then
+ 	export CC="flag-sort -r gcc-4.2"
+ 	export CXX="flag-sort -r g++-4.2"
+ else	
+ 	export CC="flag-sort -r gcc"
+	export CXX="flag-sort -r g++"
+ fi
  export FFLAGS='-O3'
  # avoid package installation failure
  if [ "%m" = "i386" ]
@@ -185,6 +193,7 @@ CompileScript: <<
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  export FLIBS="-L${FLIBDIR} -lgfortran"
+ # -ff2c is required when using gfortran and Accelerate.framework
  if [ "%type_pkg[-atlas]" = "" ]
  	then export FFLAGS='-O3 -ff2c'
  	else export FFLAGS='-O3'
@@ -279,9 +288,7 @@ SplitOff: <<
 		fontconfig2-shlibs,
 		freetype219-shlibs,
 		(%type_raw[-atlas] = -atlas)	atlas-shlibs (>= 3.8.1-1),
-		(%type_raw[-atlas] = -atlas)	arpack-ng-atlas-shlibs (>= 3.0.1-2),
 		(%type_raw[-atlas] = -atlas) 	qrupdate-atlas-shlibs (>= 1.1.1-5), 
-		(%type_raw[-atlas] != -atlas)	arpack-ng-shlibs (>= 3.0.1-2),
 		(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs (>= 1.1.1-5)
 	<<
 	Provides: <<
@@ -458,7 +465,9 @@ Splitoff3: <<
 	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
 	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
 	(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs,
+	(%type_raw[-atlas] != -atlas)	arpack-ng-shlibs (>= 3.0.1-2),
 	(%type_raw[-atlas] = -atlas) 	atlas-shlibs (>= 3.8.1-1),
+	(%type_raw[-atlas] = -atlas)	arpack-ng-atlas-shlibs (>= 3.0.1-2),
 	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas-shlibs
 	<<
 	Conflicts: << 
@@ -629,12 +638,17 @@ The non-atlas variant depends on non-atlas variants (only) of these.
  
 Patch oct-conf.h and mkoctfile to use octave-specific compiler executables
 which are part of the -dev package to avoid issues which would propagate as 
-dependendencies, e.g. encoding 'flag-sort' or a ccache-default compiler in the
-compiler name. These go in the -dev package, and are either wrappers around 
-Fink's compiler wrappers or symlinks to the OS X compilers as appropriate 
-for the OS version.  They are resolved in the PostInstScript so that they
-set themselves appropriately for the OS version where Octave is installed, 
-rather than where it is built.
+dependendencies, e.g. encoding 'flag-sort' or a ccache-default compiler. This
+also makes sure that anything that builds against Octave has the proper 
+information when installed manually as well as via Fink, and is critical for
+10.6/i386 (and 10.5/x86_64) users where the default compiler architecture
+doesn't correspond to the Fink architecture.
+These go in the -dev package, and are either wrappers around Fink's compiler
+wrappers or symlinks to the Xcode compilers, as appropriate for the OS version.
+They are resolved in the PostInstScript so that they set themselves 
+appropriately for the OS version where Octave is installed, rather than where
+it is built, thereby avoiding the necessity to rebuild Octave when updating
+the OS.
 
 Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
@@ -646,6 +660,9 @@ GNU info file.
 
 We use Provides in a new namespace and new projections to avoid
 unwieldy | lists in the octave-forge packages.
+
+The combination of compiler wrappers and new-style FLIBS, LAPACK_LIBS, and
+BLAS_LIBS constitutes liboctave-v2.
 <<
 Homepage: http://www.octave.org/
 License: GPL
