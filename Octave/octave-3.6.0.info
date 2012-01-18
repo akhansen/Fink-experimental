@@ -395,25 +395,24 @@ SplitOff2: <<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 	PostInstScript: <<
 		cd %p/bin
-		FOO=1
 		osversion=`uname -r | cut -d. -f1`
 		case $osversion in
 			11) cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/cc "FOO"
+exec %p/var/lib/fink/path-prefix-clang/cc "'$@'"
 EOF
 cat << EOF > oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-clang/c++ "FOO"
+exec %p/var/lib/fink/path-prefix-clang/c++ "'$@'"
 EOF
 				;;
 			10) cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/cc "FOO"
+exec %p/var/lib/fink/path-prefix-10.6/cc "'$@'"
 EOF
 cat << EOF > %p/bin/oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/c++ "FOO"
+exec %p/var/lib/fink/path-prefix-10.6/c++ "'$@'"
 EOF
 				;;
 			9)  if [ "%m" = "x86_64" ]
@@ -421,11 +420,11 @@ EOF
 				then 
 					cat << EOF > oct-cc
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "FOO"
+exec %p/var/lib/fink/path-prefix-10.6/gcc-4.2 "'$@'"
 EOF
 cat << EOF > %p/bin/oct-cxx
 #!/bin/sh -ev
-exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "FOO"
+exec %p/var/lib/fink/path-prefix-10.6/g++-4.2 "'$@'"
 EOF
 			 	else
 			 		# default compilers on on powerpc and i386 are OK
@@ -435,11 +434,7 @@ EOF
 			# fangism--feel free to update this
 			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
 		esac
-		if [ ! -h oct-cc ]
-		then 
-			chmod a+x oct-cc oct-cxx
-			perl -pi -e 's/FOO/$@/' oct-cc oct-cxx	
-		fi
+		if [ ! -h oct-cc ] ; then chmod a+x oct-cc oct-cxx ; fi
 	<<
 	PreRmScript: <<
 		if [ -f %p/bin/oct-cc ]
