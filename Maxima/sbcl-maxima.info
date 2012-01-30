@@ -1,6 +1,5 @@
 Info2: <<
 Package: sbcl-%type_pkg[sbcl]-maxima
-Architecture: x86_64
 Type: sbcl (1.0.55), intelbs (1.0.48)
 Version: 1.0.55
 Revision: 1
@@ -55,7 +54,7 @@ InstallScript: <<
   rm -rf share/info share/man
 <<
 
-Homepage:  http://www.sbcl.org/
+Homepage: http://www.sbcl.org/
 
 DescDetail: <<
 Steel Bank Common Lisp is an open source development system for ANSI
@@ -72,9 +71,13 @@ when updating maxima.
 Keep sbcl Type in sync with that in maxima.info
 
 Doesn't build info files, because of overlap with normal 'sbcl' package.
+
 Also leaves out manpages.  PDF documentation uses TeX, so we won't do that.
 
 Doesn't use threading from 'sbcl' because maxima doesn't like it.
+
+Remove test which fails if there's a directory in / with non-ASCII
+characters in its name.
 <<
 
 DescPort: <<
