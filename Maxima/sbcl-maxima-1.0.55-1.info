@@ -4,6 +4,8 @@ Type: sbcl (1.0.55), intelbs (1.0.48), ppcbs (1.0.47)
 Version: 1.0.55
 Revision: 1
 License: BSD
+# powerpc not currently working
+Architecture: i386, x86_64
 Description: ANSI Common Lisp implementation
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # Based on sbcl-x86_64.info from Jesse Alama <jesse.alama@gmail.com>
