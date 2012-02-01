@@ -7,6 +7,7 @@ Description: Tcl/TK front end for maxima (X11 graphics)
 Source: mirror:sourceforge:maxima/Maxima-source/%v-source/maxima-%v.tar.gz
 Source-MD5: 1d904f3484e41c12db8130a9ba93461d
 Type: sbcl (1.0.55)
+Architecture: i386, x86_64
 Depends: maxima ( >= %v), tcltk
 BuildDepends: <<
 libgettext8-dev, libiconv-dev, libncurses5, 
