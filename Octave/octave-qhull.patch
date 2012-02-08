@@ -1,15 +1,7 @@
-diff -Nurd octave-3.6.0-rc1/src/DLD-FUNCTIONS/oct-qhull.h octave-3.6.0-rc1.patched/src/DLD-FUNCTIONS/oct-qhull.h
---- octave-3.6.0-rc1/src/DLD-FUNCTIONS/oct-qhull.h	2012-01-12 14:58:51.000000000 -0500
-+++ octave-3.6.0-rc1.patched/src/DLD-FUNCTIONS/oct-qhull.h	2012-01-14 18:58:25.000000000 -0500
-@@ -20,6 +20,7 @@
- 
- */
- 
-+#define qh_QHpointer 1
- #if !defined (octave_oct_qhull_h)
- #define octave_oct_qhull_h 1
- 
-@@ -27,27 +28,12 @@
+diff -Nurd octave-3.6.0/src/DLD-FUNCTIONS/oct-qhull.h octave-3.6.0.patched/src/DLD-FUNCTIONS/oct-qhull.h
+--- octave-3.6.0/src/DLD-FUNCTIONS/oct-qhull.h	2012-01-15 13:05:02.000000000 -0500
++++ octave-3.6.0.patched/src/DLD-FUNCTIONS/oct-qhull.h	2012-02-07 13:19:49.000000000 -0500
+@@ -27,27 +27,11 @@
  
  extern "C" {
  
@@ -39,7 +31,6 @@ diff -Nurd octave-3.6.0-rc1/src/DLD-FUNCTIONS/oct-qhull.h octave-3.6.0-rc1.patch
 +# include <libqhull/geom.h>
 +# include <libqhull/poly.h>
 +# include <libqhull/io.h>
-+
  
  }
  

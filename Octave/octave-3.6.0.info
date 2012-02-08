@@ -2,7 +2,7 @@ Info2: <<
 Package: octave%type_pkg[-atlas]%type_pkg[-x11]
 Type: -atlas (boolean), oct(3.6.0), gcc (4.6), -x11 (boolean)
 Version: 3.6.0
-Revision: 1
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
@@ -15,9 +15,9 @@ BuildDepends: <<
 	hdf5.7, 
 	libcurl4,
 	libftgl2,
-	pcre,
+	libpcre1,
 	pkgconfig,
-	qhull5-dev, 
+	qhull6.3-dev, 
 	readline5,  
 	sed,
 	suitesparse,
@@ -73,8 +73,8 @@ PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchFile5: %{ni}-10.7-x11.patch
 PatchFile5-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
-#PatchFile6: %{ni}-qhull.patch
-#PatchFile6-MD5: b3838e73c493d954390862544147ff9f
+PatchFile6: %{ni}-qhull.patch
+PatchFile6-MD5: e4fbe7b5d92d35fb3e74e2b31fc16da7
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -117,17 +117,17 @@ PatchScript: <<
 			patch -p1 < %{PatchFile4}
 			perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
 		else
+			# change windows to Windows to match PatchFile5
+			perl -pi.orig -e 's/windows/Windows/g' src/display.cc 
 			patch -l -p1 < %{PatchFile5}
 		fi
 	fi
 
-	# fix lib name for qhull6 in configure 
-#    perl -pi.orig -e '	s|(qhull/)|lib\1|g; s|lqhull|lqhull6|' configure
-    # fix macro for libqhull/liqhull.h in configure
-#    perl -pi.bak -e 's,(.*HAVE_QHULL_LIBQHULL_H.*),\1 || defined (HAVE_LIBQHULL_LIBQHULL_H),g' \
-#    					configure 
+    # fix qhull include path and the consequent macro in configure
+    perl -pi.bak -e 's,(qhull(/|\.h)),lib\1,g; s,(.*HAVE_QHULL_LIBQHULL_H.*),\1 || defined (HAVE_LIBQHULL_LIBQHULL_H),g' \
+    					configure 
 	# patching oct-qhull.h for qhull6
-#	patch -p1 < %{PatchFile6}
+	patch -p1 < %{PatchFile6}
 
 	# more patching by fangism
 	# silence some warnings
@@ -148,6 +148,8 @@ using std::size_t;' liboctave/oct-alloc.h
 GCC: 4.0
 UseMaxBuildJobs: false
 SetLDFLAGS: -Wl,-dead_strip_dylibs
+SetCC: flag-sort -r gcc
+SetCXX: flag-sort -r g++
 
 ConfigureParams: <<
 	(%type_raw[-atlas] != -atlas)	--with-lapack=-Wl,-framework,Accelerate \
@@ -160,7 +162,7 @@ ConfigureParams: <<
 	--x-libraries=/usr/X11/lib \
 	--x-includes=/usr/X11/include \
 	--with-magick=GraphicsMagick \
-	--with-qhull-includedir=%p/include/qhull \
+	--with-qhull-includedir=%p/include/libqhull \
 	--host=%m-apple-darwin \
 	--build=%m-apple-darwin \
 	--infodir='${prefix}/share/info' \
@@ -174,22 +176,9 @@ ConfigureParams: <<
 <<
 CompileScript: <<
  #!/bin/sh -ev
- # Needs GCC >= 4.2
- osversion=`uname -r | cut -d. -f1`
- if [$osversion eq 9]
- then
- 	export CC="flag-sort -r gcc-4.2"
- 	export CXX="flag-sort -r g++-4.2"
- else	
- 	export CC="flag-sort -r gcc"
-	export CXX="flag-sort -r g++"
- fi
+ export CFLAGS='-O3'
  export FFLAGS='-O3'
- # avoid package installation failure
- if [ "%m" = "i386" ]
- 	then export CXXFLAGS="-O1"
- 	else export CXXFLAGS="-O3"
- fi
+ export CXXFLAGS="-O3"
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  export FLIBS="-L${FLIBDIR} -lgfortran"
@@ -251,7 +240,7 @@ InstallScript: <<
  popd
 
  # sanitize .la file
- cd %i/lib/%{Ni}/%v/
+ cd %i/lib/%{Ni}/%type_raw[v]/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' liboctinterp.la
 <<
 
@@ -282,7 +271,8 @@ SplitOff: <<
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<	
 	Depends: << 
-		fftw3-shlibs, 
+		fftw3-shlibs,
+		gcc%type_pkg[gcc]-shlibs,
 		hdf5.7-shlibs,
 		readline5-shlibs, 
 		fontconfig2-shlibs,
@@ -301,12 +291,12 @@ SplitOff: <<
 	<<
 	
 	Files: <<
-		lib/%{Ni}/%v/lib{cruft,%{Ni},octinterp}.1.dylib
+		lib/%{Ni}/%type_raw[v]/lib{cruft,%{Ni},octinterp}.1.dylib
 	<<
 	Shlibs: <<
-		%p/lib/%{Ni}/%v/libcruft.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%v/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%v/liboctinterp.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%type_raw[v]/libcruft.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%type_raw[v]/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%type_raw[v]/liboctinterp.1.dylib 2.0.0 %n (>=3.6.0-1)
 	<<
 	DescDetail: <<
 	This package contains shared libraries which are used by the Octave
@@ -342,6 +332,10 @@ SplitOff2: <<
 		%{Ni}343-atlas-dev,
 		%{Ni}343-x11-dev,
 		%{Ni}343-atlas-x11-dev,
+		%{Ni}343-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
 		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -379,8 +373,8 @@ SplitOff2: <<
 	BuildDependsOnly: true
 	
 	Files: <<
-		include/%{Ni}-%v
-		lib/%{Ni}/%v/*.la 
+		include/%{Ni}-%type_raw[v]
+		lib/%{Ni}/%type_raw[v]/*.la 
 		bin/mkoctfile*
 		bin/octave-config*
 		share/man/man1/mkoctfile*.1
@@ -419,11 +413,11 @@ SplitOff2: <<
 							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 				chmod a+x oct-cc oct-cxx ;;
 			9)  if [ "%m" = "x86_64" ]
-					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
+					# use 10.6 compiler wrappers on 10.5/x86_64	
 				then 
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
 								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
 								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 					chmod a+x oct-cc oct-cxx
 			 	else
@@ -459,8 +453,8 @@ Splitoff3: <<
 	graphicsmagick-shlibs,
 	hdf5.7-shlibs,
 	libcurl4-shlibs, 
-	pcre-shlibs, 
-	qhull5-shlibs,
+	libpcre1-shlibs, 
+	qhull6.3-shlibs,
 	readline5-shlibs,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
 	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
@@ -665,5 +659,5 @@ The combination of compiler wrappers and new-style FLIBS, LAPACK_LIBS, and
 BLAS_LIBS constitutes liboctave-v2.
 <<
 Homepage: http://www.octave.org/
-License: GPL
+License: GPL3+
 <<
