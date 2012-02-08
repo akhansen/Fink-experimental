@@ -16,12 +16,9 @@ This package provides the following functions:
 License: GPL
 
 # default source
-Source: mirror:sourceforge:/octave/%type_raw[forge]-%v.tar.gz
-# this will redirect like a fiend, and then you can replace it with a one-hop:
-# Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-# replacing "Individual Package Releases" with the  relevant directory that you get from the first
-# Source above.
+Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
 Source-MD5: @SOURCE_MD5@
+SourceDirectory: %type_raw[forge]
 
 # Octave-forge packages need to have at least the following:
 # BuildDepends: <<
@@ -74,7 +71,6 @@ underscores.
 
 #### Insert required changes here ####
 
-#TarFilesRename: @PACKAGE@:@PACKAGE@-@VERSION@
 #@CHANGES@
 
 ######################################
@@ -91,15 +87,15 @@ SetMAKEFLAGS: -j1
 CompileScript: <<
 #!/bin/sh -ev
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3 appears not to want to install
+# repack tarball, since octave-3.4.3+ appears not to want to install
 # from directories
-if [ %type_pkg[oct] >= 343 ]
+if [ %type_pkg[oct] -ge 343 ]
 then
 	cd ..
-	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
+	tar -cvf %type_raw[forge]-%v.tar %type_raw[forge]
 	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar.gz
-else pkgsrc=%type_raw[forge]-%v
+	pkgsrc=%type_raw[forge]-%v.tar
+else pkgsrc=%type_raw[forge]
 fi
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
