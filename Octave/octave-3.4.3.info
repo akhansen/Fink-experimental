@@ -2,7 +2,7 @@ Info2: <<
 Package: octave%type_pkg[-atlas]%type_pkg[-x11]
 Type: -atlas (boolean), oct(3.4.3), gcc (4.6), -x11 (boolean)
 Version: 3.4.3
-Revision: 305
+Revision: 311
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
@@ -15,9 +15,9 @@ BuildDepends: <<
 	hdf5.7, 
 	libcurl4,
 	libftgl2,
-	pcre,
+	libpcre1,
 	pkgconfig,
-	qhull5-dev, 
+	qhull6.3-dev, 
 	readline5,  
 	sed,
 	suitesparse,
@@ -28,10 +28,8 @@ BuildDepends: <<
 	(%type_raw[-x11] = -x11) 		fltk-x11,
 	(%type_raw[-x11] = -x11) 		x11-dev,	
 	(%type_raw[-atlas] != -atlas) 	qrupdate (>=1.1.1-5),
-	(%type_raw[-atlas] != -atlas) 	arpack-ng,
 	(%type_raw[-atlas] = -atlas) 	atlas (>= 3.8.1-1), 
-	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas (>=1.1.1-5),
-	(%type_raw[-atlas] = -atlas) 	arpack-ng-atlas
+	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas (>=1.1.1-5)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
@@ -66,9 +64,9 @@ Source-MD5: fbb581da9873ce8c3bf44a6a019db67f
 PatchFile: %{ni}-glpk.patch
 PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
 PatchFile2: %{ni}-%v-manpages.patch
-PatchFile2-MD5: 0261f43929818d8472f462e12bde4c62
+PatchFile2-MD5: 213530118b9a34a947f01c6ddd6f4f2b
 PatchFile3: %{ni}.patch
-PatchFile3-MD5: 5a6fc121b863a789cb4bcb645ed0f24b
+PatchFile3-MD5: 5a470e2210abe88e3e2d3e9e614140bf
 PatchFile4: %{ni}-10.7.patch
 PatchFile4-MD5: 8304ed39a2c8783f01c81133971166e8
 PatchFile5: %{ni}-10.7-x11.patch
@@ -77,41 +75,51 @@ PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
 	patch -p1 < %{PatchFile}
+
 	# create versioned manpages
 	cp doc/interpreter/%{Ni}.1 doc/interpreter/%{Ni}-%v.1
 	cp doc/interpreter/%{Ni}-config.1 doc/interpreter/%{Ni}-config-%v.1
 	cp doc/interpreter/mkoctfile.1 doc/interpreter/mkoctfile-%v.1
 	# fix executable names in versioned manpages
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile2} | patch -p1 
+
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile3} | patch -p1 
 	# Put in the Fink tree.
 	sed -i.orig -e 's|@FINKPREFIX@|%p|g'   %{Ni}-forge* %{Ni}rc doc/interpreter/*.1 src/mkoctfile*in
- 	# Put compiler information without 'flag-sort' into oct-conf.h, which in 
+ 	# Put OS-version-invariant links to compilers into oct-conf.h, which in 
  	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
  	# function, which is then used by some of the octave-forge packages at 
  	# configure time.  Also do this for mkoctfile.in.
- 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"`which gcc`\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"`which g++` -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"`which g++`\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"`which g++`\"|" src/oct-conf.h.in src/mkoctfile*in	
-	# Add the BLAS C library for the -atlas variant.
-	if [ "%type_pkg[-atlas]" = "-atlas" ]
-		then sed -i.orig -e 's|%%OCTAVE_CONF_BLAS_LIBS%%|"%p/lib/liblapack.dylib %p/lib/libf77blas.dylib %p/lib/libcblas.dylib"|' \
-						src/oct-conf.h.in src/mkoctfile*in
-	fi
+ 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"oct-cc\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"oct-cxx -E\"|" \
+ 				-e "s|%%OCTAVE_CONF_CXX%%|\"oct-cxx\"|" \
+ 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"oct-cxx\"|" \
+ 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"oct-cxx\"|" \
+ 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"oct-cxx\"|" \
+ 					src/oct-conf.h.in src/mkoctfile*in	
+	
 	# Make sure GraphicsMagick gets activated properly.
-	perl -pi.orig -e 's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
-	# fix lack of CGDisplayBitsPerPixel
-	if [ "%type_pkg[-x11]" != "-x11" ]
+	perl -pi.orig -e \
+		's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' \
+			src/DLD-FUNCTIONS/__magick_read__.cc
+
+	# fix lack of CGDisplayBitsPerPixel on 10.7
+	osversion=`uname -r | cut -d. -f1`
+	if [ $osversion -ge 10 ]
 	then
-		patch -p1 < %{PatchFile4}
-		perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
-	else
-		patch -l -p1 < %{PatchFile5}
+		if [ "%type_pkg[-x11]" != "-x11" ]
+		then
+			patch -p1 < %{PatchFile4}
+			perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
+		else
+			patch -l -p1 < %{PatchFile5}
+		fi
 	fi
+
+    # fix qhull include path
+    perl -pi.bak -e 's,(qhull(/|\.h)),lib\1,g' 	configure src/DLD-FUNCTIONS/*.cc 
+
 	# more patching by fangism
 	# silence some warnings
 	sed -i.orig -e '/ibasea/s|\*ibasea, ||' \
@@ -134,7 +142,7 @@ using std::size_t;' liboctave/oct-alloc.h
 <<
 
 GCC: 4.0
-UseMaxBuildJobs: true
+UseMaxBuildJobs: false
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
 SetLDFLAGS: -Wl,-dead_strip_dylibs
@@ -143,8 +151,8 @@ SetLIBS: -lGraphicsMagick
 ConfigureParams: <<
 	(%type_raw[-atlas] != -atlas)	--with-lapack=-Wl,-framework,Accelerate \
 	(%type_raw[-atlas] != -atlas)	--with-blas=-Wl,-framework,Accelerate \
- 	(%type_raw[-atlas] = -atlas)	--with-lapack=%p/lib/liblapack.dylib \
- 	(%type_raw[-atlas] = -atlas)	--with-blas=%p/lib/libf77blas.dylib \
+ 	(%type_raw[-atlas] = -atlas)	--with-lapack="-llapack" \
+ 	(%type_raw[-atlas] = -atlas)	--with-blas="-lf77blas -lcblas" \
 	(%type_raw[-x11] != -x11)		--with-framework-carbon \
 	(%type_raw[-x11] = -x11)		--without-framework-carbon \
 	--with-x \
@@ -165,19 +173,18 @@ ConfigureParams: <<
 CompileScript: <<
  #!/bin/sh -ev
  export CFLAGS='-O3'
- export CXXFLAGS='-O3'
  export FFLAGS='-O3'
+ export CXXFLAGS="-O3"
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
- export FLIBS="${FLIBDIR}/libgfortran.dylib"
+ export FLIBS="-L${FLIBDIR} -lgfortran"
+ # -ff2c is required when using gfortran and Accelerate.framework
  if [ "%type_pkg[-atlas]" = "" ]
- then 
-	export FFLAGS='-O3 -ff2c'
- else 
-    export FFLAGS='-O3'
+ 	then export FFLAGS='-O3 -ff2c'
+ 	else export FFLAGS='-O3'
  fi
  %{default_script}
- fink-package-precedence ,
+ fink-package-precedence .
 <<
 
 InfoTest: <<
@@ -199,29 +206,32 @@ InstallScript: <<
  # package directory.
  cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
  mkdir -p %i/var/%{Ni}/%v/
+
  # install examples
  mkdir -p %i/share/%{Ni}/%v/doc/examples
  cp -R examples %i/share/%{Ni}/%v/doc/examples
- # clear out hardcoded Fink sed.
- pushd %i/bin 
- for file in mkoctfile-%v %{Ni}-config-%v 
- do 
- 	perl -pi -e 's|%p/bin/sed|/usr/bin/sed|g' $file
- done
- popd 
+
  # remove autogenerated freedesktop.org desktop file
  rm -f %i/share/applications/www.%{Ni}.org-%{Ni}.desktop
  mkdir -p %i/share/%{Ni}/%v/scripts
  # install the octave-forge helper scripts
  cp %{Ni}-forge* %i/share/%{Ni}/%v/scripts
  chmod a+x %i/share/%{Ni}/%v/scripts/*
+ # move compiler wrapper over
+ cp %b/oct-compiler.in %i/share/%{Ni}/%v/scripts
+
+ # clear out hardcoded Fink sed.
+ pushd %i/bin 
+ for file in mkoctfile-%v %{Ni}-config-%v 
+ do
+ 	perl -pi -e 's|%p/bin/sed|/usr/bin/sed|g' $file
+ done
  # generate Fink-gcc enabled mkoctfile
- cp %i/bin/mkoctfile-%type_raw[oct] %i/bin/mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
+ cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
  perl -pi -e \
- 's,(CC).*(gcc),\1\="%p/bin/\2-fsf-%type_raw[gcc],g; \
-  s,(.*=\").*(g\+\+),\1%p/bin/\2-fsf-%type_raw[gcc],g' \
-    %i/bin/mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] 
- cd %i/bin
+ 's,oct\-cc,%p/bin/gcc-fsf-%type_raw[gcc],g; \
+  s,oct\-cxx,%p/bin/g++-fsf-%type_raw[gcc],g' \
+    mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] 
  # create convenience symlink
  ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
 <<
@@ -252,7 +262,8 @@ SplitOff: <<
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<	
 	Depends: << 
-		fftw3-shlibs, 
+		fftw3-shlibs,
+		gcc%type_pkg[gcc]-shlibs,
 		hdf5.7-shlibs,
 		readline5-shlibs, 
 		fontconfig2-shlibs,
@@ -262,7 +273,7 @@ SplitOff: <<
 		(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs (>= 1.1.1-5)
 	<<
 	Provides: <<
-		
+		liboctave%type_pkg[oct]-v2,
 		liboctave%type_pkg[oct],
 		(%type_raw[-atlas] = -atlas) liboctave%type_pkg[oct]-atlas,
 		(%type_raw[-atlas] != -atlas) liboctave%type_pkg[oct]-veclib,
@@ -308,6 +319,14 @@ SplitOff2: <<
 		%{Ni}324-atlas-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
+		%{Ni}360-dev, 
+		%{Ni}360-atlas-dev,
+		%{Ni}360-x11-dev,
+		%{Ni}360-atlas-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
 		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -324,13 +343,22 @@ SplitOff2: <<
 		%{Ni}324-atlas-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
+		%{Ni}343 (<< 3.4.3-206),
+		%{Ni}360-dev, 
+		%{Ni}360-atlas-dev,
+		%{Ni}360-x11-dev,
+		%{Ni}360-atlas-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Provides: <<
-		
+		liboctave%type_pkg[oct]-v2-dev,
 		liboctave%type_pkg[oct]-dev,
 		(%type_raw[-atlas] = -atlas) liboctave%type_pkg[oct]-atlas-dev,
 		(%type_raw[-atlas] != -atlas) liboctave%type_pkg[oct]-veclib-dev,
@@ -342,15 +370,19 @@ SplitOff2: <<
 	
 	Files: <<
 		include/%{Ni}-%v
+		lib/%{Ni}/%v/*.la 
 		bin/mkoctfile*
 		bin/octave-config*
 		share/man/man1/mkoctfile*.1
 		share/man/man1/octave-config*.1
+		share/%{Ni}/%v/scripts/oct-compiler.in
 	<<
 	
 	DescDetail: <<
 	This package contains files needed to build against Octave, including
-	headers and the mkoctfile executable.
+	headers and the mkoctfile executable.  It also contains symlinks to Fink's
+	compiler wrappers, which are set up at install time to be appropriate to
+	the current machine setup.
 	<<
 	DescUsage: <<
 	To use mkoctfile to build dynamically loadable modules, you will need 	
@@ -358,10 +390,51 @@ SplitOff2: <<
  	%n cannot Depend on them since they are BuildDependsOnly.
 	<<
 	DescPackaging:  <<
-	We Make up an extra mkoctfile which uses a Fink gcc for packages that need
+	We make up an extra mkoctfile which uses a Fink gcc for packages that need
 	stuff which isn't included in Xcode.
 	<<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
+	PostInstScript: <<
+		cd %p/bin
+		osversion=`uname -r | cut -d. -f1`
+		case $osversion in
+			11) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/cc,' \
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
+				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/c++,' \
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
+				chmod a+x oct-cc oct-cxx ;;
+			10) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
+				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
+							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
+				chmod a+x oct-cc oct-cxx ;;
+			9)  if [ "%m" = "x86_64" ]
+					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
+				then 
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
+								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
+								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
+					chmod a+x oct-cc oct-cxx
+			 	else
+			 		# Compilers on powerpc and i386 build with proper arch.
+					ln -s /usr/bin/gcc-4.2 oct-cc
+					ln -s /usr/bin/g++-4.2 oct-cxx 
+				fi ;;
+			# fangism--feel free to update this
+			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
+		esac
+	<<
+	PreRmScript: <<
+		if [ -e %p/bin/oct-cc ]
+			then rm %p/bin/oct-cc
+			else printf "%p/bin/oct-cc is not present.\n" 
+		fi
+		if [ -e %p/bin/oct-cxx ]
+			then rm %p/bin/oct-cxx
+			else printf "%p/bin/oct-cxx is not present.\n"
+		fi
+	<<
 <<
 
 Splitoff3: <<
@@ -376,15 +449,13 @@ Splitoff3: <<
 	graphicsmagick-shlibs,
 	hdf5.7-shlibs,
 	libcurl4-shlibs, 
-	pcre-shlibs, 
-	qhull5-shlibs,
+	libpcre1-shlibs, 
+	qhull6.3-shlibs,
 	readline5-shlibs,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
 	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
-	(%type_raw[-atlas] != -atlas) 	arpack-ng-shlibs,
 	(%type_raw[-atlas] != -atlas) 	qrupdate-shlibs,
 	(%type_raw[-atlas] = -atlas) 	atlas-shlibs (>= 3.8.1-1),
-	(%type_raw[-atlas] = -atlas) 	arpack-ng-atlas-shlibs,
 	(%type_raw[-atlas] = -atlas) 	qrupdate-atlas-shlibs
 	<<
 	Conflicts: << 
@@ -547,16 +618,18 @@ variables, and the individual octave-forge  packages have to make copies
 of the octave scripts during their build process and edit them to use the
 package's name.
 
-The -atlas variant depends on -atlas variants (only) of qrupdate and arpack-ng.  
-The non-atlas variant depends on non-atlas variants (only) of these.
+The -atlas variant depends on -atlas variant (only) of qrupdate.  
+The non-atlas variant depends on non-atlas variant (only) of this.
  
-Patch oct-conf.h, and mkoctfile not to put "flag-sort -r" in the 
-name of the compiler used, and to use the full path of Fink's compiler wrappers.
-Also, we add the BLAS C library to BLAS_LIBS in the -atlas variant.  This makes
-sure that anything that builds against Octave has the proper information when 
-installed manually as well as via Fink, and is critical for 10.6/i386 (and 10.5
-/x86_64) users.  Unfortunately, this requires a rebuild on OS upgrades, because
-the information in oct-conf.h gets hardcoded into the Octave interpreter 
+Patch oct-conf.h, and mkoctfile not to put "flag-sort -r" in the name of the
+compiler used, and to use the full path of Fink's compiler wrappers.  Also, 
+add the BLAS C library to BLAS_LIBS in the -atlas variant.  This avoid issues
+which would propagate as dependendencies, e.g. encoding 'flag-sort' or a 
+ccache-default compiler.  This also makes sure that anything that builds 
+against Octave has the proper information when installed manually as well as 
+via Fink, and is critical for 10.6/i386 (and 10.5/x86_64) users.
+Unfortunately, this requires a rebuild on OS upgrades, because the 
+information in oct-conf.h gets hardcoded into the Octave interpreter 
 executable, and some octave-forge packages get information from that.
 
 Includes an additional mkoctfile which uses Fink's gcc46 compilers instead
@@ -578,7 +651,40 @@ As of revision 304:
 
 Due to issues with qhull6, use qhull5 instead.
 Clean up octave-forge build scripts.
+
+As of revision 305:
+
+Switch to arpack-ng, which contains downstream patches from
+Scilab, Debian, R, Octave, ...
+
+As of revision 306:
+
+arpack-ng-atlas misbuilt prior to version 3.0.1-2
+
+As of revision 307:
+
+Package is actually using a bundled arpack--no configure flag
+to disable that.
+Move .la files into the -dev splitoff.
+
+As of revision 308:
+
+Our specifications of FLIBS, LAPACK_LIBS, and BLAS_LIBS weren't quite right
+(the latter two are OK in the non-atlas variant); fix so that newer upstream
+octave-forge packages that use these will work without patching for this.
+
+Patch oct-conf.h and mkoctfile to use octave-specific compiler executables.  
+These go in the -dev package, and are either wrappers around Fink's compiler
+wrappers or symlinks to the Xcode compilers, as appropriate for the OS version.
+They are resolved in the PostInstScript so that they set themselves 
+appropriately for the OS version where Octave is installed, rather than where
+it is built, thereby avoiding the necessity to rebuild Octave when updating
+the OS.
+This allows unification of the 10.5 and 10.6 package descriptions.
+
+These two fixes, which applied in all of our Octave packages, constitute 
+"liboctave-v2".
 <<
-Homepage: http://www.octave.org/
-License: GPL
+Homepage:  http://www.octave.org/
+License: GPL3+
 <<
