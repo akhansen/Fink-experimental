@@ -240,7 +240,7 @@ InstallScript: <<
  popd
 
  # sanitize .la file
- cd %i/lib/%{Ni}/%type_raw[v]/
+ cd %i/lib/%{Ni}/%v/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' liboctinterp.la
 <<
 
@@ -291,12 +291,12 @@ SplitOff: <<
 	<<
 	
 	Files: <<
-		lib/%{Ni}/%type_raw[v]/lib{cruft,%{Ni},octinterp}.1.dylib
+		lib/%{Ni}/%v/lib{cruft,%{Ni},octinterp}.1.dylib
 	<<
 	Shlibs: <<
-		%p/lib/%{Ni}/%type_raw[v]/libcruft.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%type_raw[v]/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%type_raw[v]/liboctinterp.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%v/libcruft.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%v/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%v/liboctinterp.1.dylib 2.0.0 %n (>=3.6.0-1)
 	<<
 	DescDetail: <<
 	This package contains shared libraries which are used by the Octave
@@ -332,7 +332,7 @@ SplitOff2: <<
 		%{Ni}343-atlas-dev,
 		%{Ni}343-x11-dev,
 		%{Ni}343-atlas-x11-dev,
-		%{Ni}343-dev, 
+		%{Ni}361-dev, 
 		%{Ni}361-atlas-dev,
 		%{Ni}361-x11-dev,
 		%{Ni}361-atlas-x11-dev,
@@ -356,6 +356,10 @@ SplitOff2: <<
 		%{Ni}343-atlas-dev,
 		%{Ni}343-x11-dev,
 		%{Ni}343-atlas-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -373,8 +377,8 @@ SplitOff2: <<
 	BuildDependsOnly: true
 	
 	Files: <<
-		include/%{Ni}-%type_raw[v]
-		lib/%{Ni}/%type_raw[v]/*.la 
+		include/%{Ni}-%v
+		lib/%{Ni}/%v/*.la 
 		bin/mkoctfile*
 		bin/octave-config*
 		share/man/man1/mkoctfile*.1
@@ -415,9 +419,9 @@ SplitOff2: <<
 			9)  if [ "%m" = "x86_64" ]
 					# use 10.6 compiler wrappers on 10.5/x86_64	
 				then 
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
 								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
+					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
 								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
 					chmod a+x oct-cc oct-cxx
 			 	else
