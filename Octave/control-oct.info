@@ -2,7 +2,7 @@ Info2: <<
 Package: control%type_pkg[-atlas]-oct%type_pkg[oct]
 Version: 2.2.5
 Type: oct (3.4.3 3.6.0 3.6.1), forge (control), -atlas (boolean)
-Revision: 5
+Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage:  http://octave.sourceforge.net/control/index.html 
@@ -180,6 +180,11 @@ SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 
 CompileScript: <<
 #!/bin/sh -ev
+if [ $UID -ne 0 ]
+then 
+	echo "%n cannot be built with --build-as-nobody"
+	exit 1
+fi
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
 # repack tarball, since octave-3.4.3 appears not to want to install
 # from directories
