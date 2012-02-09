@@ -10,7 +10,7 @@ Source-MD5: bfba44eeda8fa6e29c2bbcd2604c34eb
 
 BuildDepends: <<
 	glpk-dev, hdf5.7-oldapi, readline5, libncurses5, fftw3 (>= 3.1.1-7), libcurl4, 
-	libpcre1-dev, gcc46-compiler, suitesparse, qhull5-dev, fink (>= 0.30.0-1), fink-package-precedence, sed,
+	libpcre1, gcc46-compiler, suitesparse, qhull5-dev, fink (>= 0.30.0-1), fink-package-precedence, sed,
 	(%type_raw[-atlas] = atlas) atlas, flag-sort
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-atlas] (=%v-%r)
