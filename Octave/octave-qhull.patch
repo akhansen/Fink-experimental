@@ -1,6 +1,6 @@
-diff -Nurd octave-3.6.0/src/DLD-FUNCTIONS/oct-qhull.h octave-3.6.0.patched/src/DLD-FUNCTIONS/oct-qhull.h
---- octave-3.6.0/src/DLD-FUNCTIONS/oct-qhull.h	2012-01-15 13:05:02.000000000 -0500
-+++ octave-3.6.0.patched/src/DLD-FUNCTIONS/oct-qhull.h	2012-02-07 13:19:49.000000000 -0500
+diff -Nurd octave-@OCTVERSION@/src/DLD-FUNCTIONS/oct-qhull.h octave-@OCTVERSION@.patched/src/DLD-FUNCTIONS/oct-qhull.h
+--- octave-@OCTVERSION@/src/DLD-FUNCTIONS/oct-qhull.h	2012-01-15 13:05:02.000000000 -0500
++++ octave-@OCTVERSION@.patched/src/DLD-FUNCTIONS/oct-qhull.h	2012-02-07 13:19:49.000000000 -0500
 @@ -27,27 +27,11 @@
  
  extern "C" {
