@@ -495,6 +495,7 @@ Splitoff3: <<
 	<<
 	
 	Files: <<
+		share/%{Ni}/%type_raw[v]
 		share/%{Ni}/%v
 		lib/%{Ni}/%type_raw[v]
 		bin/%{Ni}-%v
