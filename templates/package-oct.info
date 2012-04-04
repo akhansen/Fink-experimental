@@ -72,6 +72,10 @@ underscores.
 #### Insert required changes here ####
 
 #@CHANGES@
+#Typically we're seeing 
+#SourceDirectory: %type_raw[forge]
+#These days
+SourceDirectory: @SOURCEDIR@
 
 ######################################
 
@@ -85,19 +89,28 @@ SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 SetMAKEFLAGS: -j1
 
 CompileScript: <<
-#!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
-# repack tarball, since octave-3.4.3+ appears not to want to install
-# from directories
-if [ %type_pkg[oct] -ge 343 ]
-then
-	cd ..
-	tar -cvf %type_raw[forge]-%v.tar %type_raw[forge]
-	cd %b
-	pkgsrc=%type_raw[forge]-%v.tar
-else pkgsrc=%type_raw[forge]
-fi
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+	#!/bin/sh -ev
+	#--build-as-nobody blocker
+	if [ $UID -ne 0 ]
+	then 
+		echo "%n cannot be built with --build-as-nobody"
+		exit 1
+	fi
+	export OCTAVE=%p/bin/octave-%type_raw[oct] 
+	# usually srcdir=%type_faw[forge] these days.  Sometimes it's still
+	# %type_raw[forge]-%v
+	srcdir=@SOURCEDIR@
+	# repack tarball, since octave-3.4.3+ appears not to want to install
+	# from directories
+	if [ %type_pkg[oct] -ge 343 ]
+	then
+		cd ..
+		tar -cvf $srcdir-%v.tar $srcdir
+		cd %b
+		pkgsrc=$srcdir-%v.tar
+	else pkgsrc=$srcdir
+	fi
+	%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 
