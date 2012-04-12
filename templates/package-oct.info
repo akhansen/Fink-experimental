@@ -97,7 +97,7 @@ CompileScript: <<
 		exit 1
 	fi
 	export OCTAVE=%p/bin/octave-%type_raw[oct] 
-	# usually srcdir=%type_faw[forge] these days.  Sometimes it's still
+	# usually srcdir=%type_raw[forge] these days, but sometimes it's still
 	# %type_raw[forge]-%v
 	srcdir=@SOURCEDIR@
 	# repack tarball, since octave-3.4.3+ appears not to want to install
