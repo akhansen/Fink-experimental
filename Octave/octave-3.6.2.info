@@ -3,7 +3,6 @@ Package: octave%type_pkg[-atlas]%type_pkg[-x11]
 Type: -atlas (boolean), oct (3.6.2), gcc (4.7), -x11 (boolean)
 Version: 3.6.2
 Revision: 1
-Architecture: (%type_raw[-atlas] != -atlas) i386, (%type_raw[-atlas] != -atlas) powerpc
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
@@ -121,8 +120,9 @@ using std::size_t;' liboctave/oct-alloc.h
 <<
 
 GCC: 4.0
-UseMaxBuildJobs: false
 SetLDFLAGS: -Wl,-dead_strip_dylibs
+SetCC: flag-sort -r gcc
+SetCXX: flag-sort -r g++
 
 ConfigureParams: <<
 	(%type_raw[-atlas] != -atlas)	--with-lapack=-Wl,-framework,Accelerate \
@@ -149,23 +149,9 @@ ConfigureParams: <<
 <<
 CompileScript: <<
  #!/bin/sh -ev
- # Needs GCC >= 4.2
- osversion=`uname -r | cut -d. -f1`
- if [ $osversion -eq 9 ]
- then
- 	export CC="flag-sort -r gcc-4.2"
- 	export CXX="flag-sort -r g++-4.2"
- else	
- 	export CC="flag-sort -r gcc"
-	export CXX="flag-sort -r g++"
- fi
  export CFLAGS='-O3'
  export FFLAGS='-O3'
- # avoid package installation failure
- if [ "%m" != "x86_64" ]
- 	then export CXXFLAGS="-O0"
- 	else export CXXFLAGS="-O3"
- fi
+ export CXXFLAGS="-O3"
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  export FLIBS="-L${FLIBDIR} -lgfortran"
@@ -174,19 +160,25 @@ CompileScript: <<
  	then export FFLAGS='-O3 -ff2c'
  	else export FFLAGS='-O3'
  fi
- %{default_script}
+ ./configure %c
+ # don't just use top-level Makefile so that we can do a multi-core build.
+ for dirs in libgnu libcruft liboctave ; do
+ 	pushd $dirs
+ 	make
+ 	popd
+ done
+ # src/ and scripts/ need to be built with -j1 since docs get built there.
+ for dirs in src scripts ; do
+ 	pushd $dirs
+ 	make -j1
+ 	popd
+ done
  fink-package-precedence .
 <<
 
-# bus error at   src/dirfns.cc
-# No tests on 32-bit platforms
 InfoTest: <<
 	TestScript: <<
-	#!/bin/sh -ev
-	if [ "%m" = "x86_64" ]
-		then make check || exit 2	
-		else printf "\nSkipping tests for %m.\n"
-	fi
+		make check || exit 2	
 	<<
 <<
 
@@ -329,10 +321,10 @@ SplitOff2: <<
 		%{Ni}360-atlas-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
-		%{Ni}361-dev, 
-		%{Ni}361-atlas-dev,
-		%{Ni}361-x11-dev,
-		%{Ni}361-atlas-x11-dev,
+		%{Ni}362-dev, 
+		%{Ni}362-atlas-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-x11-dev,
 		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
 		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -357,10 +349,10 @@ SplitOff2: <<
 		%{Ni}360-atlas-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
-		%{Ni}361-dev, 
-		%{Ni}361-atlas-dev,
-		%{Ni}361-x11-dev,
-		%{Ni}361-atlas-x11-dev,
+		%{Ni}362-dev, 
+		%{Ni}362-atlas-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -604,8 +596,6 @@ because this appears to be necessary when using the Accelerate framework.
 
 The package won't build on 10.5/x86_64 or 10.6/x86_64 against the vecLib
 framework, so we disable the non-atlas option on those platforms.
-
-Must build with CXXFLAGS set at -O0 on 32-bit or some Octave Forge packages won't install.
 <<
 DescPackaging:  <<
 Not sane (and now not even compilable) to use private code
