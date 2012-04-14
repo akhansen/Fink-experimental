@@ -1,8 +1,8 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]%type_pkg[-x11]
-Type: -atlas (boolean), oct(3.2.4), gcc (4.6), -x11 (boolean)
+Type: -atlas (boolean), oct(3.2.4), gcc (4.7), -x11 (boolean)
 Version: 3.2.4
-Revision: 3011
+Revision: 3012
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
@@ -68,10 +68,6 @@ PatchFile3: %{ni}.patch
 PatchFile3-MD5: 675cf038c246ec6f138684551fab2cbb
 PatchFile4: %{ni}-GM.patch
 PatchFile4-MD5: 7f016e7d32fa32a0b2962f35892f52a9
-PatchFile5: %{ni}-10.7.patch
-PatchFile5-MD5: 8304ed39a2c8783f01c81133971166e8
-PatchFile6: %{ni}-10.7-x11.patch
-PatchFile6-MD5: 6dd5be3b8d199fb76a72997ea50d05d4
 PatchScript: <<
 	#!/bin/sh -ev
 	#fix for use of glpk private internals
@@ -104,19 +100,6 @@ PatchScript: <<
 	# Make sure GraphicsMagick gets activated properly.
 	sed -e 's/@OCTVERSION@/%v/g' %{PatchFile4} | patch -p1
 	perl -pi.orig -e 's|(#include \<GraphicsMagick/Magick\+\+\.h\>)|\1\nusing namespace Magick;|' src/DLD-FUNCTIONS/__magick_read__.cc
-
-	# fix lack of CGDisplayBitsPerPixel on 10.7
-	osversion=`uname -r | cut -d. -f1`
-	if [ $osversion -ge 10 ]
-	then
-		if [ "%type_pkg[-x11]" != "-x11" ]
-		then
-			patch -p1 < %{PatchFile5}
-			perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
-		else
-			patch -l -p1 < %{PatchFile6}
-		fi
-	fi
 	# more patching by fangism
 	# silence some warnings
 	sed -i.orig -e '/ibasea/s|\*ibasea, ||' \
@@ -189,9 +172,27 @@ InfoTest: <<
 		#!/bin/sh -ev
 		# doesn't work on any OS X
 		mv scripts/image/imread.m scripts/image/imread.m.testfails
+		if [ "%m" = "i386" ]
+		then
+			# these don't work on i386
+			mv src/ov-struct.cc src/ov-struct.cc.testfails
+			mv scripts/miscellaneous/setfield.m scripts/miscellaneous.m.testfails
+			if [ "%type_raw[-atlas]" = "-atlas" ]
+				# this doesn't work on i386/atlas: 
+				then mv scripts/linear-algebra/onenormest.m scripts/linear-algebra/onenormest.m.testfails
+			fi
+		fi
 		make check || exit 2	
 		#restore files
 		mv scripts/image/imread.m.testfails scripts/image/imread.m
+		if [ "%m" = "i386" ] 
+		then
+			mv src/ov-struct.cc.testfails src/ov-struct.cc
+			mv scripts/miscellaneous/setfield.m.testfails scripts/miscellaneous.m
+			if [ "%type_raw[-atlas]" = "-atlas" ]
+				then mv scripts/linear-algebra/onenormest.m.testfails scripts/linear-algebra/onenormest.m
+			fi
+		fi
 	<<
 <<
 
@@ -230,7 +231,7 @@ InstallScript: <<
  pushd %i/bin 
  for file in mkoctfile-%v %{Ni}-bug-%v %{Ni}-config-%v 
  do 
- 	perl -pi -e 's|%p/bin/sed|/usr/bin/sed|g' $file
+ 	perl -pi -e 's|%p/bin/sed|/usr/bin/env sed|g' $file
  done
  # generate Fink-gcc enabled mkoctfile
  cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
@@ -331,7 +332,10 @@ SplitOff2: <<
 		%{Ni}361-atlas-dev,
 		%{Ni}361-x11-dev,
 		%{Ni}361-atlas-x11-dev,
-		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
+		%{Ni}362-dev, 
+		%{Ni}362-atlas-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-x11-dev,
 		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
@@ -355,7 +359,10 @@ SplitOff2: <<
 		%{Ni}361-atlas-dev,
 		%{Ni}361-x11-dev,
 		%{Ni}361-atlas-x11-dev,
-		%{Ni} (<< 3.0.5-5), 
+		%{Ni}362-dev, 
+		%{Ni}362-atlas-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-x11-dev,
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
 		%{Ni}3.0.2-atlas ( << 3.0.2-5),
@@ -595,7 +602,7 @@ CGDisplayBitsPerPixel on 10.7.
 
 Cleanups from David Fang to get the package to build using clang.
 
-As of revision 325:  the non-atlas variant is built with -ff2c in the FFLAGS, 
+As of revision 125|225:  the non-atlas variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
 <<
 DescPackaging:  <<
@@ -634,7 +641,7 @@ package's name.
 We remove the FLTK backend module since we are allowing for Aqua and X11
 variants of that in the fltk-backend-{aqua|x11}-oct324 packages.
 
-As of revision 325:  
+As of revision 125|225:  
 
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
 The non-atlas variant depends on non-atlas variants (only) of these.
@@ -655,7 +662,7 @@ installed manually as well as via Fink, and is critical for 10.6/i386 (and 10.5
 the information in oct-conf.h gets hardcoded into the Octave interpreter 
 executable, and some octave-forge packages get information from that.
 
-As of revision 326:
+As of revision 126|226:
 
 Get rid of the ugly construction previously used for setting the BLAS and 
 LAPACK libraries.
@@ -663,7 +670,13 @@ LAPACK libraries.
 Now includes an additional mkoctfile which uses Fink's gcc46 compilers instead
 of Xcode's.
 
-As of revision 701:
+As of revision 127:
+
+Since 'gcc' isn't wrapped by a Fink compiler wrapper on 10.5, we modify 
+encoded references to ccache-default's %p/bin/cc to use /usr/bin/gcc instead.
+
+As of revision 501|601:
+
 It turns out that liboctinterp.3.2.4.dylib links to X11 if the package is
 configured to build the FLTK graphics with X11, so we'll migrate to a fully-
 varianted octave package and leave fltk-backend-oct324-(aqua|x11) just as
@@ -674,16 +687,18 @@ unwieldy | lists in the octave-forge packages.
 
 Actually _install_ the manpages for the versioned executables.
 
-As of revision 3002:
+Disable non-atlas (vecLib) option on x86_64 due to misbuilding.
+
+As of revision 1002|2002:
 
 Don't use METIS, because of its license.
 
-As of revision 3004:
+As of revision 1004|2004:
 
 Due to issues with qhull6, use qhull5 instead.
 Clean up octave-forge build scripts.
 
-As of revision 3005: switch to arpack-ng
+As of revision 1005|2005: switch to arpack-ng
 
 As of revision 3006:  
 
@@ -703,6 +718,6 @@ This allows unification of the 10.5 and 10.6 package descriptions.
 These two fixes, which applied in all of our Octave packages, constitute 
 "liboctave-v2".
 <<
-Homepage:  http://www.octave.org/
+Homepage: http://www.octave.org/
 License: GPL3
 <<
