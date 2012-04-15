@@ -129,5 +129,4 @@ PostInstScript:  <<
 <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
-
 <<
