@@ -236,7 +236,7 @@ InstallScript: <<
  done
  # generate Fink-gcc enabled mkoctfile
 # cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
-# cp mkoctfile-%type_raw[v] mkoctfile-%type_raw[v]-gcc%type_raw[gcc]
+ cp mkoctfile-%type_raw[v] mkoctfile-%type_raw[v]-gcc%type_raw[gcc]
  perl -pi -e \
  's,oct\-cc,%p/bin/gcc-fsf-%type_raw[gcc],g; \
   s,oct\-cxx,%p/bin/g++-fsf-%type_raw[gcc],g' \
@@ -246,10 +246,14 @@ InstallScript: <<
  popd
 
  # sanitize .la file
- cd %i/lib/%{Ni}/%type_raw[v]/
+ pushd %i/lib/%{Ni}/%type_raw[v]/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' liboctinterp.la
+ popd
 
  # for prerelease package only:
+ #make non-rc mkoctfile
+ pushd %i/bin
+ ln -s mkoctfile-%type_raw[v] mkoctfile-%type_raw[oct]
 <<
 
 InfoDocs: %{Ni}.info
@@ -513,6 +517,7 @@ Splitoff3: <<
 	
 	Files: <<
 		share/%{Ni}/%type_raw[v]
+		share/%{Ni}/%v
 		lib/%{Ni}/%type_raw[v]
 		bin/%{Ni}-%type_raw[v]
 		var/%{Ni}/%v
