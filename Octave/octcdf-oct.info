@@ -1,0 +1,151 @@
+Info2: <<
+Package: octcdf%type_raw[-nc]-oct%type_pkg[oct]
+Version: 1.1.4
+Type: oct (3.4.3 3.6.0 3.6.1 3.6.2), forge (octcdf), -nc (-ncdap -nc4), gcc (4.7)
+Revision: 2
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+# unfortunately, Homepage won't do types
+Homepage: http://octave.sourceforge.net/octcdf/index.html 
+Description: NetCDF interface for octave
+DescDetail: <<
+This package is DAP-enabled via the  NetCDF3 implementations in libnc-dap3,
+(the -ncdap version) or netcdf7, AKA netCDF4 (the nc4 version).
+It contains the following functions and examples.
+NetCDF:
+        ncautonan
+        ncautoscale
+        ncbyte
+        ncchar
+        ncdouble
+        ncdump
+        ncfloat
+        ncint
+        nclong
+        ncshort
+        netcdf_setup
+        ncatt
+        ncclose
+        ncdatatype
+        ncdim
+        ncenddef
+        ncname
+        ncredef
+        ncsync
+        ncvar
+        netcdf
+        ncisrecord
+Examples:
+        example_netcdf
+        example_opendap
+<<
+
+License: GPL2+
+
+# Most octave-forge packages have to have the following BuildDepends:
+# liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev, 
+# fftw3, 
+# ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+# ( %type_pkg[oct] != 305 ) hdf5.7
+#
+# Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
+# not use the conditional, of course.
+
+BuildDepends: <<
+  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+  fftw3, 
+  (%type_raw[-nc] = -ncdap) libdap9,
+  (%type_raw[-nc] = -ncdap) libnc-dap3 (>= 1:3.7.3-4),
+  (%type_raw[-nc] = -nc4) netcdf-c7, 
+  hdf5.7
+<<
+Depends: << 
+  octave%type_pkg[oct]-interpreter,
+  (%type_raw[-nc] = -ncdap) libnc-dap3-shlibs (>= 1:3.7.3-4),
+  (%type_raw[-nc] = -nc4) netcdf-c7-shlibs,
+  ( %type_pkg[oct] << 360 ) gcc%type_pkg[gcc]-shlibs
+  <<
+Conflicts: <<
+	octave-forge,
+	%type_raw[forge]-ncdap-oct%type_pkg[oct],
+	%type_raw[forge]-nc4-oct%type_pkg[oct]
+<<
+BuildConflicts: <<
+	(%type_raw[-nc] = -ncdap) netcdf7,  
+	(%type_raw[-nc] = -ncdap) netcdf-c7 
+<<
+Replaces: <<
+%type_raw[forge]-oct%type_pkg[oct] (<< 1.1.2-3),
+%type_raw[forge]-ncdap-oct%type_pkg[oct],
+%type_raw[forge]-nc4-oct%type_pkg[oct]
+<<
+
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: de10840e48e9033e6ae165480f73cf4f
+SourceDirectory: %type_pkg[forge]
+
+# Do not change anything from this point down, unless absolutely necessary,
+# since the foo-oct%type_pkg[oct] packages are designed to be built/installed
+# in the same way.
+
+
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
+SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
+UseMaxBuildJobs: false
+BuildAsNobody: false
+
+CompileScript: <<
+#!/bin/sh -ev
+if [ $UID -ne 0 ]
+then 
+	echo "%n cannot be built with --build-as-nobody"
+	exit 1
+fi
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+cd ..
+tar -cf %type_raw[forge].tar %type_raw[forge]
+cd %b
+pkgsrc=%type_raw[forge].tar
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+<<
+
+InstallScript: << 
+	#!/bin/sh -ev
+	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
+	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	# copy template scripts
+	cp %p/share/octave/%type_raw[oct]/scripts/octave-forge-prerm %p/share/octave/%type_raw[oct]/scripts/octave-forge-postinst %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	cd %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	sed -i -e 's/@PKGNAME@/%type_raw[forge]-%v/' octave-forge-postinst
+	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
+	chmod a+x octave-forge*
+<<
+
+PostInstScript:  <<
+	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
+	then 
+		%p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-postinst
+	else
+ 		mv %p/share/octave/%type_raw[oct]/packages/%type_raw[forge]-%v/octave_packages %p/var/octave/%type_raw[oct]/octave_packages
+	fi
+<<
+
+PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
+
+DescPackaging: <<
+This package:
+As of 1.1.2-3:  This package can use netCDF4 (netcdf7 in Fink), or if that isn't 
+found, libnc-dap(3).  We allow for both possibilities and specify a BuildConflicts: 
+netcdf7 to remove nc-config and allow fallback to libnc-dap.
+
+Common for all octave-forge packages:
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
+<<
