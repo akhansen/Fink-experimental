@@ -8,7 +8,7 @@ Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 Homepage: http://octave.sourceforge.net/combinatorics/index.html 
 Description: Combinatorics functions for Octave
 DescDetail: <<
-Combinatorics functions, incuding partitioning.
+Combinatorics functions, including partitioning.
 
 The package provides the following functions:
 	partint
