@@ -1,8 +1,8 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]%type_pkg[-x11]
-Type: -atlas (boolean), oct(3.6.1), gcc (4.7), -x11 (boolean)
-Version: 3.6.1
-Revision: 2
+Type: -atlas (boolean), oct(3.6.2), gcc (4.7), -x11 (boolean), v (3.6.2-rc0)
+Version: 3.6.2
+Revision: 0.rc0
 Architecture: <<
 i386,
 (%type_raw[-atlas] = -atlas) x86_64
@@ -65,8 +65,9 @@ Replaces: <<
 	%{Ni}3.0.2-atlas ( << 3.0.2-5) 
 <<
 
-Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
-Source-MD5:  15c7c97a4aa4b1ee1d7dfd784c1bc492
+#Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
+Source: ftp://alpha.gnu.org/gnu/octave/%{Ni}-%type_raw[v].tar.gz
+Source-MD5:  077b58a9663c0cf4a0450e1c7516e82a
 
 PatchFile: %{ni}-glpk.patch
 PatchFile-MD5: a4861a0803cfbbbb8892019cd5f217d2
@@ -106,6 +107,21 @@ PatchScript: <<
 	perl -pi.orig -e \
 		's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' \
 			src/DLD-FUNCTIONS/__magick_read__.cc
+
+	# fix lack of CGDisplayBitsPerPixel on 10.7
+	osversion=`uname -r | cut -d. -f1`
+	if [ $osversion -ge 10 ]
+	then
+		if [ "%type_pkg[-x11]" != "-x11" ]
+		then
+			patch -p1 < %{PatchFile4}
+			perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
+		else
+			# change windows to Windows to match PatchFile5
+			perl -pi.orig -e 's/windows/Windows/g' src/display.cc 
+			patch -l -p1 < %{PatchFile5}
+		fi
+	fi
 
 	# more patching by fangism
 	# silence some warnings
@@ -215,7 +231,8 @@ InstallScript: <<
  cp doc/interpreter/*.info* %i/share/info
  # Install Fink-specific octaverc which points at our oct-versioned
  # package directory.
- cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
+ #cp %{Ni}rc %i/share/%{Ni}/%v/m/startup
+ cp %{Ni}rc %i/share/%{Ni}/%type_raw[v]/m/startup
  mkdir -p %i/var/%{Ni}/%v/
 
  # install examples
@@ -232,23 +249,30 @@ InstallScript: <<
 
  # clear out hardcoded Fink sed.
  pushd %i/bin 
- for file in mkoctfile-%v %{Ni}-config-%v 
+ for file in mkoctfile-%type_pkg[v] %{Ni}-config-%type_raw[v] 
  do
  	perl -pi -e 's|%p/bin/sed|/usr/bin/env sed|g' $file
  done
  # generate Fink-gcc enabled mkoctfile
- cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
+# cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
+ cp mkoctfile-%type_raw[v] mkoctfile-%type_raw[v]-gcc%type_raw[gcc]
  perl -pi -e \
  's,oct\-cc,%p/bin/gcc-fsf-%type_raw[gcc],g; \
   s,oct\-cxx,%p/bin/g++-fsf-%type_raw[gcc],g' \
-    mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] 
+    mkoctfile-%type_raw[v]-gcc%type_raw[gcc] 
  # create convenience symlink
- ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
+ ln -s mkoctfile-%type_raw[v]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
  popd
 
  # sanitize .la file
- cd %i/lib/%{Ni}/%v/
+ pushd %i/lib/%{Ni}/%type_raw[v]/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' liboctinterp.la
+ popd
+
+ # for prerelease package only:
+ #make non-rc mkoctfile
+ pushd %i/bin
+ ln -s mkoctfile-%type_raw[v] mkoctfile-%type_raw[oct]
 <<
 
 InfoDocs: %{Ni}.info
@@ -298,12 +322,12 @@ SplitOff: <<
 	<<
 	
 	Files: <<
-		lib/%{Ni}/%v/lib{cruft,%{Ni},octinterp}.1.dylib
+		lib/%{Ni}/%type_raw[v]/lib{cruft,%{Ni},octinterp}.1.dylib
 	<<
 	Shlibs: <<
-		%p/lib/%{Ni}/%v/libcruft.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%v/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.0-1)
-		%p/lib/%{Ni}/%v/liboctinterp.1.dylib 2.0.0 %n (>=3.6.0-1)
+		%p/lib/%{Ni}/%type_raw[v]/libcruft.1.dylib 2.0.0 %n (>=3.6.2-1)
+		%p/lib/%{Ni}/%type_raw[v]/lib%{Ni}.1.dylib 2.0.0 %n (>=3.6.2-1)
+		%p/lib/%{Ni}/%type_raw[v]/liboctinterp.1.dylib 2.0.0 %n (>=3.6.2-1)
 	<<
 	DescDetail: <<
 	This package contains shared libraries which are used by the Octave
@@ -343,10 +367,10 @@ SplitOff2: <<
 		%{Ni}360-atlas-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
-		%{Ni}362-dev, 
-		%{Ni}362-atlas-dev,
-		%{Ni}362-x11-dev,
-		%{Ni}362-atlas-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		(%type_raw[-atlas] = atlas)		%{Ni} (<< 3.0.5-5), 
 		(%type_raw[-atlas] != atlas) 	%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -371,10 +395,10 @@ SplitOff2: <<
 		%{Ni}360-atlas-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
-		%{Ni}362-dev, 
-		%{Ni}362-atlas-dev,
-		%{Ni}362-x11-dev,
-		%{Ni}362-atlas-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -392,8 +416,8 @@ SplitOff2: <<
 	BuildDependsOnly: true
 	
 	Files: <<
-		include/%{Ni}-%v
-		lib/%{Ni}/%v/*.la 
+		include/%{Ni}-%type_raw[v]
+		lib/%{Ni}/%type_raw[v]/*.la 
 		bin/mkoctfile*
 		bin/octave-config*
 		share/man/man1/mkoctfile*.1
@@ -511,9 +535,10 @@ Splitoff3: <<
 	<<
 	
 	Files: <<
+		share/%{Ni}/%type_raw[v]
 		share/%{Ni}/%v
-		lib/%{Ni}/%v
-		bin/%{Ni}-%v
+		lib/%{Ni}/%type_raw[v]
+		bin/%{Ni}-%type_raw[v]
 		var/%{Ni}/%v
 		share/man/man1/%{Ni}-%v.1
 	<<
@@ -676,15 +701,11 @@ GNU info file.
 We use Provides in a new namespace and new projections to avoid
 unwieldy | lists in the octave-forge packages.
 
-The combination of compiler wrappers and new-style FLIBS, LAPACK_LIBS, and
-BLAS_LIBS constitutes liboctave-v2.
-
-As of revision 3: 
-Switch to using gcc47.  Since octave-forge packages for octave < 3.6.0
-link to whatever gcc4N Octave is using, and also since some other packages
-actually use gcc-4.N, add "liboctave-gcc47-dev" and "liboctave-gcc47" 
-Provides, to make sure that things stay in sync; the latter isn't used yet.
+Since octave-forge packages for octave < 3.6.0 link to whatever gcc4N 
+Octave is using, and also since some other packages actually use gcc-4.N, 
+add "liboctave-gcc47-dev" and "liboctave-gcc47" Provides, to make sure that
+ things stay in sync; the latter isn't used yet.
 <<
 Homepage: http://www.octave.org/
-License: GPL3
+License: GPL3+
 <<
