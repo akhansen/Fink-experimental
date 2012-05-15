@@ -108,21 +108,6 @@ PatchScript: <<
 		's|(#include \<)(Magick\+\+\.h\>)|\1GraphicsMagick/\2\nusing namespace Magick;|' \
 			src/DLD-FUNCTIONS/__magick_read__.cc
 
-	# fix lack of CGDisplayBitsPerPixel on 10.7
-	osversion=`uname -r | cut -d. -f1`
-	if [ $osversion -ge 10 ]
-	then
-		if [ "%type_pkg[-x11]" != "-x11" ]
-		then
-			patch -p1 < %{PatchFile4}
-			perl -pi.orig -e 's/CGDisplayBitsPerPixel/displayBitsPerPixel/' src/display.cc
-		else
-			# change windows to Windows to match PatchFile5
-			perl -pi.orig -e 's/windows/Windows/g' src/display.cc 
-			patch -l -p1 < %{PatchFile5}
-		fi
-	fi
-
 	# more patching by fangism
 	# silence some warnings
 	sed -i.orig -e '/ibasea/s|\*ibasea, ||' \
