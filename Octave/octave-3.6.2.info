@@ -258,6 +258,7 @@ InstallScript: <<
  #make non-rc mkoctfile
  pushd %i/bin
  ln -s mkoctfile-%type_raw[v] mkoctfile-%type_raw[oct]
+ ln -s %{Ni}-%type_raw[v] %{Ni}-%type_raw[oct]
 <<
 
 InfoDocs: %{Ni}.info
