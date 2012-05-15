@@ -1,6 +1,6 @@
 Info2: <<
 Package: octave%type_pkg[-atlas]%type_pkg[-x11]
-Type: -atlas (boolean), oct(3.6.2), gcc (4.7), -x11 (boolean), v (3.6.2-rc0)
+Type: -atlas (boolean), oct(3.6.2), gcc (4.6), -x11 (boolean), v (3.6.2-rc0)
 Version: 3.6.2
 Revision: 0.rc0
 Architecture: powerpc
