@@ -254,6 +254,8 @@ InstallScript: <<
  #make non-rc mkoctfile
  pushd %i/bin
  ln -s mkoctfile-%type_raw[v] mkoctfile-%type_raw[oct]
+ ln -s mkoctfile-%type_raw[v]-gcc%type_raw[gcc] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
+ ln -s %{Ni}-%type_raw[v] %{Ni}-%type_raw[oct]
 <<
 
 InfoDocs: %{Ni}.info
@@ -624,6 +626,8 @@ because this appears to be necessary when using the Accelerate framework.
 
 The package won't build on 10.5/x86_64 or 10.6/x86_64 against the vecLib
 framework, so we disable the non-atlas option on those platforms.
+
+Must build with CXXFLAGS set at -O0 on 32-bit or some Octave Forge packages won't install.
 <<
 DescPackaging:  <<
 Not sane (and now not even compilable) to use private code
