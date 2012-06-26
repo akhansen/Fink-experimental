@@ -154,7 +154,7 @@ ConfigureParams: <<
 	(%type_raw[-lapack] = .)	--with-lapack=-Wl,-framework,Accelerate \
 	(%type_raw[-lapack] = .)	--with-blas=-Wl,-framework,Accelerate \
  	(%type_raw[-lapack] = -atlas)	--with-lapack="-lptlapack" \
- 	(%type_raw[-lapack] = -atlas)	--with-blas="-lptcblas -lptf77blas  -lptatlas" \
+ 	(%type_raw[-lapack] = -atlas)	--with-blas="-lptcblas -lptf77blas  -latlas" \
  	(%type_raw[-lapack] = -ref)	--with-lapack="-L%p/lib/lapack/3.4.1 -lreflapack" \
  	(%type_raw[-lapack] = -ref)	--with-blas="-L%p/lib/lapack/3.4.1 -lrefblas" \
 	(%type_raw[-x11] != -x11)		--with-framework-carbon \
@@ -294,7 +294,7 @@ SplitOff: <<
 		readline6-shlibs, 
 		fontconfig2-shlibs,
 		freetype219-shlibs,
-		(%type_raw[-lapack] = -atlas)	atlas-shlibs (>= 3.9.76-1),
+		(%type_raw[-lapack] = -atlas)	atlas-shlibs (>= 3.9.11-13),
 		(%type_raw[-lapack] = -atlas) 	qrupdate-atlas-shlibs (>= 1.1.2-3), 
 		(%type_raw[-lapack] = .) 	qrupdate-shlibs (>= 1.1.1-5),
 		(%type_raw[-lapack] = -ref) qrupdate-ref-shlibs,
@@ -528,7 +528,8 @@ Splitoff3: <<
 		%{Ni}%type_pkg[oct]-ref-x11,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		%{Ni}3.0.2 ( << 3.0.2-5),
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Replaces: <<
 		%{Ni}%type_pkg[oct],

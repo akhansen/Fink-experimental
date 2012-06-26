@@ -303,7 +303,7 @@ SplitOff: <<
 	Provides: <<
 		liboctave%type_pkg[oct]-gcc%type_pkg[gcc],
 		liboctave%type_pkg[oct],
-		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-atlas,
+		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-ptatlas,
 		(%type_raw[-lapack] = .) liboctave%type_pkg[oct]-accelerate,
 		(%type_raw[-lapack] = -ref) liboctave%type_pkg[oct]-ref,
 		(%type_raw[-x11] = -x11) liboctave%type_pkg[oct]-x11,
@@ -416,7 +416,7 @@ SplitOff2: <<
 	Provides: <<
 		liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
 		liboctave%type_pkg[oct]-dev,
-		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-atlas-dev,
+		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-ptatlas-dev,
 		(%type_raw[-lapack] = .) liboctave%type_pkg[oct]-accelerate-dev,
 		(%type_raw[-lapack] = -ref) liboctave%type_pkg[oct]-ref-dev,
 		(%type_raw[-x11] = -x11) liboctave%type_pkg[oct]-x11-dev,
@@ -528,7 +528,8 @@ Splitoff3: <<
 		%{Ni}%type_pkg[oct]-ref-x11,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5), %{Ni}3.0.2-atlas ( << 3.0.2-5)
+		%{Ni}3.0.2 ( << 3.0.2-5),
+		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Replaces: <<
 		%{Ni}%type_pkg[oct],
