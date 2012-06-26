@@ -343,23 +343,32 @@ SplitOff2: <<
 		%{Ni}%type_pkg[oct]-ref-dev,
 		%{Ni}%type_pkg[oct]-ref-x11-dev,
 		%{Ni}305-dev, 
-		%{Ni}305-atlas-dev,  
+		%{Ni}305-atlas-dev,
+		%{Ni}305-ref-dev,  
 		%{Ni}324-dev, 
 		%{Ni}324-atlas-dev,
+		%{Ni}324-ref-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
+		%{Ni}324-ref-x11-dev,
 		%{Ni}343-dev, 
 		%{Ni}343-atlas-dev,
+		%{Ni}343-ref-dev,
 		%{Ni}343-x11-dev,
 		%{Ni}343-atlas-x11-dev,
+		%{Ni}343-ref-x11-dev,
 		%{Ni}360-dev, 
 		%{Ni}360-atlas-dev,
+		%{Ni}360-ref-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
+		%{Ni}360-ref-x11-dev,
 		%{Ni}361-dev, 
 		%{Ni}361-atlas-dev,
+		%{Ni}361-ref-dev,
 		%{Ni}361-x11-dev,
 		%{Ni}361-atlas-x11-dev,
+		%{Ni}361-ref-x11-dev,		
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -373,23 +382,32 @@ SplitOff2: <<
 		%{Ni}%type_pkg[oct]-ref-dev,
 		%{Ni}%type_pkg[oct]-ref-x11-dev,
 		%{Ni}305-dev, 
-		%{Ni}305-atlas-dev,  
+		%{Ni}305-atlas-dev,
+		%{Ni}305-ref-dev,  
 		%{Ni}324-dev, 
 		%{Ni}324-atlas-dev,
+		%{Ni}324-ref-dev,
 		%{Ni}324-x11-dev,
 		%{Ni}324-atlas-x11-dev,
+		%{Ni}324-ref-x11-dev,
 		%{Ni}343-dev, 
 		%{Ni}343-atlas-dev,
+		%{Ni}343-ref-dev,
 		%{Ni}343-x11-dev,
 		%{Ni}343-atlas-x11-dev,
+		%{Ni}343-ref-x11-dev,
 		%{Ni}360-dev, 
 		%{Ni}360-atlas-dev,
+		%{Ni}360-ref-dev,
 		%{Ni}360-x11-dev,
 		%{Ni}360-atlas-x11-dev,
+		%{Ni}360-ref-x11-dev,
 		%{Ni}361-dev, 
 		%{Ni}361-atlas-dev,
+		%{Ni}361-ref-dev,
 		%{Ni}361-x11-dev,
 		%{Ni}361-atlas-x11-dev,
+		%{Ni}361-ref-x11-dev,		
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -528,7 +546,7 @@ Splitoff3: <<
 									octave%type_pkg[oct]-interpreter,
 	(%type_raw[-x11] = -x11) 		octave%type_pkg[oct]-interpreter-x11,
 	(%type_raw[-x11] != -x11) 		octave%type_pkg[oct]-interpreter-aqua,
-	(%type_raw[-lapack] = -atlas) 	octave%type_pkg[oct]-interpreter-atlas,
+	(%type_raw[-lapack] = -atlas) 	octave%type_pkg[oct]-interpreter-ptatlas,
 	(%type_raw[-lapack] = -.)		octave%type_pkg[oct]-interpreter-accelerate,
 	(%type_raw[-lapack] = -ref) 	octave%type_pkg[oct]-interpreter-ref
 	<<
@@ -675,8 +693,10 @@ variables, and the individual octave-forge  packages have to make copies
 of the octave scripts during their build process and edit them to use the
 package's name.
 
-The -atlas variant depends on -atlas variants (only) of qrupdate and arpack.  
-The non-atlas variant depends on non-atlas variants (only) of these.
+The -atlas variant depends on -atlas variants (only) of qrupdate and arpack-ng.  
+The Accelerate variant depends on Accelerate variants (only) of these, and 
+the reference LAPACK variant depends on variants of qrupdate and arpack-ng
+which use the reference LAPACK (i.e. lapack341).
  
 Patch oct-conf.h and mkoctfile to use octave-specific compiler executables
 which are part of the -dev package to avoid issues which would propagate as 
