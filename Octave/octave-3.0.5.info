@@ -226,7 +226,8 @@ SplitOff: <<
 		liboctave%type_pkg[oct]-gcc%type_pkg[gcc],
 		liboctave%type_pkg[oct],
 		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-ptatlas,
-		(%type_raw[-lapack] != -atlas) liboctave%type_pkg[oct]-accelerate
+		(%type_raw[-lapack] = -ref) liboctave%type_pkg[oct]-ref,
+		(%type_raw[-lapack] = .) liboctave%type_pkg[oct]-accelerate
 	<<
 	Files: <<
 		lib/%{Ni}-%v
@@ -309,7 +310,8 @@ SplitOff2: <<
 		liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
 		liboctave%type_pkg[oct]-dev,
 		(%type_raw[-lapack] = -atlas) liboctave%type_pkg[oct]-ptatlas-dev,
-		(%type_raw[-lapack] != -atlas) liboctave%type_pkg[oct]-accelerate-dev
+		(%type_raw[-lapack] = -ref) liboctave%type_pkg[oct]-ref-dev,
+		(%type_raw[-lapack] = .) liboctave%type_pkg[oct]-accelerate-dev
 	<<
 	
 	BuildDependsOnly: true
@@ -407,7 +409,8 @@ Splitoff3: <<
 	Provides: <<
 									octave%type_pkg[oct]-interpreter,
 	(%type_raw[-lapack] = -atlas) 	octave%type_pkg[oct]-interpreter-ptatlas,
-	(%type_raw[-lapack] != -atlas) 	octave%type_pkg[oct]-interpreter-accelerate
+	(%type_raw[-lapack] = -ref) 	octave%type_pkg[oct]-interpreter-ref,
+	(%type_raw[-lapack] = .) 	octave%type_pkg[oct]-interpreter-accelerate
 	<<
 	
 	Files: <<
