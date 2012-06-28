@@ -1,6 +1,6 @@
 Info2: <<
-Package: octave%type_pkg[-atlas]%type_pkg[-x11]
-Type: -atlas (boolean), oct(3.2.4), gcc (4.7), -x11 (boolean)
+Package: octave%type_pkg[-lapack]%type_pkg[-x11]
+Type: -lapack (-atlas -ref .), oct(3.2.4), gcc (4.7), -x11 (boolean)
 Version: 3.2.4
 Revision: 3019
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -18,7 +18,7 @@ BuildDepends: <<
 	readline5,
 	sed, 
 	suitesparse, 
-	fink (>= 0.30.0-1), 
+	fink (>= 0.32.0-1), 
 	fink-package-precedence, 
 	flag-sort,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua,
@@ -238,9 +238,6 @@ InstallScript: <<
  sed -i.bak -e "s|flag-sort -r gcc|oct-cc|g" \
  			-e "s|flag-sort -r g++|oct-cxx|g" \
  			%i/bin/%{Ni}-bug-%v 
- # for the -atlas variant, add libcblas.dylib to BLAS_LIBS:
-# perl -pi -e 's|(%p/lib/liblapack.dylib %p/lib/libf77blas.dylib)|$1 %p/lib/libcblas.dylib|' \
-# 	%i/bin/%{ni}-bug-%v
  # move compiler wrapper over
  cp %b/oct-compiler.in %i/share/%{Ni}/%v/scripts
 
@@ -323,8 +320,8 @@ SplitOff: <<
 	interpreter itself, as well as for packages that build against Octave, 
 	such as the various Octave Forge packages.
 	Any package that either links to the libraries in %{Ni}%type_pkg[-lapack]%type_pkg[-x11]-shlibs or 
-	installs an extension should Depend on %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-shlibs and BuildDepend
-	on %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-dev.  
+	installs an extension should Depend on %{Ni}%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-shlibs and BuildDepend
+	on %{Ni}%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-dev.  
 	In addition, it will need to BuildDepend on hdf5.7 and fftw3.  
 	<<
 	DocFiles: BUGS ChangeLog README ROADMAP SENDING-PATCHES COPYING
@@ -332,7 +329,7 @@ SplitOff: <<
 SplitOff2: <<
 	Package: octave%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-dev
 	Depends: <<
-		octave%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-shlibs (=%v-%r), 
+		octave%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-shlibs (=%v-%r), 
 		gcc%type_pkg[gcc]-compiler 
 	<<
 	Conflicts: << 
