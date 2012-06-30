@@ -4,8 +4,8 @@ Version: 2.1.0
 Type: forge (linear-algebra), -lapack (-atlas -ref .), gcc (4.6)
 Revision: 5
 Architecture: <<
-(%type_raw[-atlas] != -atlas) powerpc, 
-(%type_raw[-atlas] != -atlas) i386
+(%type_raw[-lapack] = .) powerpc, 
+(%type_raw[-lapack] = .) i386
 <<
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
