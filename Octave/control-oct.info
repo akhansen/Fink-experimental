@@ -90,10 +90,12 @@ Pole Placement:
 	place
 	rlocus
 Linear-Quadratic Control:
-	dlqr
-	estim
-	kalman
-	lqr
+    dlqe
+    dlqr
+    estim
+    kalman
+    lqe
+    lqr
 Robust Control:
 	augw
 	fitfrd
@@ -132,6 +134,7 @@ Overloaded Operators:
 	@lti/subsref
 	@lti/transpose
 	@lti/uminus
+    @lti/uplus
 	@lti/vertcat
 Miscellaneous:
 	options
