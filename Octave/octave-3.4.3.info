@@ -210,7 +210,7 @@ CompileScript: <<
 InfoTest: <<
 	TestScript: <<
 	    #!/bin/sh -ev
-	    if [ "%m" = "i386" -a "%type_raw[-atlas]" = "-atlas" ]
+	    if [ "%m" = "i386" -a "%type_raw[-lapack]" = "-atlas" ]
 			then printf "\n\t* Skipping tests on this platform. *\n\n"
 			else make check || exit 2	
 		fi
