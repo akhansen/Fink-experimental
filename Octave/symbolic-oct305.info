@@ -1,72 +1,81 @@
 Info2: <<
-Package: optim-oct305
-Version: 1.0.4
-Type: oct (3.0.5), forge (optim), gcc (4.7)
-Revision: 6
+Package: symbolic-oct305
+Version: 1.0.7
+Type: oct (3.0.5), forge (symbolic), gcc (4.7)
+Revision: 3
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage:  http://octave.sourceforge.net/optim/index.html 
-Description: Non-linear optimization toolkit for Octave
+Homepage:  http://octave.sourceforge.net/symbolic/index.html 
+Description: Symbolic toolbox for Octave
 DescDetail: <<
-Unconstrained Non-linear Optimization toolkit.
-This package provides the following additional functions:
-Minimization:
-        minimize
-        nelder_mead_min
-        d2_min
-        nrm
-        fmin
-        fminbnd
-        line_min
-        fmins
-        adsmax
-        mdsmax
-        nmsmax
-        bfgsmin
-        samin
-        battery
-        fminsearch
-Data fitting:
-        expfit
-        expdemo
-        wpolyfit
-        wpolyfitdemo
-        leasqr
-        leasqrdemo
-        LinearRegression
-Root finding:
-        fzero
-        fsolve
-        fsolve_options
-Compatibility:
-        fminunc
-        optimset
-Numerical derivatives:
-        dfdp
-        bs_gradient
-        cdiff
-        deriv
-        leval
-        numgradient
-        numhessian
-Tests:
-        test_min_1
-        test_min_2
-        test_min_3
-        test_min_4
-        test_d2_min_1
-        test_d2_min_2
-        test_d2_min_3
-        test_nelder_mead_min_1
-        test_nelder_mead_min_2
-        poly_2_ex
-        test_minimize_1
-Examples:
-        bfgsmin_example
-        rosenbrock
-        samin_example
+Symbolic toolbox based on GiNaC and CLN.
+The package provides the following functions:
+Symbols:
+        symbols
+        sym
+        ex_matrix
+        Pi
+Extended precision arithmetic:
+        digits
+        vpa
+        to_double
+Properties:
+        is_ex
+        is_ex_matrix
+        is_sym
+        is_vpa
+        syminfo
+Expression manipulation:
+        subs
+        collect
+        expand
+        lcoeff
+        numden
+        findsymbols
+        findsym
+Special Functions:
+        Abs
+        Cos
+        Cosh
+        Exp
+        Gcd
+        Log
+        Sin
+        Sinh
+        Tan
+        Tanh
+        aCos
+        aCosh
+        aSin
+        aSinh
+        aTan
+        aTanh
+        Sqrt
+Polynomials:
+        tcoeff
+        coeff
+        degree
+        ldegree
+        sym2poly
+        poly2sym
+        sumterms
+Calculus
+        differentiate
+Solving Equations:
+        symlsolve
+        symfsolve
+Number theory:
+        probably_prime
+        quotient
+        remainder
+        premainder
+Plot:
+        splot
+Conversion:
+        to_char
+
 <<
-License: GPL2+/GFDL
+License: GPL2+
 
 # All octave-forge packages have to have the following BuildDepends:
 #  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
@@ -79,19 +88,19 @@ License: GPL2+/GFDL
 
 BuildDepends: <<
   liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
-  fftw3, 
-  hdf5.7-oldapi,
-  fink (>=0.32)
-<<
-RuntimeDepends: miscellaneous-oct%type_pkg[oct]
+  fftw3, ginac2, cln6,  
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7
+ <<
 Depends: << 
   octave%type_pkg[oct]-interpreter,
+  cln6-shlibs, ginac2-shlibs,
   gcc%type_pkg[gcc]-shlibs
 <<
 Conflicts: octave-forge
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.4-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.0.8-999)
 
-Source-MD5: 318dbf44957fbeaadb034a2b7532b110
+Source-MD5: 30758e5791a04c378ed3e32b57396cd0
 
 #### Insert required changes here ####
 
@@ -116,7 +125,7 @@ then
 	echo "%n cannot be built with --build-as-nobody"
 	exit 1
 fi
-export OCTAVE=%p/bin/octave-%type_raw[oct]
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
 %p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
 <<
 
@@ -131,6 +140,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 

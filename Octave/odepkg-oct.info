@@ -81,7 +81,7 @@ BuildDepends: <<
 Depends: << 
   (%type_raw[-lapack] = -atlas) atlas-shlibs (>=3.9.11-13),
   (%type_raw[-lapack] = -atlas)	octave%type_pkg[oct]-interpreter-ptatlas, 
-  (%type_raw[-lapack] = -.)		octave%type_pkg[oct]-interpreter-accelerate,
+  (%type_raw[-lapack] = .)		octave%type_pkg[oct]-interpreter-accelerate,
   (%type_raw[-lapack] = -ref)	lapack341-shlibs,
   (%type_raw[-lapack] = -ref)	octave%type_pkg[oct]-interpreter-ref,
   gcc%type_pkg[gcc]-shlibs
@@ -129,7 +129,7 @@ PatchScript: <<
 # mkoctfile doesn't actually do multiple variables with a -p
 # The line is OK on non-atlas octaves, though, since we really
 # just want one "-Wl,-framework,Accelerate".
-if [ "%type_pkg[-lapack]" = "-atlas" ] ; then
+if [ "%type_raw[-lapack]" != "." ] ; then
 	perl -pi -e 's /(LAPACK_LIBS := \$\(shell mkoctfile \-p BLAS_LIBS)( LAPACK_LIBS\))/\1) \$(shell mkoctfile -p \2/' src/Makefile
 fi
 # clean up redundant LAPACK_LIBS

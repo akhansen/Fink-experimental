@@ -1,75 +1,26 @@
 Info2: <<
-Package: optim-oct305
-Version: 1.0.4
-Type: oct (3.0.5), forge (optim), gcc (4.7)
-Revision: 6
+Package: data-smoothing-oct%type_pkg[oct]
+Version: 1.2.3
+Type: oct (3.0.5 3.2.4 3.4.3), forge (data-smoothing)
+Revision: 4
+
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage:  http://octave.sourceforge.net/optim/index.html 
-Description: Non-linear optimization toolkit for Octave
+Homepage: http://octave.sourceforge.net/data-smoothing/index.html 
+Description: Data smoothing package for Octave
 DescDetail: <<
-Unconstrained Non-linear Optimization toolkit.
-This package provides the following additional functions:
-Minimization:
-        minimize
-        nelder_mead_min
-        d2_min
-        nrm
-        fmin
-        fminbnd
-        line_min
-        fmins
-        adsmax
-        mdsmax
-        nmsmax
-        bfgsmin
-        samin
-        battery
-        fminsearch
-Data fitting:
-        expfit
-        expdemo
-        wpolyfit
-        wpolyfitdemo
-        leasqr
-        leasqrdemo
-        LinearRegression
-Root finding:
-        fzero
-        fsolve
-        fsolve_options
-Compatibility:
-        fminunc
-        optimset
-Numerical derivatives:
-        dfdp
-        bs_gradient
-        cdiff
-        deriv
-        leval
-        numgradient
-        numhessian
-Tests:
-        test_min_1
-        test_min_2
-        test_min_3
-        test_min_4
-        test_d2_min_1
-        test_d2_min_2
-        test_d2_min_3
-        test_nelder_mead_min_1
-        test_nelder_mead_min_2
-        poly_2_ex
-        test_minimize_1
-Examples:
-        bfgsmin_example
-        rosenbrock
-        samin_example
+This package contains algorithms for smoothing noisy data under Octave.
+It provides the following additional functions:
+	ddmat
+	regdatasmooth
+	rgdtsmcore
+	rgdtsmcorewrap
 <<
-License: GPL2+/GFDL
+
+License: GPL2+
 
 # All octave-forge packages have to have the following BuildDepends:
-#  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -78,22 +29,24 @@ License: GPL2+/GFDL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
-  fftw3, 
-  hdf5.7-oldapi,
+  liboctave%type_pkg[oct]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7,
   fink (>=0.32)
 <<
-RuntimeDepends: miscellaneous-oct%type_pkg[oct]
+RuntimeDepends: optim-oct%type_pkg[oct] | optim-atlas-oct%type_pkg[oct] | optim-ref-oct%type_pkg[oct]
 Depends: << 
-  octave%type_pkg[oct]-interpreter,
-  gcc%type_pkg[gcc]-shlibs
+  octave%type_pkg[oct]-interpreter
 <<
 Conflicts: octave-forge
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.4-999)
+Replaces: octave-forge-%type_raw[forge] (<< 1.1.1-999)
 
-Source-MD5: 318dbf44957fbeaadb034a2b7532b110
+Source-MD5: 086c53dd14ce2ba9bb36a28b12bd2ea4
 
 #### Insert required changes here ####
+
+SourceDirectory: %type_pkg[forge]
 
 ######################################
 
@@ -116,8 +69,18 @@ then
 	echo "%n cannot be built with --build-as-nobody"
 	exit 1
 fi
-export OCTAVE=%p/bin/octave-%type_raw[oct]
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+if [ %type_pkg[oct] -ge 343 ]
+then
+	cd ..
+	tar -cf %type_raw[forge].tar %type_raw[forge]
+	cd %b
+	pkgsrc=%type_raw[forge].tar
+else pkgsrc=%type_raw[forge]
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 

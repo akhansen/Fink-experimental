@@ -158,7 +158,7 @@ BuildDepends: <<
 Depends: <<
   (%type_raw[-lapack] = -atlas)  atlas-shlibs (>=3.9.11-13),
   (%type_raw[-lapack] = -atlas)	octave%type_pkg[oct]-interpreter-ptatlas, 
-  (%type_raw[-lapack] = -.)		octave%type_pkg[oct]-interpreter-accelerate,
+  (%type_raw[-lapack] = .)		octave%type_pkg[oct]-interpreter-accelerate,
   (%type_raw[-lapack] = -ref)	lapack341-shlibs,
   (%type_raw[-lapack] = -ref)	octave%type_pkg[oct]-interpreter-ref,
   gcc%type_pkg[gcc]-shlibs
@@ -175,7 +175,7 @@ Replaces: <<
 	%type_raw[forge]-oct%type_pkg[oct]
 <<
 
-Source-MD5: d822fd3fd595eaa09967c4dc25cfb3b6
+Source-MD5: beb7704c2ed7b073c75b658d8995c212
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 SourceDirectory: %type_pkg[forge]
 

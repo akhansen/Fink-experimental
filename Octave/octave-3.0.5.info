@@ -121,7 +121,7 @@ CompileScript: <<
  		a='--with-lapack=-lptlapack --with-blas=-lptf77blas'
     	export FFLAGS='-O3' ;;
  	"-ref")
- 		export LDFLAGS="-L/%p/lib/lapack/3.4.1 "$LDFLAGS
+ 		export LDFLAGS="-L%p/lib/lapack/3.4.1 "$LDFLAGS
  		a='--with-lapack=-lreflapack --with-blas=-lrefblas'
    		export FFLAGS='-O3' ;;
  esac
@@ -170,7 +170,7 @@ InstallScript: <<
  			%i/bin/%{Ni}-bug-%v 
  # for the -atlas variant, add -lcblas to BLAS_LIBS in octave-bug:
  if [ "%type_pkg[-lapack]" = "-atlas" ]
- 	then perl -pi -e perl -pi -e 's/(BLAS_LIBS.*)\"/\1 -lcblas\"/' %i/bin/%{ni}-bug-%v
+ 	then perl -pi -e 's/(BLAS_LIBS.*)\"/\1 -lcblas\"/' %i/bin/%{ni}-bug-%v
  fi
  # move compiler wrapper over
  cp %b/oct-compiler.in %i/share/%{Ni}/%v/scripts

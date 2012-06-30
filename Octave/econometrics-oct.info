@@ -1,75 +1,56 @@
 Info2: <<
-Package: optim-oct305
-Version: 1.0.4
-Type: oct (3.0.5), forge (optim), gcc (4.7)
-Revision: 6
+Package: econometrics-oct%type_pkg[oct]
+Version: 1.0.8
+Type: oct (3.0.5 3.2.4 3.4.3 3.6.0 3.6.1 3.6.2), forge (econometrics), gcc (4.7)
+Revision: 5
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage:  http://octave.sourceforge.net/optim/index.html 
-Description: Non-linear optimization toolkit for Octave
+Homepage: http://octave.sourceforge.net/econometrics/index.html 
+Description: Econometrics functions for Octave
 DescDetail: <<
-Unconstrained Non-linear Optimization toolkit.
-This package provides the following additional functions:
-Minimization:
-        minimize
-        nelder_mead_min
-        d2_min
-        nrm
-        fmin
-        fminbnd
-        line_min
-        fmins
-        adsmax
-        mdsmax
-        nmsmax
-        bfgsmin
-        samin
-        battery
-        fminsearch
-Data fitting:
-        expfit
-        expdemo
-        wpolyfit
-        wpolyfitdemo
-        leasqr
-        leasqrdemo
-        LinearRegression
-Root finding:
-        fzero
-        fsolve
-        fsolve_options
-Compatibility:
-        fminunc
-        optimset
-Numerical derivatives:
-        dfdp
-        bs_gradient
-        cdiff
-        deriv
-        leval
-        numgradient
-        numhessian
-Tests:
-        test_min_1
-        test_min_2
-        test_min_3
-        test_min_4
-        test_d2_min_1
-        test_d2_min_2
-        test_d2_min_3
-        test_nelder_mead_min_1
-        test_nelder_mead_min_2
-        poly_2_ex
-        test_minimize_1
-Examples:
-        bfgsmin_example
-        rosenbrock
-        samin_example
+Econometrics functions including MLE and GMM based techniques.'
+
+The package provides the following functions:
+	average_moments
+	delta_method
+	gmm_estimate
+	gmm_example
+	gmm_obj
+	gmm_results
+	gmm_variance
+	gmm_variance_inefficient
+	mle_estimate
+	mle_example
+	mle_obj
+	mle_results
+	mle_variance
+	parameterize
+	prettyprint
+	scale_data
+	unscale_parameters
+	nls_estimate
+	nls_obj
+	mle_obj_nodes
+	nls_example
+	nls_obj_nodes
+	poisson
+	poisson_moments
+	prettyprint_c
+	sum_moments_nodes
+	kernel_density
+	kernel_density_cvscore
+	kernel_density_nodes
+	kernel_example
+	kernel_optimal_bandwidth
+	kernel_regression
+	kernel_regression_cvscore
+	kernel_regression_nodes
 <<
-License: GPL2+/GFDL
+
+License: GPL2+
 
 # All octave-forge packages have to have the following BuildDepends:
-#  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -78,22 +59,35 @@ License: GPL2+/GFDL
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
-  fftw3, 
-  hdf5.7-oldapi,
+  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7,
   fink (>=0.32)
-<<
-RuntimeDepends: miscellaneous-oct%type_pkg[oct]
-Depends: << 
+ <<
+RuntimeDepends:   optim-oct%type_pkg[oct] | optim-atlas-oct%type_pkg[oct] | optim-ref-oct%type_pkg[oct]
+Depends: <<
   octave%type_pkg[oct]-interpreter,
-  gcc%type_pkg[gcc]-shlibs
+  ( %type_pkg[oct] << 360 ) gcc%type_pkg[gcc]-shlibs
 <<
 Conflicts: octave-forge
-Replaces: octave-forge-%type_raw[forge] (<< 1.0.4-999)
 
-Source-MD5: 318dbf44957fbeaadb034a2b7532b110
+Source-MD5: 363cdacabfc3b551a500e9c8bf5c4437
+
+DescPackaging: <<
+Common for all octave-forge packages.
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
 
 #### Insert required changes here ####
+
+#@CHANGES@
 
 ######################################
 
@@ -117,7 +111,17 @@ then
 	exit 1
 fi
 export OCTAVE=%p/bin/octave-%type_raw[oct]
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+if [ %type_pkg[oct] -ge 343 ]
+then
+	cd ..
+	tar -cf %type_raw[forge]-%v.tar %type_raw[forge]-%v
+	cd %b
+	pkgsrc=%type_raw[forge]-%v.tar
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 
@@ -141,15 +145,4 @@ PostInstScript:  <<
 <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
-
-DescPackaging: <<
-Common for all octave-forge packages.
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
 <<

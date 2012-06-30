@@ -27,8 +27,8 @@ BuildDepends: <<
 	(%type_raw[-x11] != -x11) 		fltk13-aqua,
 	(%type_raw[-x11] = -x11) 		fltk-x11,
 	(%type_raw[-x11] = -x11) 		x11-dev,	
-	(%type_raw[-lapack] = .) 	arpack-ng (>=3.0.1-2) | (%type_raw[-lapack] = .) arpack-ng-mpi,
-	(%type_raw[-lapack] = .) 	qrupdate (>=1.1.1-5),
+	(%type_raw[-lapack] = .) 		arpack-ng (>=3.0.1-2) | (%type_raw[-lapack] = .) arpack-ng-mpi,
+	(%type_raw[-lapack] = .) 		qrupdate (>=1.1.1-5),
 	(%type_raw[-lapack] = -atlas) 	atlas (>= 3.9.76-1), 
 	(%type_raw[-lapack] = -atlas) 	arpack-ng-atlas (>=3.1.1-3) | (%type_raw[-lapack] = -atlas) arpack-ng-mpi-atlas (>=3.1.1-3), 
 	(%type_raw[-lapack] = -atlas) 	qrupdate-atlas (>=1.1.1-5),
@@ -322,9 +322,9 @@ SplitOff: <<
 	This package contains shared libraries which are used by the Octave
 	interpreter itself, as well as for packages that build against Octave, 
 	such as the various Octave Forge packages.
-	Any package that either links to the libraries in %{Ni}%type_pkg[-atlas]%type_pkg[-x11]-shlibs or 
-	installs an extension should Depend on %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-shlibs and BuildDepend
-	on %{Ni}%type_pkg[oct]%type_pkg[-atlas]%type_pkg[-x11]-dev.  
+	Any package that either links to the libraries in %{Ni}%type_pkg[-lapack]%type_pkg[-x11]-shlibs or 
+	installs an extension should Depend on %{Ni}%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-shlibs and BuildDepend
+	on %{Ni}%type_pkg[oct]%type_pkg[-lapack]%type_pkg[-x11]-dev.  
 	In addition, it will need to BuildDepend on hdf5.7 and fftw3.  
 	<<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
@@ -508,13 +508,13 @@ Splitoff3: <<
 	readline6-shlibs,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua-shlibs,
 	(%type_raw[-x11] = -x11) 		fltk-x11-shlibs,
-	(%type_raw[-lapack] = .) 	qrupdate-shlibs,
-	(%type_raw[-lapack] = .)	arpack-ng-shlibs (>= 3.0.1-2) | (%type_raw[-lapack] != -atlas) arpack-ng-mpi-shlibs,
-	(%type_raw[-lapack] = -lapack) 	lapack341-shlibs,
-	(%type_raw[-lapack] = -lapack)	arpack-ng-atlas-shlibs (>= 3.1.1-3)| (%type_raw[-lapack] = -lapack) arpack-ng-mpi-atlas-shlibs (>= 3.1.1-3),
-	(%type_raw[-lapack] = -lapack) 	qrupdate-lapack-shlibs (>= 1.1.2-3),
+	(%type_raw[-lapack] = .) 		qrupdate-shlibs,
+	(%type_raw[-lapack] = .)		arpack-ng-shlibs (>= 3.0.1-2) | (%type_raw[-lapack] = .) arpack-ng-mpi-shlibs,
+	(%type_raw[-lapack] = -ref) 	lapack341-shlibs,
+	(%type_raw[-lapack] = -ref)		arpack-ng-ref-shlibs (>= 3.1.1-3) | (%type_raw[-lapack] = -ref) arpack-ng-mpi-ref-shlibs (>= 3.1.1-3),
+	(%type_raw[-lapack] = -ref) 	qrupdate-ref-shlibs (>= 1.1.2-3),
 	(%type_raw[-lapack] = -atlas) 	atlas-shlibs (>= 3.9.11-13),
-	(%type_raw[-lapack] = -atlas)	arpack-ng-atlas-shlibs (>= 3.1.1-3)| (%type_raw[-lapack] = -lapack) arpack-ng-mpi-atlas-shlibs (>= 3.1.1-3),
+	(%type_raw[-lapack] = -atlas)	arpack-ng-atlas-shlibs (>= 3.1.1-3) | (%type_raw[-lapack] = -atlas) arpack-ng-mpi-atlas-shlibs (>= 3.1.1-3),
 	(%type_raw[-lapack] = -atlas) 	qrupdate-atlas-shlibs (>= 1.1.2-3)
 	<<
 	RuntimeDepends: <<
@@ -551,7 +551,7 @@ Splitoff3: <<
 	(%type_raw[-x11] = -x11) 		octave%type_pkg[oct]-interpreter-x11,
 	(%type_raw[-x11] != -x11) 		octave%type_pkg[oct]-interpreter-aqua,
 	(%type_raw[-lapack] = -atlas) 	octave%type_pkg[oct]-interpreter-ptatlas,
-	(%type_raw[-lapack] = -.)		octave%type_pkg[oct]-interpreter-accelerate,
+	(%type_raw[-lapack] = .)		octave%type_pkg[oct]-interpreter-accelerate,
 	(%type_raw[-lapack] = -ref) 	octave%type_pkg[oct]-interpreter-ref
 	<<
 	

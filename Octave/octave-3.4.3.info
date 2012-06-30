@@ -546,7 +546,7 @@ Splitoff3: <<
 	(%type_raw[-x11] = -x11) 		octave%type_pkg[oct]-interpreter-x11,
 	(%type_raw[-x11] != -x11) 		octave%type_pkg[oct]-interpreter-aqua,
 	(%type_raw[-lapack] = -atlas) 	octave%type_pkg[oct]-interpreter-ptatlas,
-	(%type_raw[-lapack] = -.)		octave%type_pkg[oct]-interpreter-accelerate,
+	(%type_raw[-lapack] = .)		octave%type_pkg[oct]-interpreter-accelerate,
 	(%type_raw[-lapack] = -ref) 	octave%type_pkg[oct]-interpreter-ref
 	<<
 	
