@@ -3,6 +3,10 @@ Package: control%type_pkg[-lapack]-oct%type_pkg[oct]
 Version: 2.3.52
 Type: oct (3.6.0 3.6.1 3.6.2), forge (control), -lapack (-atlas -ref .), gcc (4.7)
 Revision: 1
+Architecture: <<
+i386,
+(%type_raw[-lapack] != .) x86_64
+<<
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/control/index.html 

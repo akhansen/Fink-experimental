@@ -5,7 +5,7 @@ Type: oct (3.2.4 3.4.3), forge (nan), -lapack (-atlas -ref .), gcc (4.6)
 Revision: 5
 Architecture: <<
 i386,
-( %type_raw[-lapack] = -atlas ) x86_64
+( %type_raw[-lapack] != . ) x86_64
 <<
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types

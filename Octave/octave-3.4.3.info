@@ -3,8 +3,8 @@ Package: octave%type_pkg[-lapack]%type_pkg[-x11]
 Type: -lapack (-atlas -ref .), oct(3.4.3), gcc (4.6), -x11 (boolean)
 Version: 3.4.3
 Revision: 317
-#atlas-only on x86_64
-Architecture: (%type_raw[-lapack] != -atlas) i386, (%type_raw[-lapack] != -atlas) powerpc
+#Don't use Accelerate on x86_64
+Architecture: (%type_raw[-lapack]  = .) i386, (%type_raw[-lapack] = .) powerpc
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 
 BuildDepends: <<
