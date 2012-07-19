@@ -1,7 +1,9 @@
 Info2: <<
 Package: @PACKAGE@-oct%type_pkg[oct]
 Version: @VERSION@
-Type: oct (@OCT@), forge (@PACKAGE@)
+# Packages with compiled oct files generally need the following 
+# if they support Octave < 3.6.0:
+Type: oct (@OCT@), forge (@PACKAGE@), gcc (@GCCVERSION@)
 Revision: 1
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
@@ -12,50 +14,6 @@ DescDetail: <<
 
 This package provides the following functions:
 <<
-
-License: GPL
-
-# default source
-Source: mirror:sourceforge:octave/Octave%%20Forge%%20Packages/Individual%%20Package%%20Releases/%type_raw[forge]-%v.tar.gz
-Source-MD5: @SOURCE_MD5@
-SourceDirectory: %type_raw[forge]
-
-# Octave-forge packages need to have at least the following:
-# BuildDepends: <<
-# liboctave%type_pkg[oct]-dev,
-# fftw3, 
-# ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-# ( %type_pkg[oct] != 305 ) hdf5.7
-# <<
-# Depends: <<
-# octave%type_pkg[oct]-interpreter
-
-# Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
-# not use the conditional, of course.
-# Packages that use BLAS or LAPACK will need to specify the the
-# -atlas and -veclib variants separately:
-#
-#BuildDepends: <<
-#  (%type_raw[-atlas] = -atlas)		atlas,
-#  (%type_raw[-atlas] = -atlas)		liboctave%type_pkg[oct]-atlas-dev,
-#  (%type_raw[-atlas] != -atlas)	liboctave%type_pkg[oct]-veclib-dev
-# <<
-#Depends: << 
-#  (%type_raw[-atlas] = -atlas)  	atlas-shlibs,
-#  (%type_raw[-atlas] = -atlas)	 	octave%type_pkg[oct]-interpreter-atlas, 
-#  (%type_raw[-atlas] != -atlas)	octave%type_pkg[oct]-interpreter-veclib
-# <<
-
-BuildDepends: <<
-  liboctave%type_pkg[oct]-dev, 
-  fftw3,
-  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
-  ( %type_pkg[oct] != 305 ) hdf5.7 
-<<
-Depends: <<
-  octave%type_pkg[oct]-interpreter
-<<
-Conflicts: octave-forge
 
 DescPackaging: <<
 Common for all octave-forge packages:
@@ -69,13 +27,59 @@ using this .info file as a template, or when the package name contains
 underscores.
 <<
 
+License: @LICENSE@
+
+# default source
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: @SOURCE_MD5@
+SourceDirectory: %type_raw[forge]
+
+# Octave-forge packages generally need to have at least the following:
+# BuildDepends: <<
+
+BuildDepends: <<
+  liboctave%type_pkg[oct]-dev, 
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
+<<
+# Packages which serve only Octave-3.0.5 or only Octave > 3.0.5 need
+# not use the conditional, of course.
+Depends: <<
+  octave%type_pkg[oct]-interpreter,
+  ( %type_pkg[oct] < 360 ) gcc%type_pkg[gcc]-shlibs
+<<
+# Similarly, this conditional can be dropped if only Octaves > 3.6.0 are supported
+
+# Packages that use BLAS or LAPACK will need to specify the the
+# variants separately:
+#
+#BuildDepends: <<
+#  (%type_raw[-lapack] = -atlas)	atlas,
+#  (%type_raw[-lapack] = -ref)		lapack341,
+#  (%type_raw[-lapack] = -atlas)	liboctave%type_pkg[oct]%type_pkg[-lapack]-dev,
+#  (%type_raw[-lapack] = -ref)		liboctave%type_pkg[oct]%type_pkg[-lapack]-dev,
+#  (%type_raw[-lapack] = .)			liboctave%type_pkg[oct]-accelerate-dev
+# <<
+#Depends: << 
+#  (%type_raw[-lapack] = -atlas)	atlas,
+#  (%type_raw[-lapack] = -ref)		lapack341,
+#  (%type_raw[-lapack] = -atlas)	liboctave%type_pkg[oct]%type_pkg[-lapack]-dev,
+#  (%type_raw[-lapack] = -ref)		liboctave%type_pkg[oct]%type_pkg[-lapack]-dev,
+#  (%type_raw[-lapack] = .)			octave%type_pkg[oct]-interpreter-accelerate
+# <<
+
+# Packages that explicitly require gcc4N should use 
+# BuildDepends: liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev
+
+# Dependencies on other -oct modules are RuntimeDepends, which require
+# BuildDepends: fink (>= 0.32)
+
+Conflicts: octave-forge
+
 #### Insert required changes here ####
 
 #@CHANGES@
-#Typically we're seeing 
-#SourceDirectory: %type_raw[forge]
-#These days
-SourceDirectory: @SOURCEDIR@
 
 ######################################
 
@@ -86,7 +90,8 @@ SourceDirectory: @SOURCEDIR@
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
-SetMAKEFLAGS: -j1
+UseMaxBuildJobs: false
+BuildAsNobody: false
 
 CompileScript: <<
 	#!/bin/sh -ev
