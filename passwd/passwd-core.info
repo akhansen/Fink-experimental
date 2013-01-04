@@ -258,6 +258,13 @@ SplitOff19: <<
   %p/sbin/update-passwd amqp 'AMQP Messaging Daemon' /dev/null /dev/null amqp amqp
  <<
 <<
+SplitOff99: <<
+  Package: passwd
+  Depends: passwd-core (>= 20130103-1)
+  Description: OBSOLETE: use package 'passwd-core' instead
+  RuntimeDepends: fink-obsolete-packages
+  DocFiles: README README.removing-users
+<<
 ## More users can be added here as additional SplitOffN fields
 ## If a user becomes obsolete, that SplitOffN can be commented out
 ## as well as the corresponding entries in %p/etc/{passwd-fink,group-fink}
