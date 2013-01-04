@@ -3,7 +3,6 @@ Version: 20130103
 Revision: 1
 
 BuildDepends: fink (>= 0.33.0)
-Conflicts: passwd ( << 20130103-1 )
 Replaces: passwd ( << 20130103-1 )
 
 Source: https://github.com/fink/passwd/tarball/%v
