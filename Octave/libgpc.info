@@ -1,0 +1,43 @@
+Info2: <<
+Package: libgpc
+Version: 2.32
+Revision: 1
+Type: v (2.32)
+License: Restrictive
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+HomePage: http://www.cs.man.ac.uk/~toby/gpc/
+
+Description: Generic Polygon Clipper Library
+DescDetail: <<
+The University of Manchester GPC library 
+(wikipedia: http://en.wikipedia.org/wiki/GPC_General_Polygon_Clipper_Library)
+is a flexible and highly robust polygon set operations library for use with 
+C, C#, Delphi, Java, Perl, Python, Haskell, Lua, VB.Net (and other) 
+applications, as referenced in the comp.graphics.algorithms FAQ 
+( http://www.faqs.org/faqs/graphics/algorithms-faq/ )
+and the UIUC Computational Geometry Page. 
+( http://compgeom.cs.uiuc.edu/%7Ejeffe/compgeom/ )
+
+GPC Features:
+
+* Difference, intersection, exclusive-or and union clip operations are 
+  supported.
+* Polygons may be comprised of multiple disjoint contours.
+* Contour vertices may be given in any order - clockwise or anticlockwise.
+* Contours may be convex, concave or self-intersecting.
+* Contours may be nested (i.e. polygons may have holes).
+* Output may take the form of either polygon contours or tristrips.
+* Hole and external contours are differentiated in the result.
+* Coincident edges and degenerate regions are handled correctly.
+<<
+
+Source: ftp://ftp.cs.man.ac.uk/pub/toby/gpc/gpc%type_pkg[v]-release.zip
+Source-MD5: a51ed0614dd78f2d78da70dc7a06ed3a
+NoSourceDirectory: true
+
+CompileScript: <<
+llvm-g++-4.2 gpc.c
+<<
+
+DocFiles: GPC-README.pdf, VERSIONS.TXT
+<<

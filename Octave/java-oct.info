@@ -1,8 +1,8 @@
 Info2: <<
-Package: java-oct305
-Version: 1.2.5
-Type: oct (3.0.5), forge (java), gcc (4.7)
-Revision: 4
+Package: java-oct%type_pkg[oct]
+Version: 1.2.8
+Type: oct (3.2.4 3.4.3), forge (java)
+Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/java/index.html 
@@ -11,6 +11,7 @@ DescDetail: <<
 Provides Java interface with OO-like Java objects manipulation
 
 The package includes the following functions:
+Java Interface:
 	java_exit
 	java_invoke
 	java_get
@@ -18,17 +19,33 @@ The package includes the following functions:
 	java_set
 	java_new
 	javaaddpath
+	javarmpath
 	javaclasspath
+	javamem
 	javaArray
 	java2mat
 	java_convert_matrix
 	java_unsigned_conversion
 	java_debug
+	javaObject
+	javaMethod
+	javamethods
+	javafields
+Dialog Boxes:
+	msgbox.m
+	errordlg.m
+	helpdlg.m
+	inputdlg.m
+	listdlg.m
+	msgbox.m
+	questdlg.m
+	warndlg.m
 <<
-License: GPL2+
+
+License: GPL
 
 # All octave-forge packages have to have the following BuildDepends:
-#  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+#  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
 # fftw3, 
 # ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
 # ( %type_pkg[oct] != 305 ) hdf5.7
@@ -37,7 +54,7 @@ License: GPL2+
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev, 
+  liboctave%type_pkg[oct]-dev,
   fftw3,
   ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
   ( %type_pkg[oct] != 305 ) hdf5.7, 
@@ -45,12 +62,11 @@ BuildDepends: <<
 <<
 Depends: <<
   octave%type_pkg[oct]-interpreter,
-  system-java,
-  gcc%type_pkg[gcc]-shlibs
+  system-java
 <<
 Conflicts: octave-forge
 
-Source-MD5: b5fef3c65481fb8f2e153ee4201f0e84
+Source-MD5: e94bcb73e21f2e8f3e5cf43c143ba029
 
 DescPackaging: <<
 Common for all octave-forge packages.
@@ -65,6 +81,7 @@ using this .info file as a template.
 
 #### Insert required changes here ####
 
+SourceDirectory: %type_pkg[forge]
 PatchScript: <<
 	perl -pi -e "s/echo \-n/echo/g; s/ECHO_N='-n'/ECHO_N=/" src/configure src/configure.base
 	perl -pi -e 's|JAVA_INCS=".*"|JAVA_INCS="-I/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers"|' src/configure
@@ -86,18 +103,22 @@ Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
-UseMaxBuildJobs: false
-BuildAsNobody: false
+SetMAKEFLAGS: -j1
 
 CompileScript: <<
 #!/bin/sh -ev
-if [ $UID -ne 0 ]
-then 
-	echo "%n cannot be built with --build-as-nobody"
-	exit 1
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+if [ "%type_pkg[oct]" = "343" ]
+then
+	cd ..
+	tar -cf %type_raw[forge].tar %type_raw[forge]
+	cd %b
+	pkgsrc=%type_raw[forge].tar
+else pkgsrc=%type_raw[forge]
 fi
-export OCTAVE=%p/bin/octave-%type_raw[oct]
-%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh %type_raw[forge]-%v
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 
@@ -111,6 +132,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
