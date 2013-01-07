@@ -1,6 +1,6 @@
 Package: passwd-core
 Version: 20130103
-Revision: 1
+Revision: 10.7
 
 BuildDepends: fink (>= 0.33.0)
 Replaces: passwd ( << 20130103-1 )
