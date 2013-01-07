@@ -1,22 +1,22 @@
 Info2: <<
-Package: data-smoothing-oct%type_pkg[oct]
-Version: 1.3.0
-Type: oct (3.6.0 3.6.1 3.6.2), forge (data-smoothing)
+Package: gpc-oct%type_pkg[oct]
+Version: 0.1.7
+Type: oct (3.0.5 3.2.4 3.4.3), forge (gpc)
 Revision: 2
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
-Homepage: http://octave.sourceforge.net/data-smoothing/index.html 
-Description: Data smoothing package for Octave
+Homepage: http://octave.sourceforge.net/gpc/index.html 
+Description: General polygon clipping in Octave
 DescDetail: <<
-This package contains algorithms for smoothing noisy data under Octave.
-It provides the following additional functions:
-	ddmat
-	regdatasmooth
-	rgdtsmcore
-	rgdtsmcorewrap
+Interface to the GPC (http://www.cs.man.ac.uk/~toby/gpc/) library.
+
+This package provides the gpc_plot function.
 <<
 
-License: GPL2+
+License: GPL
+
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: 099f5d169d0553a343d4b3bbed153ecb
 
 # All octave-forge packages have to have the following BuildDepends:
 #  octave%type_pkg[oct]-dev | octave%type_pkg[oct]-atlas-dev,
@@ -28,52 +28,60 @@ License: GPL2+
 # not use the conditional, of course.
 
 BuildDepends: <<
-  liboctave%type_pkg[oct]-dev, 
+  liboctave%type_pkg[oct]-dev,
   fftw3,
-  hdf5.7,
-  fink (>=0.32)
+  ( %type_pkg[oct] = 305 ) hdf5.7-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.7 
 <<
-RuntimeDepends: optim-oct%type_pkg[oct] | optim-atlas-oct%type_pkg[oct] | optim-ref-oct%type_pkg[oct]
-Depends: << 
+Depends: <<
   octave%type_pkg[oct]-interpreter
 <<
 Conflicts: octave-forge
-Replaces: octave-forge-%type_raw[forge] (<< 1.1.1-999)
+
+DescPackaging: <<
+Common for all octave-forge packages:
+
+We read in postinst and prerm template scripts installed by octaveN and modify
+them to use the name of this package because Octave's package manager can't 
+cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template, or when the package name contains 
+underscores.
+<<
 
 #### Insert required changes here ####
 
+TarFilesRename: gpc:gpc-0.1.7
+#@CHANGES@
+
 ######################################
 
-Source-MD5: d8fc52ed097b5096f5e7ea16dc5ab343
-
-# Do not change anything from this point down unless absolutely necessary,
+# Do not change anything from this point down, unless absolutely necessary,
 # since the foo-oct%type_pkg[oct] packages are designed to be built/installed
 # in the same way.
-
-Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
-SourceDirectory: %type_pkg[forge]
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
-UseMaxBuildJobs: false
-BuildAsNobody: false
+SetMAKEFLAGS: -j1
 
 CompileScript: <<
 #!/bin/sh -ev
-if [ $UID -ne 0 ]
-then 
-	echo "%n cannot be built with --build-as-nobody"
-	exit 1
-fi
 export OCTAVE=%p/bin/octave-%type_raw[oct] 
-	# repack tarball, since octave-3.4.3 appears not to want to install
-	# from directories
+# clear out svn stuff
+find . -name .svn | xargs rm -rf
+# repack tarball, since octave-3.4.3 appears not to want to install
+# from directories
+if [ "%type_pkg[oct]" = "343" ]
+then
 	cd ..
-	tar -cf %type_raw[forge].tar %type_raw[forge]
+	tar -cvzf %type_raw[forge]-%v.tar.gz %type_raw[forge]-%v
 	cd %b
-	pkgsrc=%type_raw[forge].tar
-	%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+	pkgsrc=%type_raw[forge]-%v.tar.gz
+else pkgsrc=%type_raw[forge]-%v
+fi
+%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
 <<
 
 InstallScript: << 
@@ -87,6 +95,7 @@ InstallScript: <<
 	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
 	chmod a+x octave-forge*
 <<
+
 PostInstScript:  <<
 	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
 	then 
@@ -97,15 +106,4 @@ PostInstScript:  <<
 <<
 
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
-
-DescPackaging: <<
-Common for all octave-forge packages.
-
-We read in postinst and prerm template scripts installed by octaveN and modify
-them to use the name of this package because Octave's package manager can't 
-cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template.
-<<
 <<
