@@ -1,6 +1,6 @@
 Package: passwd-core
 Version: 20130103
-Revision: @REVISION@
+Revision: 1
 
 BuildDepends: fink (>= 0.33.0)
 Replaces: passwd ( << 20130103-1 )
@@ -212,12 +212,6 @@ SplitOff14: <<
  PostInstScript: <<
   %p/sbin/update-passwd rt 'Request Tracker'n /dev/null /dev/null rt rt
  <<
-<<
-SplitOff15: <<
- Package: passwd-dovecot
- Description: OBSOLETE entries for the Dovecot IMAP server daemon
- RuntimeDepends: fink (>=0.33.0), fink-obsolete-packages
- DocFiles: README README.removing-users
 <<
 SplitOff16: <<
  Package: passwd-haldaemon
