@@ -1,0 +1,43 @@
+Package: fink-octave-scripts
+Version: 0.3.0
+Revision: 1
+License: Public Domain
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Homepage: http://akhansen.github.io/fink-octave-scripts
+Description: Convenience scripts for Octave add-ons
+
+Depends: fink (>= 0.36.4), xcode (>= 3.1)
+
+Source: https://github.com/akhansen/%n/archive/master.zip
+Source-MD5: 69d8a40a93d17600fe13b036eacc00dd
+SourceRename: %n-%v.zip
+SourceDirectory: %n-master
+
+PatchScript: <<
+	sed -e 's,@FINKPREFIX@,%p,g' octave-forge-patch.sh.in > octave-forge-patch.sh
+	sed -e 's,@FINKPREFIX@,%p,g' oct-cc.in > oct-cc
+	sed -e 's,@FINKPREFIX@,%p,g' oct-cxx.in > oct-cxx	
+	sed -i.bak -e 's,@FINKPREFIX@,%p,g' octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in
+<<
+
+CompileScript: echo "No compiling required."
+InstallScript: <<
+	printf "Installing platform-agnostic compiler wrappers...\n"
+	mkdir -p %i/bin
+	cp oct-cc oct-cxx %i/bin
+	chmod a+x %i/bin/oct-cc %i/bin/oct-cxx
+	printf "Installing Octave Forge package build scripts...\n"
+	mkdir -p %i/share/%n
+	cp octave-forge-patch.sh octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in %i/share/%n/
+	chmod a+x %i/share/%n/octave-forge-patch.sh
+<<
+DocFiles: Readme.md NEWS
+
+PreInstScript: <<
+echo "Replacing prior oct-cc and oct-cxx with our version..."
+rm -f %p/bin/oct-cc %p/bin/oct-cxx
+<<
+
+DescUsage: <<
+Check out the %p/doc/%n/Readme.md file for usage instructions.
+<<

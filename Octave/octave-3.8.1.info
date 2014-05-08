@@ -121,8 +121,11 @@ PatchScript: <<
 
 GCC: 4.0
 SetLDFLAGS: -Wl,-dead_strip_dylibs
-SetCC: flag-sort -r gcc
-SetCXX: flag-sort -r g++
+SetCC: flag-sort -r clang
+SetCXX: flag-sort -r clang++
+SetCFLAGS: -O3 -MD
+SetCXXFLAGS: -O3 -MD
+SetLIBS: -lgl2ps
 
 ConfigureParams: <<
 	(%type_raw[-blas] = .)		--with-lapack=-Wl,-framework,Accelerate \
@@ -153,8 +156,6 @@ ConfigureParams: <<
 CompileScript: <<
  #!/bin/sh -ev
  osversion=`uname -r | cut -d. -f1`
- export CFLAGS='-O3 -MD'
- export CXXFLAGS="-O3 -MD -I/usr/X11/include"
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
  if [ "%type_raw[-blas]" = "." ]
  	then export FFLAGS='-O3 -ff2c'
@@ -233,16 +234,13 @@ InstallScript: <<
  do
  	perl -pi -e 's|%p/bin/sed|/usr/bin/env sed|g' $file
  done
- # generate Fink-gcc enabled mkoctfile
- cp mkoctfile-%type_raw[oct] mkoctfile-%type_raw[oct]-gcc%type_raw[gcc]
- perl -pi -e \
- 's,oct\-cc,%p/bin/gcc-fsf-%type_raw[gcc],g; \
-  s,oct\-cxx,%p/bin/g++-fsf-%type_raw[gcc],g' \
-    mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] 
- # create convenience symlink
- ln -s mkoctfile-%type_raw[oct]-gcc%type_raw[gcc] mkoctfile-gcc%type_raw[gcc] 
- popd
-
+ 
+ # upstream install operation mangles mkoctfile, so copy it over
+ # from %b manually
+ rm %i/bin/mkoctfile %i/bin/mkoctfile-%type_raw[oct]
+ /bin/cp %b/src/mkoctfile mkoctfile-%v
+ ln -s mkoctfile-%v mkoctfile
+ 
  # sanitize .la file
  cd %i/lib/%{Ni}/%v/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' liboctinterp.la liboctave.la
@@ -254,28 +252,29 @@ ConfFiles: %p/share/%{Ni}/site/m/startup/%{Ni}rc
 DescPort: <<
 Thanks to Per Persson for most (if not all) of the work on the macos X port.
 
-Apply fix from http://lukassen.wordpress.com/2010/01/18/taming-snow-leopard-cgdisplaybitsperpixel-deprication/ ,
-with improvements from Peter O'Gorman and Daniel Macks, to display.cc to work around the lack of 
-CGDisplayBitsPerPixel on 10.7.
-
-Cleanups from David Fang to get the package to build using clang.
-
 The Accelerate variant is built with -ff2c in the FFLAGS, 
 because this appears to be necessary when using the Accelerate framework.
 <<
 DescPackaging:  <<
-We use the oct-cc and oct-cxx wrappers to ensure that we point at the correct 
-compiler wrapper for the OS X version.  The BuildDepends: fink (>=0.36.4-1) 
-is because that's the fink version where a compiler wrapper for 'clang' was
-added for 10.9.
+Remove a desktop file that gets generated only for users with GNOME/KDE 
+installed.
+
+We use the platform-independent oct-cc and oct-cxx wrappers from 
+fink-octave-scripts to ensure that user builds:
+1) at the Fink compiler wrapper for the OS X version 
+2) at a stably named compiler, in case of OS X updates.
+
+Build using flag-sort because upstream's flag ordering can cause conflicts
+between libinterp/corefcn/sysdep.h  and sysdep.h from saclib.
+	
+SetLIBS: -lgl2ps because of missing symbols from that library on 10.7/Xcode
+4.2.6	
 	
 Set the GNUTERM environment variable to AquaTerm because autodetection of
 DISPLAY seems to cause options to be fed to our gnuplot that it doesn't 
 understand.  AquaTerm seems to be a sensible default.
 
 Create manpages for the versioned executables.
-
-Remove a desktop file that gets generated only for users with GNOME/KDE installed.
 
 We have split the package up into runtime, development, and library packages,
 to make upgrades easier for us and for users.
@@ -424,9 +423,11 @@ SplitOff: <<
 # -dev
 SplitOff2: <<
 	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]-dev
+	RuntimeDepends: fink-octave-scripts (>= 0.3-1),
 	Depends: <<
 		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]-shlibs (=%v-%r), 
-		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11] (=%v-%r), 
+		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11] (=%v-%r),
+		fink (>=0.32),
 		gcc%type_pkg[gcc]-compiler 
 	<<
 	Conflicts: << 
@@ -567,53 +568,6 @@ SplitOff2: <<
 	stuff which isn't included in Xcode.
 	<<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
-	PostInstScript: <<
-		cd %p/bin
-		osversion=`uname -r | cut -d. -f1`
-		case $osversion in
-		 	13) ln -s /usr/bin/cc oct-cc
-		 		perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-libcxx/c++,' \
-							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
-				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/c++,' \
-								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
-				chmod a+x oct-cxx ;;
-		 1[12]) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/cc,' \
-							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
-				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-clang/c++,' \
-							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
-				chmod a+x oct-cc oct-cxx ;;
-			10) perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/cc,' \
-							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
-				perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/c++,' \
-							%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
-				chmod a+x oct-cc oct-cxx ;;
-			9)  if [ "%m" = "x86_64" ]
-					# use 10.6 gcc-4.2 compiler wrappers on 10.5/x86_64	
-				then 
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/gcc-4.2,' \
-								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cc
-					perl -p -e 's,COMPILER,%p/var/lib/fink/path-prefix-10.6/g++-4.2,' \
-								%p/share/%{Ni}/%v/scripts/oct-compiler.in > %p/bin/oct-cxx
-					chmod a+x oct-cc oct-cxx
-			 	else
-			 		# default compilers on on powerpc and i386 build with proper arch.
-					ln -s /usr/bin/gcc-4.2 oct-cc
-					ln -s /usr/bin/g++-4.2 oct-cxx 
-				fi ;;
-			# fangism--feel free to update this
-			*)  printf "You will need to generate your own %p/bin/oct-cc and %p/bin/oct-cxx symlinks.\n" ;;
-		esac
-	<<
-	PreRmScript: <<
-		if [ -e %p/bin/oct-cc ]
-			then rm %p/bin/oct-cc
-			else printf "%p/bin/oct-cc is not present.\n" 
-		fi
-		if [ -e %p/bin/oct-cxx ]
-			then rm %p/bin/oct-cxx
-			else printf "%p/bin/oct-cxx is not present.\n"
-		fi
-	<<
 <<
 
 # Versioned executables
