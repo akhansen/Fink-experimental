@@ -8,10 +8,9 @@ Description: Convenience scripts for Octave add-ons
 
 Depends: fink (>= 0.36.4), xcode (>= 3.1)
 
-Source: https://github.com/akhansen/%n/archive/master.zip
-Source-MD5: 69d8a40a93d17600fe13b036eacc00dd
-SourceRename: %n-%v.zip
-SourceDirectory: %n-master
+Source: https://github.com/akhansen/%n/archive/0.3.0.tar.gz
+Source-Checksum: SHA1(1a4251b841414d55895f428db541188f7ac326b3)
+SourceRename: %n-%v.tar.gz
 
 PatchScript: <<
 	sed -e 's,@FINKPREFIX@,%p,g' octave-forge-patch.sh.in > octave-forge-patch.sh
