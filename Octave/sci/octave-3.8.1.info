@@ -1,6 +1,6 @@
 Info2: <<
-Package: octave%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]
-Type: -blas (. -atlas -ref), oct (3.8.1), gcc (4.9), -fltkx11 (boolean), lapack (3.5.0), java, -qtui (. -qtmac -qtx11)
+Package: octave%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]
+Type: -blas (. -atlas -ref), oct (3.8.1), gcc (4.9), -x11 (boolean), lapack (3.5.0), java (1.6), -qtui (. -qtmac -qtx11)
 Version: 3.8.1
 Revision: 1
 Description: MATLAB-like language for computations
@@ -25,14 +25,14 @@ BuildDepends: <<
 	readline6,  
 	sed,
 	suitesparse (>= 4.0.2-2),
-	system-java-dev,
+	system-java16-dev,
 	texinfo (>= 4.13),
 	fink (>= 0.36.4-1),
 	fink-package-precedence,
 	flag-sort,
-	(%type_raw[-fltkx11] != -fltkx11) 	fltk13-aqua,
-	(%type_raw[-fltkx11] = -fltkx11) 	fltk-x11,
-	(%type_raw[-fltkx11] = -fltkx11) 	x11-dev,
+	(%type_raw[-x11] != -x11) 	fltk13-aqua,
+	(%type_raw[-x11] = -x11) 	fltk-x11,
+	(%type_raw[-x11] = -x11) 	x11-dev,
 	(%type_raw[-blas] = .) 				arpack-ng (>=3.1.3-3) | (%type_raw[-blas] = .) arpack-ng-mpi (>= 3.1.2-4), 
 	(%type_raw[-blas] = .) 				qrupdate (>= 1.1.2-7),
 	(%type_raw[-blas] = -atlas) 		atlas (>= 3.10.1-1),
@@ -45,15 +45,16 @@ BuildDepends: <<
 	(%type_raw[-qtui] = -qtmac) 		qscintilla2.11-qt4-mac,
 	(%type_raw[-qtui] = -qtx11) 		qt4-base-x11,
 	(%type_raw[-qtui] = -qtx11) 		qscintilla2.11-qt4-x11,
-	(%type_raw[-qtui] = -qtx11) 		x11-dev
+	(%type_raw[-qtui] = -qtx11) 		x11-dev,
+	texlive-base | texlive-nox-base
 <<
-Depends: %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui] (=%v-%r)
+Depends: %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
 Suggests: %{Ni}%type_pkg[oct]-docs
 Provides: <<
 									%{Ni}-interpreter,
-(%type_raw[-fltkx11] = -fltkx11) 	%{Ni}-interpreter-fltkx11,
-(%type_raw[-fltkx11] != -fltkx11)	%{Ni}-interpreter-fltkaqua,
+(%type_raw[-x11] = -x11) 			%{Ni}-interpreter-x11,
+(%type_raw[-x11] != -x11)			%{Ni}-interpreter-aqua,
 (%type_raw[-qtui] = -qtx11)			%{Ni}-interpreter-qtx11,
 (%type_raw[-qtui] = -qtmac)			%{Ni}-interpreter-qtmac,
 (%type_raw[-blas] = -atlas)			%{Ni}-interpreter-newatlas,
@@ -86,35 +87,18 @@ PatchScript: <<
 	#Fink-specific structural changes
 	sed -e 's/@OCTVERSION@/%v/g' -e 's|@FINKPREFIX@|%p|g' %{PatchFile} | patch -p1 
 	# Put in the Fink tree.
-	sed -i.orig -e 's|@FINKPREFIX@|%p|g' doc/interpreter/*.1 src/mkoctfile*in.cc
+	sed -i -e 's|@FINKPREFIX@|%p|g' doc/interpreter/*.1 src/mkoctfile*in.cc
 
- 	# Put Fink compiler wrappers into oct-conf.in.h, which in 
- 	# turn gets harcoded into the Octave interpreter's 'octave_config_info' 
- 	# function, which is then used by some of the octave-forge packages at 
- 	# configure time.  Also do this for mkoctfile.in.cc so that mkoctfile has the
- 	# right information.
- 	export CC=`which gcc`
- 	export CXX=`which g++`
- 	sed -i.orig -e "s|%%OCTAVE_CONF_CC%%|\"$CC\"|" \
- 				-e "s|%%OCTAVE_CONF_CXXCPP%%|\"$CXX -E\"|" \
- 				-e "s|%%OCTAVE_CONF_CXX%%|\"$CXX\"|" \
- 				-e "s|%%OCTAVE_CONF_DL_LD%%|\"$CXX\"|" \
- 				-e "s|%%OCTAVE_CONF_LD_CXX%%|\"$CXX\"|" \
- 				-e "s|%%OCTAVE_CONF_SH_LD%%|\"$CXX\"|" \
-					libinterp/oct-conf.in.h 	
- 	sed -i.orig -e "s|%%OCTAVE_CONF_MKOCTFILE_CC%%|\"$CC\"|" \
- 				-e "s|%%OCTAVE_CONF_MKOCTFILE_CXX%%|\"$CXX\"|" \
- 				-e "s|%%OCTAVE_CONF_MKOCTFILE_LD_CXX%%|\"$CXX\"|" \
-					src/mkoctfile.in.cc 	
-	
+	# instead of using flag-sort, ensure that the right sysdep.h is used
+	grep -lr '#include "sysdep.h"' * | xargs perl -pi.orig -e 's,sysdep.h,%b/libinterp/corefcn/sysdep.h,'
 <<
 
 GCC: 4.0
-SetLDFLAGS: -Wl,-dead_strip_dylibs
-SetCC: flag-sort -r clang
-SetCXX: flag-sort -r clang++
+SetCC: oct-cc
 SetCFLAGS: -O3 -MD
+SetCXX: oct-cxx
 SetCXXFLAGS: -O3 -MD
+SetLDFLAGS: -Wl,-dead_strip_dylibs
 SetLIBS: -lgl2ps
 
 ConfigureParams: <<
@@ -124,11 +108,11 @@ ConfigureParams: <<
  	(%type_raw[-blas] = -atlas)	--with-blas="-ltatlas" \
  	(%type_raw[-blas] = -ref)	--with-lapack="-L%p/lib/lapack/%type_raw[lapack] -lreflapack" \
  	(%type_raw[-blas] = -ref)	--with-blas="-L%p/lib/lapack/%type_raw[lapack] -lrefblas" \
-	(%type_raw[-fltkx11] != -fltkx11)	--with-framework-carbon \
-	(%type_raw[-fltkx11] = -fltkx11)	--without-framework-carbon \
-	(%type_raw[-fltkx11] = -fltkx11) --with-x \
-	(%type_raw[-fltkx11] = -fltkx11) --x-libraries=/usr/X11/lib \
-	(%type_raw[-fltkx11] = -fltkx11) --x-includes=/usr/X11/include \
+	(%type_raw[-x11] != -x11)	--with-framework-carbon \
+	(%type_raw[-x11] = -x11)	--without-framework-carbon \
+	(%type_raw[-x11] = -x11) --with-x \
+	(%type_raw[-x11] = -x11) --x-libraries=/usr/X11/lib \
+	(%type_raw[-x11] = -x11) --x-includes=/usr/X11/include \
 	--with-magick=GraphicsMagick \
 	--with-qhull-includedir=%p/include/libqhull \
 	--host=%m-apple-darwin \
@@ -139,14 +123,13 @@ ConfigureParams: <<
 	--enable-shared \
 	--enable-dl \
 	--disable-static \
-	--disable-docs \
 	( "%type_raw[-qtui]" = "." ) --disable-gui \
 	--enable-dependency-tracking
 <<
 CompileScript: <<
  #!/bin/sh -ev
- osversion=`uname -r | cut -d. -f1`
- if [ "%type_raw[-fltkx11]" = "-fltkx11" ] ; then
+ # Encode Fink compiler wrappers
+ if [ "%type_raw[-x11]" = "-x11" ] ; then
  	export CXXFLAGS="$CXXFLAGS -I/usr/X11/include"
  fi
  export F77=%p/bin/gfortran-fsf-%type_raw[gcc]
@@ -157,16 +140,19 @@ CompileScript: <<
  fi
  FLIBDIR="%p/lib/gcc%type_raw[gcc]/lib"
  export FLIBS="-L${FLIBDIR} -lgfortran"
- export JAVA_HOME=`/usr/libexec/java_home`
+# export JAVA_HOME=`/usr/libexec/java_home`
+ printenv JAVA_HOME
  qt_type=`echo %type_pkg[-qtui] | cut -dt -f2`
  if [ "%type_raw[-qtui]" != "."  ] ; then	
  	export PKG_CONFIG_PATH="%p/lib/qt4-$qt_type/lib/pkgconfig:$PKG_CONFIG_PATH"
 	export PATH="%p/lib/qt4-$qt_type/bin:$PATH"
 	# QtCore is inherited
-	export LDFLAGS=`pkg-config QtNetwork --libs`" "`pkg-config QtGui --libs`" $LDFLAGS"
+	export LDFLAGS=`pkg-config QtNetwork --libs`" "`pkg-config QtGui --libs`" -L%p/lib/qt4-$qt_type/lib $LDFLAGS"
  fi
+ 
  ./configure %c
-   # don't just use top-level Makefile so that we can do a multi-core build.
+
+ # don't just use top-level Makefile so that we can do a multi-core build.
  pushd libgnu 
  make -j1
  popd
@@ -191,10 +177,10 @@ CompileScript: <<
 <<
 
 InfoTest: <<
-	TestDepends: ( %type_raw[-fltkx11] = -fltkx11 ) xvfb-run
+	TestDepends: ( %type_raw[-x11] = -x11 ) xvfb-run
 	TestScript: <<
 		#!/bin/sh -ev
-		if [ "%type_pkg[-fltkx11]" = "-fltkx11" ] 
+		if [ "%type_pkg[-x11]" = "-x11" ] 
 			then xvfb-run make check || exit 2
 		else
 			make check || exit 2	
@@ -207,13 +193,13 @@ InstallScript: <<
  make install DESTDIR=%d
  # Install manpages manually
  mkdir -p %i/share/man/man1
- cp doc/interpreter/*.1 %i/share/man/man1
+ mv doc/interpreter/*.1 %i/share/man/man1
  # Install info pages manually
  mkdir -p %i/share/info
- cp doc/interpreter/*.info* %i/share/info
+ mv doc/interpreter/*.info* %i/share/info
  # install texi macros
  mkdir -p %i/share/%{Ni}/%v/etc
- cp doc/interpreter/*.texi  %i/share/%{Ni}/%v/etc
+ mv doc/interpreter/*.texi  %i/share/%{Ni}/%v/etc
 
  # Install Fink-specific octaverc which points at our oct-versioned
  # package directory, and create the database directory
@@ -228,16 +214,19 @@ InstallScript: <<
  rm -f %i/share/applications/www.%{Ni}.org-%{Ni}.desktop
  mkdir -p %i/share/%{Ni}/%v/scripts
 
- # upstream install operation mangles mkoctfile, so copy it over
+ # upstream install operation mangles mkoctfile(?), so copy it over
  # from %b manually
  cd %i/bin
  rm mkoctfile mkoctfile-%type_raw[oct]
  /bin/cp %b/src/mkoctfile mkoctfile-%v
  ln -s mkoctfile-%v mkoctfile
- 
+  
  # sanitize .la files
  cd %i/lib/%{Ni}/%v/
  perl -pi -e 's/(\-framework)\s(\w+)/-Wl,$1,$2/g' *.la
+ 
+ # create docstrings file
+# echo "# stub" > %i/share/%{Ni}/%v/etc/built-in-docstrings
 <<
 
 InfoDocs: %{Ni}.info
@@ -260,13 +249,17 @@ or other languages.
 <<
 
 DescUsage: << 
-The %{Ni}%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui] package contains 
+The %{Ni}%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] package contains 
 unversioned executables, in particular the "octave" executable, along with the
-GNU info documentation.
+GNU info documentation.  
+
+The "-x11" variant has built-in FLTK graphics which use X11 rather than the 
+default Aqua.  The "-qtmac" variant builds a GUI which uses Qt on Aqua, while
+the "-qtx11" variant builds an X11 Qt gui.
 
 You can select another version of Octave to be the default, i.e. the "octave"
 executable and "info octave" point to it, via 
-"fink install %{Ni}%type_pkg[-blas]%type_pkg[-fltkx11]-<version>", 
+"fink install %{Ni}%type_pkg[-blas]%type_pkg[-x11]-<version>", 
 where the available <version> options are:
 	3.0.5
 	3.2.4
@@ -292,7 +285,7 @@ in tcsh.
 
 To build and install packages from Octave Forge manually, or to 
 build anything else against Octave, you will need to install the 
-%{Ni}%type_pkg[-blas]%type_pkg[-fltkx11]-dev package.  
+%{Ni}%type_pkg[-blas]%type_pkg[-x11]-dev package.  
 Fink's *-oct%type_pkg[oct] packages do this automatically, as well as
 applying patches, so unless you want to test a pre-release version,
 you are probably better off installing OF packages via Fink.
@@ -316,12 +309,12 @@ because this appears to be necessary when using the Accelerate framework.
 <<
 
 DescPackaging:  <<
+Use Java-1.6 because the build actually _links_ to libjvm--contrary to best
+practices.  
+
 Remove a desktop file that gets generated only for users with GNOME/KDE 
 installed.
 
-Build using flag-sort because upstream's flag ordering can cause conflicts
-between libinterp/corefcn/sysdep.h  and sysdep.h from saclib.
-	
 SetLIBS: -lgl2ps because of missing symbols from that library on 10.7/Xcode
 4.2.6	
 	
@@ -331,8 +324,8 @@ understand.  AquaTerm seems to be a sensible default.
 
 Create manpages for the versioned executables.
 
-We have split the package up into runtime, development, and library packages,
-to make upgrades easier for us and for users.
+We have split the package up into versioned runtime+library, development, and
+unversioned runtime packages,  to make upgrades easier for us and for users.
 	
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack-ng.  
 The Accelerate variant depends on Accelerate variants (only) of these, and 
@@ -351,11 +344,6 @@ fink-octave-scripts to ensure that user builds:
 1) using the Fink compiler wrapper for the OS X version 
 2) using a stably named compiler, in case of OS X updates.
 
-We turn off building docs to save time, since we'd throw them out anyway 
-because the package builds differently with and without TeX executables in
-the PATH.  However, this entails manual installation of the manpages and the
-GNU info file.
-
 We use Provides in a new namespace and new projections to avoid
 unwieldy | lists in the octave-forge packages.
 
@@ -365,109 +353,158 @@ add "liboctave-gcc4N-dev" and "liboctave-gcc4N" Provides, to make sure that
 things stay in sync; the latter isn't used yet.
 <<
 
-# SplitOffs
-
-# shlibs
-SplitOff: <<
-	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]-shlibs
-	Conflicts: << 
-		liboctave%type_pkg[oct]-shlibs,
-		%{Ni} (<< 3.0.5-5), 
-		%{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5),
-		%{Ni}3.0.2-atlas ( << 3.0.2-5)
-	<<
-	Replaces: <<
-		liboctave%type_pkg[oct]-shlibs,
-		%{Ni} (<< 3.0.5-5),	
-		%{Ni}-atlas (<< 3.0.5-5), 
-		%{Ni}3.0.2 ( << 3.0.2-5),
-		%{Ni}3.0.2-atlas ( << 3.0.2-5)
-	<<	
-	Depends: << 
-		fftw3-shlibs,
-		fontconfig2-shlibs,
-		freetype219-shlibs,
-		gcc%type_pkg[gcc]-shlibs,
-		gl2ps-shlibs,
-		hdf5.8-shlibs,
-		libpcre1-shlibs, 
-		readline6-shlibs, 
-		suitesparse-shlibs (>= 4.0.2-2),
-		(%type_raw[-blas] = -atlas)	atlas-shlibs (>= 3.10.1-1),
-		(%type_raw[-blas] = -atlas) qrupdate-atlas-shlibs (>= 1.1.2-7), 
-		(%type_raw[-blas] = .) 		qrupdate-shlibs (>= 1.1.2-7),
-		(%type_raw[-blas] = -ref) 	qrupdate-ref-shlibs (>= 1.1.2-7),
-		(%type_raw[-blas] = -ref) 	lapack%type_pkg[lapack]-shlibs
-	<<
-	Provides: <<
-		lib%{Ni}%type_pkg[oct]-gcc%type_pkg[gcc],
-		lib%{Ni}%type_pkg[oct],
-		(%type_raw[-blas] = -atlas) 		lib%{Ni}%type_pkg[oct]-newatlas,
-		(%type_raw[-blas] = .) 				lib%{Ni}%type_pkg[oct]-accelerate,
-		(%type_raw[-blas] = -ref) 			lib%{Ni}%type_pkg[oct]-ref,
-		(%type_raw[-fltkx11] = -fltkx11) 	lib%{Ni}%type_pkg[oct]-fltkx11,
-		(%type_raw[-fltkx11] != -fltkx11) 	lib%{Ni}%type_pkg[oct]-aqua,
-		(%type_raw[-qtui] = -qtx11)			lib%{Ni}%type_pkg[oct]-qtx11,
-		(%type_raw[-qtui] = -qtmac)			lib%{Ni}%type_pkg[oct]-qtmac
-	<<
-	
-	Files: <<
-		lib/%{Ni}/%v/lib{%{Ni},octinterp}.2.dylib
-		lib/%{Ni}/%v/liboctgui.0.dylib
-	<<
-	Shlibs: <<
-		%p/lib/%{Ni}/%v/lib%{Ni}.2.dylib 3.0.0 %n (>=3.8.1-1)
-		%p/lib/%{Ni}/%v/liboctinterp.2.dylib 3.0.0 %n (>=3.8.1-1)
-		%p/lib/%{Ni}/%v/liboctgui.0.dylib 1.0.0 %n (>=3.8.1-1)
-	<<
-	DescUsage: <<
-	This package contains shared libraries which are used by the Octave
-	interpreter itself, as well as for packages that build against Octave, 
-	such as the various Octave Forge packages.
-	Any package that either links to the libraries in %{Ni}%type_pkg[-blas]%type_pkg[-fltkx11]-shlibs or 
-	installs an extension should Depend on %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]-shlibs and BuildDepend
-	on %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]-dev.  
-	In addition, it will need to BuildDepend on hdf5.8 and fftw3.  
-	<<
-	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
-<<
+# SplitOff
 
 # -dev
-SplitOff2: <<
-	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]-dev
-	RuntimeDepends: fink-octave-scripts (>= 0.3-1)
+SplitOff: <<
+	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]-dev
+	RuntimeDepends: fink-%{Ni}-scripts (>= 0.3-1)
 	Depends: <<
-		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]-shlibs (=%v-%r), 
-		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui] (=%v-%r),
+		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] (=%v-%r),
 		fink (>=0.32),
 		gcc%type_pkg[gcc]-compiler 
 	<<
 	Conflicts: << 
-		lib%{Ni}305-dev, 
-		lib%{Ni}324-dev, 
-		lib%{Ni}343-dev, 
-		lib%{Ni}360-dev, 
-		lib%{Ni}361-dev, 
-		lib%{Ni}362-dev,
-		lib%{Ni}363-dev,
-		lib%{Ni}364-dev,
-		lib%{Ni}381-dev,
+		%{Ni}305-dev, 
+		%{Ni}305-atlas-dev,
+		%{Ni}305-ref-dev,  
+		%{Ni}324-dev, 
+		%{Ni}324-atlas-dev,
+		%{Ni}324-ref-dev,
+		%{Ni}324-x11-dev,
+		%{Ni}324-atlas-x11-dev,
+		%{Ni}324-ref-x11-dev,
+		%{Ni}343-dev, 
+		%{Ni}343-atlas-dev,
+		%{Ni}343-ref-dev,
+		%{Ni}343-x11-dev,
+		%{Ni}343-atlas-x11-dev,
+		%{Ni}343-ref-x11-dev,
+		%{Ni}360-dev, 
+		%{Ni}360-atlas-dev,
+		%{Ni}360-ref-dev,
+		%{Ni}360-x11-dev,
+		%{Ni}360-atlas-x11-dev,
+		%{Ni}360-ref-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-ref-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
+		%{Ni}361-ref-x11-dev,		
+		%{Ni}362-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-dev,
+		%{Ni}362-atlas-x11-dev,
+		%{Ni}362-ref-dev,
+		%{Ni}362-ref-x11-dev,
+		%{Ni}363-dev,
+		%{Ni}363-x11-dev,
+		%{Ni}363-atlas-dev,
+		%{Ni}363-atlas-x11-dev,
+		%{Ni}363-ref-dev,
+		%{Ni}363-ref-x11-dev,
+		%{Ni}364-dev,
+		%{Ni}364-x11-dev,
+		%{Ni}364-atlas-dev,
+		%{Ni}364-atlas-x11-dev,
+		%{Ni}381-atlas-dev,
+	   	%{Ni}381-atlas-x11-dev,
+   		%{Ni}381-atlas-x11-qtmac-dev,
+   		%{Ni}381-atlas-x11-qtx11-dev,
+   		%{Ni}381-atlas-qtmac-dev,
+   		%{Ni}381-atlas-qtx11-dev,
+   		%{Ni}381-atlas-x11-dev,
+   		%{Ni}381-dev,
+   		%{Ni}381-x11-dev,
+   		%{Ni}381-x11-qtmac-dev,
+   		%{Ni}381-x11-qtx11-dev,
+   		%{Ni}381-x11-x11-dev,
+   		%{Ni}381-mac-dev,
+   		%{Ni}381-qtmac-dev,
+   		%{Ni}381-qtx11-dev,
+   		%{Ni}381-ref-dev,
+   		%{Ni}381-ref-x11-dev,
+   		%{Ni}381-ref-x11-qtmac-dev,
+   		%{Ni}381-ref-x11-qtx11-dev,
+	   	%{Ni}381-ref-mac-dev,
+   		%{Ni}381-ref-qtmac-dev,
+   		%{Ni}381-ref-qtx11-dev,
+   		%{Ni}381-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
 	Replaces: <<
-		lib%{Ni}305-dev, 
-		lib%{Ni}324-dev, 
-		lib%{Ni}343-dev, 
-		lib%{Ni}360-dev, 
-		lib%{Ni}361-dev, 
-		lib%{Ni}362-dev,
-		lib%{Ni}363-dev,
-		lib%{Ni}364-dev,
-		lib%{Ni}381-dev,
+		%{Ni}305-dev, 
+		%{Ni}305-atlas-dev,
+		%{Ni}305-ref-dev,  
+		%{Ni}324-dev, 
+		%{Ni}324-atlas-dev,
+		%{Ni}324-ref-dev,
+		%{Ni}324-x11-dev,
+		%{Ni}324-atlas-x11-dev,
+		%{Ni}324-ref-x11-dev,
+		%{Ni}343-dev, 
+		%{Ni}343-atlas-dev,
+		%{Ni}343-ref-dev,
+		%{Ni}343-x11-dev,
+		%{Ni}343-atlas-x11-dev,
+		%{Ni}343-ref-x11-dev,
+		%{Ni}360-dev, 
+		%{Ni}360-atlas-dev,
+		%{Ni}360-ref-dev,
+		%{Ni}360-x11-dev,
+		%{Ni}360-atlas-x11-dev,
+		%{Ni}360-ref-x11-dev,
+		%{Ni}361-dev, 
+		%{Ni}361-atlas-dev,
+		%{Ni}361-ref-dev,
+		%{Ni}361-x11-dev,
+		%{Ni}361-atlas-x11-dev,
+		%{Ni}361-ref-x11-dev,		
+		%{Ni}362-dev,
+		%{Ni}362-x11-dev,
+		%{Ni}362-atlas-dev,
+		%{Ni}362-atlas-x11-dev,
+		%{Ni}362-ref-dev,
+		%{Ni}362-ref-x11-dev,
+		%{Ni}363-dev,
+		%{Ni}363-x11-dev,
+		%{Ni}363-atlas-dev,
+		%{Ni}363-atlas-x11-dev,
+		%{Ni}363-ref-dev,
+		%{Ni}363-ref-x11-dev,
+		%{Ni}364-dev,
+		%{Ni}364-x11-dev,
+		%{Ni}364-atlas-dev,
+		%{Ni}364-atlas-x11-dev,
+		%{Ni}364-ref-dev,
+		%{Ni}364-ref-x11-dev,
+		%{Ni}381-atlas-dev,
+	   	%{Ni}381-atlas-x11-dev,
+   		%{Ni}381-atlas-x11-qtmac-dev,
+   		%{Ni}381-atlas-x11-qtx11-dev,
+   		%{Ni}381-atlas-qtmac-dev,
+   		%{Ni}381-atlas-qtx11-dev,
+   		%{Ni}381-atlas-x11-dev,
+   		%{Ni}381-dev,
+   		%{Ni}381-x11-dev,
+   		%{Ni}381-x11-qtmac-dev,
+   		%{Ni}381-x11-qtx11-dev,
+   		%{Ni}381-x11-x11-dev,
+   		%{Ni}381-mac-dev,
+   		%{Ni}381-qtmac-dev,
+   		%{Ni}381-qtx11-dev,
+   		%{Ni}381-ref-dev,
+   		%{Ni}381-ref-x11-dev,
+   		%{Ni}381-ref-x11-qtmac-dev,
+   		%{Ni}381-ref-x11-qtx11-dev,
+	   	%{Ni}381-ref-mac-dev,
+   		%{Ni}381-ref-qtmac-dev,
+   		%{Ni}381-ref-qtx11-dev,
+   		%{Ni}381-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -479,8 +516,8 @@ SplitOff2: <<
 		(%type_raw[-blas] = -atlas) 		lib%{Ni}%type_pkg[oct]-newatlas-dev,
 		(%type_raw[-blas] = .) 				lib%{Ni}%type_pkg[oct]-accelerate-dev,
 		(%type_raw[-blas] = -ref) 			lib%{Ni}%type_pkg[oct]-ref-dev,
-		(%type_raw[-fltkx11] = -fltkx11) 	lib%{Ni}%type_pkg[oct]-fltkx11-dev,
-		(%type_raw[-fltkx11] != -fltkx11) 	lib%{Ni}%type_pkg[oct]-aqua-dev,
+		(%type_raw[-x11] = -x11) 			lib%{Ni}%type_pkg[oct]-x11-dev,
+		(%type_raw[-x11] != -x11) 			lib%{Ni}%type_pkg[oct]-aqua-dev,
 		(%type_raw[-qtui] = -qtx11)			lib%{Ni}%type_pkg[oct]-qtx11-dev,
 		(%type_raw[-qtui] = -qtmac)			lib%{Ni}%type_pkg[oct]-qtmac-dev
 	<<
@@ -490,7 +527,8 @@ SplitOff2: <<
 	Files: <<
 		include/%{Ni}-%v
 		lib/%{Ni}/%v/*.la 
-		lib/%{Ni}/%v/*.dylib
+		lib/%{Ni}/%v/lib{%{Ni},octinterp}.dylib
+		(%type_raw[-qtui] != .) lib/%{Ni}/%v/liboctgui.dylib
 		bin/mkoctfile*
 		bin/%{Ni}-config*
 		share/man/man1/mkoctfile*.1
@@ -512,41 +550,28 @@ SplitOff2: <<
 	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
 <<
 
-# Versioned executables
-Splitoff3: <<
-	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]
-	Depends: <<
-		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]%type_pkg[-qtui]-shlibs (=%v-%r),
-		ncurses, 
-		gnuplot-bin,
-		fftw3-shlibs (>= 3.1.1-7), 
-		gcc%type_pkg[gcc]-shlibs,
-		glpk-shlibs,
-		graphicsmagick-shlibs,
-		libcurl4-shlibs, 
-		qhull6.3.1-shlibs,
-		suitesparse-shlibs (>= 4.0.2-2),
-		(%type_raw[-fltkx11] != -fltkx11) 	fltk13-aqua-shlibs,
-		(%type_raw[-fltkx11] = -fltkx11) 	fltk-x11-shlibs,
-		(%type_raw[-blas] = .)		arpack-ng-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = .) arpack-ng-mpi-shlibs (>= 3.1.2-4),
-		(%type_raw[-blas] = -ref) 	lapack%type_pkg[lapack]-shlibs,
-		(%type_raw[-blas] = -ref)	arpack-ng-ref-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = -ref) arpack-ng-mpi-ref-shlibs (>= 3.1.3-3),
-		(%type_raw[-blas] = -atlas)	atlas-shlibs (>= 3.10.1-1),
-		(%type_raw[-blas] = -atlas)	arpack-ng-atlas-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = -atlas) arpack-ng-mpi-atlas-shlibs (>= 3.1.3-3)
-	<<
-	RuntimeDepends: <<
-		epstool,
-		ghostscript | ghostscript-nox,
-		transfig-graphicx | transfig-epsfig,
-		pstoedit-bin
-	<<
+# versioned executables and shlibs
+SplitOff2: <<
+	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]
 	Conflicts: << 
 		%{Ni}%type_pkg[oct],
+		%{Ni}%type_pkg[oct]-qtmac,
+		%{Ni}%type_pkg[oct]-qtx11,
 		%{Ni}%type_pkg[oct]-x11,
+		%{Ni}%type_pkg[oct]-x11-qtmac,
+		%{Ni}%type_pkg[oct]-x11-qtx11,
 		%{Ni}%type_pkg[oct]-atlas,
+		%{Ni}%type_pkg[oct]-atlas-qtmac,
+		%{Ni}%type_pkg[oct]-atlas-qtx11,
 		%{Ni}%type_pkg[oct]-atlas-x11,
+		%{Ni}%type_pkg[oct]-atlas-x11-qtmac,
+		%{Ni}%type_pkg[oct]-atlas-x11-qtx11,
 		%{Ni}%type_pkg[oct]-ref,
+		%{Ni}%type_pkg[oct]-ref-qtmac,
+		%{Ni}%type_pkg[oct]-ref-qtx11,
 		%{Ni}%type_pkg[oct]-ref-x11,
+		%{Ni}%type_pkg[oct]-ref-x11-qtmac,
+		%{Ni}%type_pkg[oct]-ref-x11-qtx11,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5),
@@ -554,25 +579,88 @@ Splitoff3: <<
 	<<
 	Replaces: <<
 		%{Ni}%type_pkg[oct],
+		%{Ni}%type_pkg[oct]-qtmac,
+		%{Ni}%type_pkg[oct]-qtx11,
 		%{Ni}%type_pkg[oct]-x11,
+		%{Ni}%type_pkg[oct]-x11-qtmac,
+		%{Ni}%type_pkg[oct]-x11-qtx11,
 		%{Ni}%type_pkg[oct]-atlas,
+		%{Ni}%type_pkg[oct]-atlas-qtmac,
+		%{Ni}%type_pkg[oct]-atlas-qtx11,
 		%{Ni}%type_pkg[oct]-atlas-x11,
+		%{Ni}%type_pkg[oct]-atlas-x11-qtmac,
+		%{Ni}%type_pkg[oct]-atlas-x11-qtx11,
 		%{Ni}%type_pkg[oct]-ref,
+		%{Ni}%type_pkg[oct]-ref-qtmac,
+		%{Ni}%type_pkg[oct]-ref-qtx11,
+		%{Ni}%type_pkg[oct]-ref-x11,
+		%{Ni}%type_pkg[oct]-ref-x11-qtmac,
+		%{Ni}%type_pkg[oct]-ref-x11-qtx11,
 		%{Ni}%type_pkg[oct]-ref-x11,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5),
 		%{Ni}3.0.2 ( << 3.0.2-5), 
 		%{Ni}3.0.2-atlas ( << 3.0.2-5)
 	<<
+	Depends: << 
+		(%type_raw[-blas] = .)		arpack-ng-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = .) arpack-ng-mpi-shlibs (>= 3.1.2-4),
+		(%type_raw[-blas] = -ref)	arpack-ng-ref-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = -ref) arpack-ng-mpi-ref-shlibs (>= 3.1.3-3),
+		(%type_raw[-blas] = -atlas)	arpack-ng-atlas-shlibs (>= 3.1.3-3) | (%type_raw[-blas] = -atlas) arpack-ng-mpi-atlas-shlibs (>= 3.1.3-3),
+		(%type_raw[-blas] = -atlas)	atlas-shlibs (>= 3.10.1-1),
+		fftw3-shlibs (>= 3.1.1-7), 
+		(%type_raw[-x11] != -x11) 	fltk13-aqua-shlibs,
+		(%type_raw[-x11] = -x11) 	fltk-x11-shlibs,
+		fontconfig2-shlibs,
+		freetype219-shlibs,
+		gcc%type_pkg[gcc]-shlibs,
+		gl2ps-shlibs,
+		glpk-shlibs,
+		gnuplot-bin,
+		graphicsmagick-shlibs,
+		hdf5.8-shlibs,
+		(%type_raw[-blas] = -ref) 	lapack%type_pkg[lapack]-shlibs,
+		libpcre1-shlibs, 
+		ncurses, 
+		qhull6.3.1-shlibs,
+	 	(%type_raw[-qtui] = -qtmac) qscintilla2.11-qt4-mac-shlibs, 
+	 	(%type_raw[-qtui] = -qtx11) qscintilla2.11-qt4-x11-shlibs, 
+	 	(%type_raw[-qtui] = -qtmac) qt4-base-mac-qtcore-shlibs, 
+	 	(%type_raw[-qtui] = -qtx11) qt4-base-x11-qtcore-shlibs, 
+	 	(%type_raw[-qtui] = -qtmac) qt4-base-mac-qtgui-shlibs, 
+	 	(%type_raw[-qtui] = -qtx11) qt4-base-x11-qtgui-shlibs, 	 	
+	 	(%type_raw[-qtui] = -qtmac) qt4-base-mac-qtnetwork-shlibs,
+		(%type_raw[-qtui] = -qtx11) qt4-base-x11-qtnetwork-shlibs,
+		(%type_raw[-blas] = -atlas)	atlas-shlibs (>= 3.10.1-1),
+		(%type_raw[-blas] = -atlas) qrupdate-atlas-shlibs (>= 1.1.2-7), 
+		(%type_raw[-blas] = .) 		qrupdate-shlibs (>= 1.1.2-7),
+		(%type_raw[-blas] = -ref) 	qrupdate-ref-shlibs (>= 1.1.2-7),
+		readline6-shlibs, 
+		suitesparse-shlibs (>= 4.0.2-2)
+	 <<
+	 RuntimeDepends: <<
+		epstool,
+		ghostscript | ghostscript-nox,
+		transfig-graphicx | transfig-epsfig,
+		pstoedit-bin
+	<<
 	Provides: <<
-										%{Ni}%type_pkg[oct]-interpreter,
-	(%type_raw[-fltkx11] = -fltkx11) 	%{Ni}%type_pkg[oct]-interpreter-fltkx11,
-	(%type_raw[-fltkx11] != -fltkx11) 	%{Ni}%type_pkg[oct]-interpreter-aqua,
-	(%type_raw[-qtui] = -qtx11)			%{Ni}%type_pkg[oct]-interpreter-qtx11,
-	(%type_raw[-qtui] = -qtmac)			%{Ni}%type_pkg[oct]-interpreter-qtmac,
-	(%type_raw[-blas] = -atlas) 		%{Ni}%type_pkg[oct]-interpreter-newatlas,
-	(%type_raw[-blas] = .)				%{Ni}%type_pkg[oct]-interpreter-accelerate,
-	(%type_raw[-blas] = -ref) 			%{Ni}%type_pkg[oct]-interpreter-ref
+		lib%{Ni}%type_pkg[oct]-gcc%type_pkg[gcc],
+		lib%{Ni}%type_pkg[oct],
+		(%type_raw[-blas] = -atlas) 		lib%{Ni}%type_pkg[oct]-newatlas,
+		(%type_raw[-blas] = .) 				lib%{Ni}%type_pkg[oct]-accelerate,
+		(%type_raw[-blas] = -ref) 			lib%{Ni}%type_pkg[oct]-ref,
+		(%type_raw[-x11] = -x11) 			lib%{Ni}%type_pkg[oct]-x11,
+		(%type_raw[-x11] != -x11) 			lib%{Ni}%type_pkg[oct]-aqua,
+		(%type_raw[-qtui] = -qtx11)			lib%{Ni}%type_pkg[oct]-qtx11,
+		(%type_raw[-qtui] = -qtmac)			lib%{Ni}%type_pkg[oct]-qtmac,
+											%{Ni}%type_pkg[oct]-interpreter,
+		(%type_raw[-x11] = -x11) 			%{Ni}%type_pkg[oct]-interpreter-x11,
+		(%type_raw[-x11] != -x11) 			%{Ni}%type_pkg[oct]-interpreter-aqua,
+		(%type_raw[-qtui] = -qtx11)			%{Ni}%type_pkg[oct]-interpreter-qtx11,
+		(%type_raw[-qtui] = -qtmac)			%{Ni}%type_pkg[oct]-interpreter-qtmac,
+		(%type_raw[-blas] = -atlas) 		%{Ni}%type_pkg[oct]-interpreter-newatlas,
+		(%type_raw[-blas] = .)				%{Ni}%type_pkg[oct]-interpreter-accelerate,
+		(%type_raw[-blas] = -ref) 			%{Ni}%type_pkg[oct]-interpreter-ref
 	<<
 	
 	Files: <<
@@ -583,17 +671,34 @@ Splitoff3: <<
 		var/%{Ni}/%v
 		share/man/man1/%{Ni}-%v.1
 	<<
-	ConfFiles: %p/share/%{Ni}/%v/m/startup/octaverc
-	RuntimeVars: <<
- 		GNUTERM: aqua
+	Shlibs: <<
+		%p/lib/%{Ni}/%v/lib%{Ni}.2.dylib 3.0.0 %n (>=3.8.1-1)
+		%p/lib/%{Ni}/%v/liboctinterp.2.dylib 3.0.0 %n (>=3.8.1-1)
+		(%type_raw[-qtui] !=.) %p/lib/%{Ni}/%v/liboctgui.0.dylib 1.0.0 %n (>=3.8.1-1)
 	<<
 	DescUsage: <<
-	The %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11] package contains versioned
-	executables, in particular the "%{Ni}-%type_raw[oct]" executable,
-	as well as all of the core functionality of the Octave interpreter.  
+	The %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] 
+	package contains versioned executables, in particular the 
+	"%{Ni}-%type_raw[oct]" executable, as well as all of the core 
+	functionality of the Octave interpreter, and the shared libraries which 
+	are used by the Octave interpreter as well as for packages that build 
+	against Octave, such as the various Octave Forge packages.
+	Any package that either links to the libraries in 
+	%{Ni}%type_pkg[-blas]%type_pkg[-x11]-shlibs or installs an extension
+	should Depend on 
+	%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]-shlibs 
+	and BuildDepend on %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]-dev.  
+	In addition, it will need to BuildDepend on hdf5.8 and fftw3.  
+
+    The "-x11" variant has built-in FLTK graphics which use X11 rather than  
+    the default Aqua.  The "-qtmac" variant builds a GUI which uses Qt on Aqua, 
+    while the "-qtx11" variant builds an X11 Qt GUI.   
+	
 	Note that the GNU info file, which provides the core documentation, 
-	is installed as part of the "%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-fltkx11]" package.
-    
+	is installed as part of the 
+	"%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]"
+	package.
+	
 	By default the plotting output (via gnuplot) is directed to AquaTerm. 
 	This can be overidden in your startup scripts, e.g.
  
@@ -615,8 +720,10 @@ Splitoff3: <<
 	You'll need to run the following command in your script:
  
 		pkg global_list %p/var/octave/%v/octave_packages
+	<<
+	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README doc/interpreter doc/refcard doc/liboctave
+	RuntimeVars: <<
+ 		GNUTERM: aqua
+	<<
 <<
-	DocFiles: AUTHORS BUGS COPYING ChangeLog NEWS README
-<<
-
 <<
