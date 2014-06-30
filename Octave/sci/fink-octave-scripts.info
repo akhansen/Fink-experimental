@@ -7,9 +7,41 @@ Homepage: http://akhansen.github.io/fink-octave-scripts
 Description: Convenience scripts for Octave add-ons
 
 Depends: fink (>= 0.36.4), xcode (>= 3.1)
+Replaces: <<
+	octave360-dev (<<3.6.0-17),
+	octave360-x11-dev (<<3.6.0-17),
+	octave360-atlas-dev (<<3.6.0-17),
+	octave360-atlas-x11-dev (<<3.6.0-17),
+	octave360-ref-dev (<<3.6.0-17),
+	octave360-ref-x11-dev (<<3.6.0-17),
+	octave361-dev (<<3.6.1-17),
+	octave361-x11-dev (<<3.6.1-17),
+	octave361-atlas-dev (<<3.6.1-17),
+	octave361-atlas-x11-dev (<<3.6.1-17),
+	octave361-ref-dev (<<3.6.1-17),
+	octave361-ref-x11-dev (<<3.6.1-17),
+	octave362-dev (<<3.6.2-16),
+	octave362-x11-dev (<<3.6.2-16),
+	octave362-atlas-dev (<<3.6.2-16),
+	octave362-atlas-x11-dev (<<3.6.2-16),
+	octave362-ref-dev (<<3.6.2-16),
+	octave362-ref-x11-dev (<<3.6.2-16),
+	octave363-dev (<<3.6.3-8),
+	octave363-x11-dev (<<3.6.3-8),
+	octave363-atlas-dev (<<3.6.3-8),
+	octave363-atlas-x11-dev (<<3.6.3-8),
+	octave363-ref-dev (<<3.6.3-8),
+	octave363-ref-x11-dev (<<3.6.3-8),
+	octave364-dev (<<3.6.4-10),
+	octave364-x11-dev (<<3.6.4-10),
+	octave364-atlas-dev (<<3.6.4-10),
+	octave364-atlas-x11-dev (<<3.6.4-10),
+	octave364-ref-dev (<<3.6.4-10),
+	octave364-ref-x11-dev (<<3.6.4-10)	
+<<
 
-Source: https://github.com/akhansen/%n/archive/0.3.0.tar.gz
-Source-Checksum: SHA1(1a4251b841414d55895f428db541188f7ac326b3)
+Source: https://github.com/akhansen/%n/archive/%v.tar.gz
+Source-Checksum: SHA1(fa490f2d9e6248d1b539074bc3b316c0349e3fec)
 SourceRename: %n-%v.tar.gz
 
 PatchScript: <<
