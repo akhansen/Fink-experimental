@@ -1,6 +1,6 @@
 Info2: <<
 Package: octave%type_pkg[-blas]%type_pkg[-x11]
-Type: -blas (. -atlas -ref), oct (3.6.4), gcc (4.8), -x11 (boolean), lapack (3.4.2)
+Type: -blas (. -atlas -ref), oct (3.6.4), gcc (4.9), -x11 (boolean), lapack (3.5.0)
 Version: 3.6.4
 Revision: 10
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -23,7 +23,6 @@ BuildDepends: <<
 	texinfo (>= 4.13),
 	fink (>= 0.32.0-1),
 	fink-package-precedence,
-	flag-sort,
 	(%type_raw[-x11] != -x11) 		fltk13-aqua,
 	(%type_raw[-x11] = -x11) 		fltk-x11,
 	(%type_raw[-x11] = -x11) 		x11-dev,
@@ -49,7 +48,7 @@ Provides: <<
 <<
 Conflicts: <<
 	%{Ni}, 
-	%{Ni}-qtmac, 
+	%{Ni}-qtmac,
 	%{Ni}-qtx11, 
 	%{Ni}-x11, 
 	%{Ni}-x11-qtmac, 
@@ -425,6 +424,8 @@ SplitOff2: <<
 		%{Ni}364-x11-dev,
 		%{Ni}364-atlas-dev,
 		%{Ni}364-atlas-x11-dev,
+		%{Ni}364-ref-dev,
+		%{Ni}364-ref-x11-dev,
 		%{Ni}381-atlas-dev,
 	   	%{Ni}381-atlas-x11-dev,
    		%{Ni}381-atlas-x11-qtmac-dev,
