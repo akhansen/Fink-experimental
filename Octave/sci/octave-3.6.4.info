@@ -828,6 +828,13 @@ Octave Forge packages against the new packaging scheme.
 
 Revision 5:
 Switch to hdf5.8, and add RuntimeDepends: epstool, since we left that out.  
+
+Revision 10:
+Switch to gcc49 and lapack350.  
+Use fink-octave-scripts package for compilers and patch in build directory's 
+sysdep.h to avoid collisions with saclib rather than using flag-sort and then having to
+undo it via patching.  All of the octave-forge packages are going to need to BDep:
+fink-octave-scripts (>= 3.0.1) henceforth.
 <<
 Homepage: http://www.gnu.org/software/octave/
 License: GPL3+
