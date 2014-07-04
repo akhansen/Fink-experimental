@@ -61,8 +61,50 @@ Provides: <<
 (%type_raw[-blas] = .)				%{Ni}-interpreter-accelerate,
 (%type_raw[-blas] = -ref)			%{Ni}-interpreter-ref
 <<
-Conflicts: octave-interpreter
-Replaces: octave-interpreter
+Conflicts: <<
+	%{Ni}, 
+	%{Ni}-qtmac,
+	%{Ni}-qtx11, 
+	%{Ni}-x11, 
+	%{Ni}-x11-qtmac, 
+	%{Ni}-x11-qtx11, 
+	%{Ni}-atlas,
+	%{Ni}-atlas-qtmac,
+	%{Ni}-atlas-qtx11,
+	%{Ni}-atlas-x11,
+	%{Ni}-atlas-x11-qtmac,
+	%{Ni}-atlas-x11-qtx11,
+	%{Ni}-ref, 
+	%{Ni}-ref-qtmac, 
+	%{Ni}-ref-qtx11, 
+	%{Ni}-ref-x11,
+	%{Ni}-ref-x11-qtmac,
+	%{Ni}-ref-x11-qtx11,
+	%{Ni}3.0.2 ( << 3.0.2-5), 
+	%{Ni}3.0.2-atlas ( << 3.0.2-5) 
+<<
+Replaces: <<
+	%{Ni}, 
+	%{Ni}-qtmac, 
+	%{Ni}-qtx11, 
+	%{Ni}-x11, 
+	%{Ni}-x11-qtmac, 
+	%{Ni}-x11-qtx11, 
+	%{Ni}-atlas,
+	%{Ni}-atlas-qtmac,
+	%{Ni}-atlas-qtx11,
+	%{Ni}-atlas-x11,
+	%{Ni}-atlas-x11-qtmac,
+	%{Ni}-atlas-x11-qtx11,
+	%{Ni}-ref, 
+	%{Ni}-ref-qtmac, 
+	%{Ni}-ref-qtx11, 
+	%{Ni}-ref-x11,
+	%{Ni}-ref-x11-qtmac,
+	%{Ni}-ref-x11-qtx11,
+	%{Ni}3.0.2 ( << 3.0.2-5), 
+	%{Ni}3.0.2-atlas ( << 3.0.2-5) 
+<<
 
 # source
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
