@@ -1,6 +1,6 @@
 Terms of usage:
 
-This subdirectory inherits the terms of usage outlined in ../Readme.md
+This subdirectory inherits the terms of usage outlined in [../Readme.md] ("https://github.com/akhansen/Fink-experimental")
 
 This directory contains Octave packaging and packaging for related items.  
 
