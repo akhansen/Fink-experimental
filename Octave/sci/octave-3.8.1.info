@@ -107,8 +107,8 @@ Replaces: <<
 <<
 
 # source
-Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.gz
-Source-MD5: 4be2bd3b985e245c8ac86881d4acdeef
+Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.bz2
+Source-MD5: 4c5b9bd6b82b7fa3191af9706e7204f8
 
 # patch
 PatchFile: %{ni}-%v-octaverc.patch
