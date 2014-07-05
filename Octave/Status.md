@@ -1,6 +1,13 @@
 Packaging Status
 ================
 
+2015-07-05 13:47 UTC
+--------------------
+
+New upstream bim (1.1.4) works with octave-3.8.1 and octave-3.6.0.  It's supposed to be
+for Octave 3.6.0 and later, so we can call that done.
+Older bim packages have been converted to fink-octave-scripts.
+
 2014-07-24 23:35 UTC
 --------------------
 
