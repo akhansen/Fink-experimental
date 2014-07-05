@@ -8,6 +8,21 @@ Description: Convenience scripts for Octave add-ons
 
 Depends: fink (>= 0.36.4), xcode (>= 3.1)
 Replaces: <<
+	octave305-dev (<<3.0.5-3029),
+	octave305-atlas-dev (<<3.0.5-3029),
+	octave305-ref-dev (<<3.0.5-3029),
+	octave324-dev (<<3.2.4-3030),
+	octave324-x11-dev (<<3.2.4-3030),
+	octave324-atlas-dev (<<3.2.4-3030),
+	octave324-atlas-x11-dev (<<3.2.4-3030),
+	octave324-ref-dev (<<3.2.4-3030),
+	octave324-ref-x11-dev (<<3.2.4-3030),
+	octave343-dev (<<3.4.3-326),
+	octave343-x11-dev (<<3.4.3-326),
+	octave343-atlas-dev (<<3.4.3-326),
+	octave343-atlas-x11-dev (<<3.4.3-326),
+	octave343-ref-dev (<<3.4.3-326),
+	octave343-ref-x11-dev (<<3.4.3-326),
 	octave360-dev (<<3.6.0-17),
 	octave360-x11-dev (<<3.6.0-17),
 	octave360-atlas-dev (<<3.6.0-17),
@@ -64,9 +79,9 @@ InstallScript: <<
 <<
 DocFiles: Readme.md NEWS
 
-PreInstScript: <<
-echo "Replacing prior oct-cc and oct-cxx with our version..."
-rm -f %p/bin/oct-cc %p/bin/oct-cxx
+PosedInstScript: <<
+echo "We replaced prior versions of oct-cc and oct-cxx with our version..."
+echo "Be sure to update any octave3XY*-dev packages to the newest version."
 <<
 
 DescUsage: <<
