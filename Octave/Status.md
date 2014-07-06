@@ -1,12 +1,18 @@
 Packaging Status
 ================
 
-2015-07-05 18:53 UTC
+2014-07-06 19:51 UTC
 --------------------
+
+Additional packages added.  All currrently work with octave* and fink-octave-packages from this repository.
+
+2014-07-05 18:53 UTC
+--------------------
+
 Existing fpl (1.3.4) and new upstream msh (1.0.10) and splines (1.2.7) work.
 These and their older colleagues have been converted to use fink-octave-scripts.
 
-2015-07-05 13:47 UTC
+2014-07-05 13:47 UTC
 --------------------
 
 New upstream bim (1.1.4) works with octave-3.8.1 and octave-3.6.0.  It's supposed to be
