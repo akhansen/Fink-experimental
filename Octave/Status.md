@@ -1,6 +1,12 @@
 Packaging Status
 ================
 
+2014-07-08 21:06 UTC
+--------------------
+
+Additional packages added.  All currrently work with octave* and fink-octave-packages from this repository,
+apart from fem-fenics, which has been stashed in the `libs/octmods-work-in-progress` directory.
+
 2014-07-06 19:51 UTC
 --------------------
 
