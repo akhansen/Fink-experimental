@@ -8,5 +8,7 @@ Packaging for various versions of the Octave main package and its documentation 
 
 Octave Forge packages are now in Fink's `libs/octmods` (this change was made without my permission--I personally would have picked `sci/octmods`).
 
+`libs/octmods-work-in-progress` contains modules that don't work yet.
+
 The `unofficial` directory contains packaging for items that can't be in Fink.
 
