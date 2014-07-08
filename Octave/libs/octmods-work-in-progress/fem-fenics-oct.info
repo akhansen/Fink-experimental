@@ -1,0 +1,82 @@
+Info2: <<
+Package: fem-fenics-oct%type_pkg[oct]
+Version: 0.0.2
+Type: oct (3.8.1), forge (fem-fenics)
+Revision: 1
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Homepage: http://octave.sourceforge.net/fem-fenics/index.html 
+Description: PDE resolution based on fenics
+DescDetail: <<
+Package for the resolution of partial differential equations based on fenics.
+
+The package provides the following functions:
+<<
+License: GPL3+
+
+BuildDepends: <<
+  liboctave%type_pkg[oct]-dev, 
+  eigen3,
+  fftw3,
+  hdf5.8,
+  fink-octave-scripts (>=0.3.0-1)
+<<
+Depends: octave%type_pkg[oct]-interpreter
+
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: df8e6a63b7413c43a4ad53852b77abce
+SourceDirectory: %type_pkg[forge]
+
+# Do not change anything from this point down unless absolutely necessary,
+# since the foo-oct%type_pkg[oct] packages are designed to be built/installed
+# in the same way.
+
+# Most packages can use the defaults below, but change them if required.
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
+
+# These should not be changed:
+UseMaxBuildJobs: false
+BuildAsNobody: false
+
+CompileScript: <<
+#!/bin/sh -ev
+
+# Most common form
+pkgsrc=%type_raw[forge]
+
+# For packages which still have the version in their source directory, use the following
+# instead
+# pkgsrc=%type_raw[forge]-%v
+
+# Any additional tweaks to the build which aren't covered by a PatchScript, such as 
+# setting environment variables, should go here.
+
+##### Invariant *Script stuff begins here. #####
+
+%p/share/fink-octave-scripts/octave-forge-patch.sh %type_raw[forge] %v %type_raw[oct] %b %i $pkgsrc
+./octave-forge-compile.sh
+<<
+
+InstallScript: ./octave-forge-install.sh
+PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
+PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
+
+DescPackaging: <<
+This package:
+# Note below applies to packages which support older Octaves in addition to 3.6.4+
+Hideous Distribution tagging is so that we can keep a *single* .info file in the
+10.7 tree that covers all octversions for 10.7/10.8, but keeps only 3.6.4+ for 10.9.  
+This is by design.  Don't touch this file without my permission.
+
+@ADDITIONAL_DESCPACKAGING@
+
+Common for all octave-forge packages:
+Preinst and postinst scripts are dynamically set up via 
+%p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
+can't cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
+# Add additional Desc* fields as required.
+<<

@@ -1,0 +1,27 @@
+Info2: <<
+Package: dolfin
+Version: 1.4.0
+Revision: 0.0001
+Type: gcc (4.9)
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+Homepage: http://fenicsproject.org
+License: GPL3+
+Description: Library for solving PDEs and ODEs
+
+Source: https://bitbucket.org/fenics-project/%n/downloads/%n-%v.tar.gz
+Source-MD5: b736119d524590b6bd0484f09893e018
+Source2: https://bitbucket.org/fenics-project/ffc/downloads/ffc-%v.tar.gz
+Source2-MD5: cac802fbbf869911fdd82b72c51a7771
+
+BuildDepends: cmake (>=2.8), openmpi, gcc%type_pkg[gcc]-compiler, boost1.55-systempython
+
+CompileScript: <<
+	cmake -DCMAKE_INSTALL_PREFIX=%p -DBOOST_ROOT=%p/opt/boost-1_55 -DUFC_DIR=%b/../ffc-%v/cmake .
+	make
+<<
+
+DescDetail: <<
+DOLFIN is the C++/Python interface of FEniCS, providing a consistent PSE
+(Problem Solving Environment) for ordinary and partial differential equations.
+<<
+<<
