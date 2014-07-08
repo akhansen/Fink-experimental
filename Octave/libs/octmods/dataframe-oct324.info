@@ -58,13 +58,13 @@ CompileScript: <<
 
 pkgsrc=%type_raw[forge]
 
-%p/share/fink-octave-scripts/octave-forge-patch.sh %type_raw[forge] %v %type_raw[oct] %b %i $pkgsrc
+%p/share/fink-octave-scripts/octave-forge-patch.sh %type_raw[forge] %v 3.2.4 %b %i $pkgsrc
 ./octave-forge-compile.sh
 <<
 
 InstallScript: ./octave-forge-install.sh
-PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
-PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
+PostInstScript:  %p/share/octave/3.2.4/%type_raw[forge]/octave-forge-postinst.sh
+PreRmScript: %p/share/octave/3.2.4/%type_raw[forge]/octave-forge-prerm.sh
 
 DescPackaging: <<
 Common for all octave-forge packages:
