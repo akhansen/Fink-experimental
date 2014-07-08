@@ -166,6 +166,8 @@ InstallScript: ./octave-forge-install.sh
 PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
 
+DocFiles: doc/gmd-7-225-2014.pdf
+
 DescPackaging: <<
 This package:
 # Note below applies to packages which support older Octaves in addition to 3.6.4+
