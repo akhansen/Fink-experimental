@@ -1,0 +1,159 @@
+Info2: <<
+Package: @FORGE_NAME@-oct%type_pkg[oct]
+Version: @VERSION@
+Type: oct (@OCTVERSIONS@), forge (@FORGE_NAME@)
+# Packages that support Octave 3.4.3 and earlier typically link to gcc4N-shlibs,
+# and need Type: gcc (@type_gcc) added.
+Revision: @REVISION@
+
+# Packages which support Octave < 3.6.4 also need
+# Distribution: ( %type_pkg[oct] << 364 ) 10.7, ( %type_pkg[oct] << 364 ) 10.8
+
+Maintainer: @MAINTAINER_NAME@ <@MAINTAINER_EMAIL@>
+# unfortunately, Homepage won't do types
+Homepage: http://octave.sourceforge.net/@FORGE_NAME@/index.html 
+Description: @DESCRIPTION
+
+# In addition to the expanded paragraph, we like to put the extra functions from
+# pkg -verbose describe <package> into the DescDetail.
+DescDetail: <<
+<<
+
+License: @LICENSE@
+
+# All packages need at least these BuildDepends, with the following exceptions:
+# 1.  Packages which aren't for Octave-3.0.5 can just declare a dependency on hdf5.8
+# 2.  Packages which don't need other packages don't need to have the versioned fink
+# 	  dependency.
+#
+# In addition, packages which support Octave 3.4.3 and earlier will need to replace
+# liboctave%type_pkg[oct]-dev with  
+# ( %type_pkg[oct] << 360 ) liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+#
+# (or simply add it) if they link to any gcc4N libraries. gcc%type_pkg[gcc]-compiler is 
+# already in the Depends of every octave*-dev package.
+#
+# The particular versioning on fink-octave-scripts indicates the first version which
+# contained compiler wrappers.
+BuildDepends: <<
+  liboctave%type_pkg[oct]-dev, 
+  fftw3,
+  hdf5.8,
+  fink (>=0.32),
+  @ADDITIONAL_BUILD_DEPENDS@
+  fink-octave-scripts (>=0.3.0-1)
+<<
+
+# To date, no Octave Forge package has needed another one to build against, so
+# we typically declare these as RuntimeDepends
+RuntimeDepends: @RUNTIME_DEPENDS@
+
+# This is the normal minimum Depends.
+Depends: octave%type_pkg[oct]-interpreter
+
+# Packages which link to BLAS/LAPACK need the following instead:
+#Depends: << 
+#  (%type_raw[-blas] = -atlas) 	atlas-shlibs (>= 3.10.1-1),
+#  (%type_raw[-blas] = -atlas)	octave%type_pkg[oct]-interpreter-newatlas, 
+#  (%type_raw[-blas] = .)		octave%type_pkg[oct]-interpreter-accelerate,
+#  (%type_raw[-blas] = -ref)		lapack%type_pkg[lapack]-shlibs,
+#  (%type_raw[-blas] = -ref)		octave%type_pkg[oct]-interpreter-ref
+# <<
+#
+# Packages which support Octave 3.4.3 and earlier also need a Depends on
+# ( %type_pkg[oct] << 360 ) gcc%type_pkg[gcc]-shlibs
+
+# Almost all packages can use the same Source URL if Type: forge is used.
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+Source-MD5: @SOURCE-MD5@
+
+# Upstreams are generally moving toward not putting the package version for the source
+# directory, so the line below is becoming mandatory.  Leave it out for packages that
+# still keep the version around.
+SourceDirectory: %type_pkg[forge]
+
+# Do not change anything from this point down unless absolutely necessary,
+# since the foo-oct%type_pkg[oct] packages are designed to be built/installed
+# in the same way.
+
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
+UseMaxBuildJobs: false
+BuildAsNobody: false
+
+CompileScript: <<
+#!/bin/sh -ev
+if [ $UID -ne 0 ]
+then 
+	echo "%n cannot be built with --build-as-nobody"
+	exit 1
+fi
+export OCTAVE=%p/bin/octave-%type_raw[oct] 
+	# repack tarball, since octave-3.4.3 appears not to want to install
+	# from directories
+	cd ..
+	tar -cf %type_raw[forge].tar %type_raw[forge]
+	cd %b
+	pkgsrc=%type_raw[forge].tar
+	%p/share/octave/%type_raw[oct]/scripts/octave-forge-compile.sh $pkgsrc
+<<
+
+InstallScript: << 
+	#!/bin/sh -ev
+	%p/share/octave/%type_raw[oct]/scripts/octave-forge-install.sh %type_raw[forge]-%v %i %b
+	mkdir -p %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	# copy template scripts
+	cp %p/share/octave/%type_raw[oct]/scripts/octave-forge-prerm %p/share/octave/%type_raw[oct]/scripts/octave-forge-postinst %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	cd %i/share/octave/%type_raw[oct]/%type_raw[forge]-%v
+	sed -i -e 's/@PKGNAME@/%type_raw[forge]-%v/' octave-forge-postinst
+	sed -i -e 's/@PKGNAME@/%type_raw[forge]/' octave-forge-prerm
+	chmod a+x octave-forge*
+<<
+PostInstScript:  <<
+	if [ -s %p/var/octave/%type_raw[oct]/octave_packages ] && [ -f %p/var/octave/%type_raw[oct]/octave_packages ] 
+	then 
+ 		`which xvfb-run` %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-postinst
+	else
+ 		mv %p/share/octave/%type_raw[oct]/packages/%type_raw[forge]-%v/octave_packages %p/var/octave/%type_raw[oct]/octave_packages
+	fi
+<<
+
+PreRmScript: `which xvfb-run` %p/share/octave/%type_raw[oct]/%type_raw[forge]-%v/octave-forge-prerm
+
+CompileScript: <<
+#!/bin/sh -ev
+
+# Most common form
+pkgsrc=%type_raw[forge]
+
+# For packages which still have the version in their source directory, use the following
+# instead
+# pkgsrc=%type_raw[forge]-%v
+
+%p/share/fink-octave-scripts/octave-forge-patch.sh %type_raw[forge] %v %type_raw[oct] %b %i $pkgsrc
+./octave-forge-compile.sh
+<<
+
+InstallScript: ./octave-forge-install.sh
+PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
+PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
+
+DescPackaging: <<
+This package:
+# Note below applies to packages which support older Octaves in addition to 3.6.4+
+Hideous Distribution tagging is so that we can keep a *single* .info file in the
+10.7 tree that covers all octversions for 10.7/10.8, but keeps only 3.6.4+ for 10.9.  
+This is by design.  Don't touch this file without my permission.
+
+@ADDITIONAL_DESCPACKAGING@
+
+Common for all octave-forge packages:
+Preinst and postinst scripts are dynamically set up via 
+%p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
+can't cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
+# Add additional Desc* fields as required.
+<<
