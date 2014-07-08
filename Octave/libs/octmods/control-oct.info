@@ -1,8 +1,8 @@
 Info2: <<
 Package: control%type_pkg[-blas]-oct%type_pkg[oct]
-Version: 2.4.5
+Version: 2.6.5
 Type: oct (3.6.0 3.6.1 3.6.2 3.6.3 3.6.4 3.8.1), forge (control), -blas (-atlas -ref .), gcc (4.9), lapack (3.5.0)
-Revision: 2
+Revision: 1
 Distribution: (%type_pkg[oct] << 364) 10.7, (%type_pkg[oct] << 364) 10.8
 
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -39,6 +39,7 @@ Model Data Access:
 Model Conversions:
         @lti/c2d
         @lti/d2c
+        @lti/d2d
         @lti/prescale
         @lti/xperm
 Model Interconnections:
@@ -50,7 +51,8 @@ Model Interconnections:
         @lti/mconnect
         @lti/parallel
         @lti/series
-Model Characteristics
+        sumblk
+Model Characteristics:
         ctrb
         ctrbf
         @lti/dcgain
@@ -72,10 +74,10 @@ Model Characteristics
         pzmap
         @lti/size
         @lti/zero
-Model Simplification
+Model Simplification:
         @lti/minreal
         @lti/sminreal
-Time Domain Analysis
+Time Domain Analysis:
         covar
         gensig
         impulse
@@ -83,7 +85,7 @@ Time Domain Analysis
         lsim
         ramp
         step
-Frequency Domain Analysis
+Frequency Domain Analysis:
         bode
         bodemag
         @lti/freqresp
@@ -92,41 +94,42 @@ Frequency Domain Analysis
         nyquist
         sensitivity
         sigma
-Pole Placement
+Pole Placement:
         place
         rlocus
-Linear-Quadratic Control
+Optimal Control:
         dlqe
         dlqr
         estim
         kalman
         lqe
         lqr
-Robust Control
+Robust Control:
         augw
         fitfrd
         h2syn
         hinfsyn
         mixsyn
+        mktito
         ncfsyn
-Matrix Equation Solvers
+Matrix Equation Solvers:
         care
         dare
         dlyap
         dlyapchol
         lyap
         lyapchol
-Model Reduction
+Model Reduction:
         bstmodred
         btamodred
         hnamodred
         spamodred
-Controller Reduction
+Controller Reduction:
         btaconred
         cfconred
         fwcfconred
         spaconred
-Experimental Data Handling
+Experimental Data Handling:
         iddata
         @iddata/cat
         @iddata/detrend
@@ -141,13 +144,14 @@ Experimental Data Handling
         @iddata/resample
         @iddata/set
         @iddata/size
-System Identification
+System Identification:
         arx
         moen4
         moesp
         n4sid
-Overloaded LTI Operators
+Overloaded LTI Operators:
         @lti/ctranspose
+        @lti/end
         @lti/horzcat
         @lti/inv
         @lti/minus
@@ -156,21 +160,28 @@ Overloaded LTI Operators
         @lti/mrdivide
         @lti/mtimes
         @lti/plus
+        @lti/repmat
         @lti/subsasgn
         @lti/subsref
+        @lti/times
         @lti/transpose
         @lti/uminus
         @lti/uplus
         @lti/vertcat
-Overloaded IDDATA Operators
+Overloaded IDDATA Operators:
+        @iddata/end
         @iddata/horzcat
         @iddata/subsasgn
         @iddata/subsref
         @iddata/vertcat
-Miscellaneous
+Miscellaneous:
+        db2mag
+        mag2db
         options
+        repsys
         strseq
         test_control
+        thiran
         BMWengine
         Boeing707
         WestlandLynx
@@ -202,8 +213,8 @@ BuildDepends: <<
   fftw3,
   hdf5.8,
   (%type_raw[-blas] = -ref) pkgconfig
-  # change the above to pykg-config once libcurl4 has changed over.
 <<
+# change the above to pykg-config once libcurl4 has changed over.
 Depends: <<
   (%type_raw[-blas] = -atlas)	atlas-shlibs (>= 3.10.1-1),
   (%type_raw[-blas] = -atlas)	octave%type_pkg[oct]-interpreter-newatlas, 
@@ -224,7 +235,7 @@ Replaces: <<
 	%type_raw[forge]-oct%type_pkg[oct]
 <<
 
-Source-MD5: fd937a789b0eb5aec153709721deeef9
+Source-MD5: b0e0e27416c0afb541a7983318bb1baa
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 SourceDirectory: %type_pkg[forge]
 
