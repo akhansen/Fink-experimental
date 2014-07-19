@@ -1,10 +1,11 @@
 Info2: <<
 Package: @FORGE_NAME@-oct%type_pkg[oct]
 Version: @VERSION@
-Type: oct (@OCTVERSIONS@), forge (@FORGE_NAME@)
+Revision: @REVISION@
+
 # Packages that support Octave 3.4.3 and earlier typically link to gcc4N-shlibs,
 # and need Type: gcc (@type_gcc) added.
-Revision: @REVISION@
+Type: oct (@OCTVERSIONS@), forge (@FORGE_NAME@)
 
 # Packages which support Octave < 3.6.4 also need
 # Distribution: ( %type_pkg[oct] << 364 ) 10.7, ( %type_pkg[oct] << 364 ) 10.8
@@ -40,9 +41,9 @@ BuildDepends: <<
   fftw3,
   hdf5.8,
   fink (>=0.32),
-  @ADDITIONAL_BUILD_DEPENDS@
   fink-octave-scripts (>=0.3.0-1)
-<<
+  @ADDITIONAL_BUILD_DEPENDS@
+ <<
 
 # To date, no Octave Forge package has needed another one to build against, so
 # we typically declare these as RuntimeDepends
