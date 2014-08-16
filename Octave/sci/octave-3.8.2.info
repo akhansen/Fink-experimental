@@ -1,7 +1,7 @@
 Info2: <<
 Package: octave%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]
-Type: -blas (. -atlas -ref), oct (3.8.1), gcc (4.9), -x11 (boolean), lapack (3.5.0), java (1.6), -qtui (. -qtmac -qtx11)
-Version: 3.8.1
+Type: -blas (. -atlas -ref), oct (3.8.2), gcc (4.9), -x11 (boolean), lapack (3.5.0), java (1.6), -qtui (. -qtmac -qtx11)
+Version: 3.8.2
 Revision: 1
 Description: MATLAB-like language for computations
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -30,9 +30,9 @@ BuildDepends: <<
 	fink (>= 0.36.4-1),
 	fink-package-precedence,
 	flag-sort,
+	x11-dev,
 	(%type_raw[-x11] != -x11) 	fltk13-aqua,
 	(%type_raw[-x11] = -x11) 	fltk-x11,
-	(%type_raw[-x11] = -x11) 	x11-dev,
 	(%type_raw[-blas] = .) 				arpack-ng (>=3.1.3-3) | (%type_raw[-blas] = .) arpack-ng-mpi (>= 3.1.2-4), 
 	(%type_raw[-blas] = .) 				qrupdate (>= 1.1.2-7),
 	(%type_raw[-blas] = -atlas) 		atlas (>= 3.10.1-1),
@@ -45,7 +45,6 @@ BuildDepends: <<
 	(%type_raw[-qtui] = -qtmac) 		qscintilla2.11-qt4-mac,
 	(%type_raw[-qtui] = -qtx11) 		qt4-base-x11,
 	(%type_raw[-qtui] = -qtx11) 		qscintilla2.11-qt4-x11,
-	(%type_raw[-qtui] = -qtx11) 		x11-dev,
 	texlive-base | texlive-nox-base
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] (=%v-%r)
@@ -108,13 +107,13 @@ Replaces: <<
 
 # source
 Source: mirror:gnu:%{Ni}/%{Ni}-%v.tar.bz2
-Source-MD5: 4c5b9bd6b82b7fa3191af9706e7204f8
+Source-MD5: 188bd97e22054f9c62701ee0e6800dc1
 
 # patch
 PatchFile: %{ni}-%v-octaverc.patch
 PatchFile-MD5: 79b5b16b41901d7818468a2081d29e0b
 PatchFile2: %{ni}-3.8-manpages.patch
-PatchFile2-MD5: 89f2c1e9223bb991ee193cb63f6fd166
+PatchFile2-MD5: faaecde613b4a87833b0e82a9b8939d4
 PatchScript: <<
 	#!/bin/sh -ev
 
@@ -133,11 +132,17 @@ PatchScript: <<
 
 	# instead of using flag-sort, ensure that the right sysdep.h is used
 	grep -lr '#include "sysdep.h"' * | xargs perl -pi.orig -e 's,sysdep.h,%b/libinterp/corefcn/sysdep.h,'
+
+	# If we're not using an X11-based FLTK, the X11 headers aren't needed
+	if [ "%type_raw[-x11]" != "-x11" ] ; then
+		perl -pi -e 's,#include <X11/Xlib\.h>,,' libinterp/dldfcn/__init_fltk__.cc
+	fi
 <<
 
 GCC: 4.0
 SetCC: oct-cc
 SetCFLAGS: -O3 -MD
+SetCPPFLAGS: -I/usr/X11/include
 SetCXX: oct-cxx
 SetCXXFLAGS: -O3 -MD
 SetLDFLAGS: -Wl,-dead_strip_dylibs
@@ -360,6 +365,8 @@ installed.
 
 SetLIBS: -lgl2ps because of missing symbols from that library on 10.7/Xcode
 4.2.6	
+
+Non-X11 FLTK stuff still uses X headers.
 	
 Set the GNUTERM environment variable to AquaTerm because autodetection of
 DISPLAY seems to cause options to be fed to our gnuplot that it doesn't 
@@ -451,29 +458,29 @@ SplitOff: <<
 		%{Ni}364-x11-dev,
 		%{Ni}364-atlas-dev,
 		%{Ni}364-atlas-x11-dev,
-		%{Ni}381-atlas-dev,
-	   	%{Ni}381-atlas-x11-dev,
-   		%{Ni}381-atlas-x11-qtmac-dev,
-   		%{Ni}381-atlas-x11-qtx11-dev,
-   		%{Ni}381-atlas-qtmac-dev,
-   		%{Ni}381-atlas-qtx11-dev,
-   		%{Ni}381-atlas-x11-dev,
-   		%{Ni}381-dev,
-   		%{Ni}381-x11-dev,
-   		%{Ni}381-x11-qtmac-dev,
-   		%{Ni}381-x11-qtx11-dev,
-   		%{Ni}381-x11-x11-dev,
-   		%{Ni}381-mac-dev,
-   		%{Ni}381-qtmac-dev,
-   		%{Ni}381-qtx11-dev,
-   		%{Ni}381-ref-dev,
-   		%{Ni}381-ref-x11-dev,
-   		%{Ni}381-ref-x11-qtmac-dev,
-   		%{Ni}381-ref-x11-qtx11-dev,
-	   	%{Ni}381-ref-mac-dev,
-   		%{Ni}381-ref-qtmac-dev,
-   		%{Ni}381-ref-qtx11-dev,
-   		%{Ni}381-x11-dev,
+		%{Ni}382-atlas-dev,
+	   	%{Ni}382-atlas-x11-dev,
+   		%{Ni}382-atlas-x11-qtmac-dev,
+   		%{Ni}382-atlas-x11-qtx11-dev,
+   		%{Ni}382-atlas-qtmac-dev,
+   		%{Ni}382-atlas-qtx11-dev,
+   		%{Ni}382-atlas-x11-dev,
+   		%{Ni}382-dev,
+   		%{Ni}382-x11-dev,
+   		%{Ni}382-x11-qtmac-dev,
+   		%{Ni}382-x11-qtx11-dev,
+   		%{Ni}382-x11-x11-dev,
+   		%{Ni}382-mac-dev,
+   		%{Ni}382-qtmac-dev,
+   		%{Ni}382-qtx11-dev,
+   		%{Ni}382-ref-dev,
+   		%{Ni}382-ref-x11-dev,
+   		%{Ni}382-ref-x11-qtmac-dev,
+   		%{Ni}382-ref-x11-qtx11-dev,
+	   	%{Ni}382-ref-mac-dev,
+   		%{Ni}382-ref-qtmac-dev,
+   		%{Ni}382-ref-qtx11-dev,
+   		%{Ni}382-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -525,29 +532,29 @@ SplitOff: <<
 		%{Ni}364-atlas-x11-dev,
 		%{Ni}364-ref-dev,
 		%{Ni}364-ref-x11-dev,
-		%{Ni}381-atlas-dev,
-	   	%{Ni}381-atlas-x11-dev,
-   		%{Ni}381-atlas-x11-qtmac-dev,
-   		%{Ni}381-atlas-x11-qtx11-dev,
-   		%{Ni}381-atlas-qtmac-dev,
-   		%{Ni}381-atlas-qtx11-dev,
-   		%{Ni}381-atlas-x11-dev,
-   		%{Ni}381-dev,
-   		%{Ni}381-x11-dev,
-   		%{Ni}381-x11-qtmac-dev,
-   		%{Ni}381-x11-qtx11-dev,
-   		%{Ni}381-x11-x11-dev,
-   		%{Ni}381-mac-dev,
-   		%{Ni}381-qtmac-dev,
-   		%{Ni}381-qtx11-dev,
-   		%{Ni}381-ref-dev,
-   		%{Ni}381-ref-x11-dev,
-   		%{Ni}381-ref-x11-qtmac-dev,
-   		%{Ni}381-ref-x11-qtx11-dev,
-	   	%{Ni}381-ref-mac-dev,
-   		%{Ni}381-ref-qtmac-dev,
-   		%{Ni}381-ref-qtx11-dev,
-   		%{Ni}381-x11-dev,
+		%{Ni}382-atlas-dev,
+	   	%{Ni}382-atlas-x11-dev,
+   		%{Ni}382-atlas-x11-qtmac-dev,
+   		%{Ni}382-atlas-x11-qtx11-dev,
+   		%{Ni}382-atlas-qtmac-dev,
+   		%{Ni}382-atlas-qtx11-dev,
+   		%{Ni}382-atlas-x11-dev,
+   		%{Ni}382-dev,
+   		%{Ni}382-x11-dev,
+   		%{Ni}382-x11-qtmac-dev,
+   		%{Ni}382-x11-qtx11-dev,
+   		%{Ni}382-x11-x11-dev,
+   		%{Ni}382-mac-dev,
+   		%{Ni}382-qtmac-dev,
+   		%{Ni}382-qtx11-dev,
+   		%{Ni}382-ref-dev,
+   		%{Ni}382-ref-x11-dev,
+   		%{Ni}382-ref-x11-qtmac-dev,
+   		%{Ni}382-ref-x11-qtx11-dev,
+	   	%{Ni}382-ref-mac-dev,
+   		%{Ni}382-ref-qtmac-dev,
+   		%{Ni}382-ref-qtx11-dev,
+   		%{Ni}382-x11-dev,
 		%{Ni} (<< 3.0.5-5), 
 		%{Ni}-atlas (<< 3.0.5-5), 
 		%{Ni}3.0.2 ( << 3.0.2-5), 
@@ -715,9 +722,9 @@ SplitOff2: <<
 		share/man/man1/%{Ni}-%v.1
 	<<
 	Shlibs: <<
-		%p/lib/%{Ni}/%v/lib%{Ni}.2.dylib 3.0.0 %n (>=3.8.1-1)
-		%p/lib/%{Ni}/%v/liboctinterp.2.dylib 3.0.0 %n (>=3.8.1-1)
-		(%type_raw[-qtui] !=.) %p/lib/%{Ni}/%v/liboctgui.0.dylib 1.0.0 %n (>=3.8.1-1)
+		%p/lib/%{Ni}/%v/lib%{Ni}.2.dylib 3.0.0 %n (>=3.8.2-1)
+		%p/lib/%{Ni}/%v/liboctinterp.2.dylib 3.0.0 %n (>=3.8.2-1)
+		(%type_raw[-qtui] !=.) %p/lib/%{Ni}/%v/liboctgui.0.dylib 1.0.0 %n (>=3.8.2-1)
 	<<
 	DescUsage: <<
 	The %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] 

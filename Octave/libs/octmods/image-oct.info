@@ -1,7 +1,7 @@
 Info2: <<
 Package: image-oct%type_pkg[oct]
 Version: 2.2.1
-Type: oct (3.8.1), forge (image)
+Type: oct (3.8.2), forge (image)
 Revision: 1
 
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>

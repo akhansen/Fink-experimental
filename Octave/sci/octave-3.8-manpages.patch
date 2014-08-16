@@ -1,6 +1,6 @@
-diff -Nurd octave-3.8.1/doc/interpreter/mkoctfile-3.8.1.1 octave-3.8.1.patched/doc/interpreter/mkoctfile-3.8.1.1
---- octave-3.8.1/doc/interpreter/mkoctfile-3.8.1.1	2014-04-22 19:17:01.000000000 -0700
-+++ octave-3.8.1.patched/doc/interpreter/mkoctfile-3.8.1.1	2014-04-22 19:21:13.000000000 -0700
+diff -Nurd octave-3.8.2/doc/interpreter/mkoctfile-3.8.2.1 octave-3.8.2.patched/doc/interpreter/mkoctfile-3.8.2.1
+--- octave-3.8.2/doc/interpreter/mkoctfile-3.8.2.1	2014-04-22 19:17:01.000000000 -0700
++++ octave-3.8.2.patched/doc/interpreter/mkoctfile-3.8.2.1	2014-04-22 19:21:13.000000000 -0700
 @@ -28,15 +28,15 @@
  .fi
  ..
@@ -27,9 +27,9 @@ diff -Nurd octave-3.8.1/doc/interpreter/mkoctfile-3.8.1.1 octave-3.8.1.patched/d
  .SH "SEE ALSO"
 -octave (1).
 +octave-@OCTVERSION@ (1).
-diff -Nurd octave-3.8.1/doc/interpreter/octave-3.8.1.1 octave-3.8.1.patched/doc/interpreter/octave-3.8.1.1
---- octave-3.8.1/doc/interpreter/octave-3.8.1.1	2014-04-22 19:16:45.000000000 -0700
-+++ octave-3.8.1.patched/doc/interpreter/octave-3.8.1.1	2014-04-22 19:20:27.000000000 -0700
+diff -Nurd octave-3.8.2/doc/interpreter/octave-3.8.2.1 octave-3.8.2.patched/doc/interpreter/octave-3.8.2.1
+--- octave-3.8.2/doc/interpreter/octave-3.8.2.1	2014-04-22 19:16:45.000000000 -0700
++++ octave-3.8.2.patched/doc/interpreter/octave-3.8.2.1	2014-04-22 19:20:27.000000000 -0700
 @@ -27,9 +27,9 @@
  .\" --------------------------------------------------------------------
  .TH OCTAVE 1 "19 October 2012" "GNU Octave"
@@ -51,9 +51,9 @@ diff -Nurd octave-3.8.1/doc/interpreter/octave-3.8.1.1 octave-3.8.1.patched/doc/
  
  .Ve
  The Info files may also be read with a stand-alone program such as
-diff -Nurd octave-3.8.1/doc/interpreter/octave-cli-3.8.1.1 octave-3.8.1.patched/doc/interpreter/octave-cli-3.8.1.1
---- octave-3.8.1/doc/interpreter/octave-cli-3.8.1.1	2014-04-22 19:16:55.000000000 -0700
-+++ octave-3.8.1.patched/doc/interpreter/octave-cli-3.8.1.1	2014-04-22 19:19:42.000000000 -0700
+diff -Nurd octave-3.8.2/doc/interpreter/octave-cli-3.8.2.1 octave-3.8.2.patched/doc/interpreter/octave-cli-3.8.2.1
+--- octave-3.8.2/doc/interpreter/octave-cli-3.8.2.1	2014-04-22 19:16:55.000000000 -0700
++++ octave-3.8.2.patched/doc/interpreter/octave-cli-3.8.2.1	2014-04-22 19:19:42.000000000 -0700
 @@ -25,24 +25,24 @@
  .fi
  ..
@@ -100,9 +100,9 @@ diff -Nurd octave-3.8.1/doc/interpreter/octave-cli-3.8.1.1 octave-3.8.1.patched/
  .SH SEE ALSO
 -octave (1)
 +octave-@OCTVERSION@ (1)
-diff -Nurd octave-3.8.1/doc/interpreter/octave-config-3.8.1.1 octave-3.8.1.patched/doc/interpreter/octave-config-3.8.1.1
---- octave-3.8.1/doc/interpreter/octave-config-3.8.1.1	2014-04-22 19:16:40.000000000 -0700
-+++ octave-3.8.1.patched/doc/interpreter/octave-config-3.8.1.1	2014-04-22 19:16:11.000000000 -0700
+diff -Nurd octave-3.8.2/doc/interpreter/octave-config-3.8.2.1 octave-3.8.2.patched/doc/interpreter/octave-config-3.8.2.1
+--- octave-3.8.2/doc/interpreter/octave-config-3.8.2.1	2014-04-22 19:16:40.000000000 -0700
++++ octave-3.8.2.patched/doc/interpreter/octave-config-3.8.2.1	2014-04-22 19:16:11.000000000 -0700
 @@ -18,6 +18,7 @@
  .\"
  .\" This page was contributed by Dirk Eddelbuettel <edd@debian.org>.

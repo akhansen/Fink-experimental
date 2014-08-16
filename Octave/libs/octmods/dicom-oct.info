@@ -1,7 +1,7 @@
 Info2: <<
 Package: dicom-oct%type_pkg[oct]
 Version: 0.1.1
-Type: oct (3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.8.1), forge (dicom), gcc (4.9), gdcm (2.4)
+Type: oct (3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.8.2), forge (dicom), gcc (4.9), gdcm (2.4)
 Revision: 7
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 Homepage: http://octave.sourceforge.net/dicom/index.html 
