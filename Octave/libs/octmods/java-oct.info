@@ -1,9 +1,7 @@
 Info2: <<
 Package: java-oct%type_pkg[oct]
 Version: 1.2.9
-Type: oct (3.2.4 3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.6.4), forge (java)
-# Packages that support Octave 3.4.3 and earlier typically link to gcc4N-shlibs,
-# and need Type: gcc (@type_gcc) added.
+Type: oct (3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.6.4), forge (java)
 Revision: 1
 Distribution: ( %type_pkg[oct] << 364 ) 10.7, ( %type_pkg[oct] << 364 ) 10.8
 
