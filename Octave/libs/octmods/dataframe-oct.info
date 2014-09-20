@@ -1,9 +1,9 @@
 Info2: <<
 Package: dataframe-oct%type_pkg[oct]
-Version: 1.0.0
+Version: 1.0.1
 Type: oct (3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.6.4 3.8.2), forge (dataframe)
 Revision: 1
-Distribution: 10.7, 10.8
+Distribution: ( %type_pkg[oct] << 364 ) 10.7, ( %type_pkg[oct] << 364 ) 10.8
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 Homepage:  http://octave.sourceforge.net/dataframe/index.html 
 Description: Octave data manipulation toolbox
@@ -45,7 +45,7 @@ Depends: octave%type_pkg[oct]-interpreter
 Conflicts: octave-forge
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
-Source-MD5: 07daaa72125badedac858911e00d7a94
+Source-MD5: 7a85eea4942a1ff7542594a6c42e9b55
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true

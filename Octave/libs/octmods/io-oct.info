@@ -1,6 +1,6 @@
 Info2: <<
 Package: io-oct%type_pkg[oct]
-Version: 2.2.3
+Version: 2.2.4
 Type: oct (3.8.2), forge (io)
 Revision: 1
 
@@ -65,7 +65,7 @@ Depends: octave%type_pkg[oct]-interpreter
 Conflicts: octave-forge
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
-Source-MD5: cbb95206580bcd484be9562b462e801c
+Source-MD5: 3cea41503795689425473c32a64dcd64
 SourceDirectory: %type_raw[forge]
 
 NoSetCPPFLAGS: true
@@ -115,7 +115,7 @@ DescPackaging: <<
 Listed license is "GPL3+/simplified BSD", so call that "OSI-Approved"
 
 Build procedure is incompatible with the one we've been using for Octave
-Forge packages (failure at installation into .deb directory), so instead we do the 
+Forge packages (failure at installation into .deb), so instead we do the 
 compile, tar up the build directory, and then let Octave's 'pkg' tool handle
 the installation into the Fink tree via the PostInstScript.
 <<
