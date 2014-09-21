@@ -1,5 +1,5 @@
 Package: fink-octave-scripts
-Version: 0.3.0
+Version: 0.3.1
 Revision: 1
 License: Public Domain
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
@@ -56,7 +56,7 @@ Replaces: <<
 <<
 
 Source: https://github.com/akhansen/%n/archive/%v.tar.gz
-Source-Checksum: SHA1(fa490f2d9e6248d1b539074bc3b316c0349e3fec)
+Source-Checksum: SHA1(d48c7a15b5058137608d1c6bb0ac60fdf2c92794)
 SourceRename: %n-%v.tar.gz
 
 PatchScript: <<
@@ -64,6 +64,10 @@ PatchScript: <<
 	sed -e 's,@FINKPREFIX@,%p,g' oct-cc.in > oct-cc
 	sed -e 's,@FINKPREFIX@,%p,g' oct-cxx.in > oct-cxx	
 	sed -i.bak -e 's,@FINKPREFIX@,%p,g' octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in
+	sed -e  's,%%OCTAVE_CONF_SED%%,"/usr/bin/env sed"' \
+			's,%%OCTAVE_PREFIX%%,"%p"' \
+			'd,%%DEFAULT_BINDIR%%,"%p/bin"' \ 
+														mkoctfile.in > mkoctfile-gcc4n.in
 <<
 
 CompileScript: echo "No compiling required."
@@ -72,8 +76,10 @@ InstallScript: <<
 	mkdir -p %i/bin
 	cp oct-cc oct-cxx %i/bin
 	chmod a+x %i/bin/oct-cc %i/bin/oct-cxx
-	printf "Installing Octave Forge package build scripts...\n"
+	printf "Installing script mkoctfile stub for Octave 3.8 and later"
 	mkdir -p %i/share/%n
+	cp mkoctfile-gcc4n.in %i/share/%n
+	printf "Installing Octave Forge package build scripts...\n"
 	cp octave-forge-patch.sh octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in %i/share/%n/
 	chmod a+x %i/share/%n/octave-forge-patch.sh
 <<
