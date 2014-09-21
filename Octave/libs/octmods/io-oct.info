@@ -83,7 +83,7 @@ pkg global_list %p/var/octave/%type_raw[oct]/octave_packages
 pkg -verbose -nodeps install %p/share/%n/%type_raw[forge].tar
 EOF
 	cat <<EOF > %n-%v-prerm
-pkg uninstall %type_raw[forge]
+pkg -nodeps uninstall %type_raw[forge]
 EOF
 <<
 
