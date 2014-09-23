@@ -127,10 +127,6 @@ Conflicts: octave-forge
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 Source-MD5: 135862f0212f8727d01b6cd302d67d9d
 
-DescPackaging: <<
-This package:
-Listed license is GPLv3+, Public Domain.
-
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 UseMaxBuildJobs: false
@@ -151,6 +147,9 @@ PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-po
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
 
 DescPackaging: <<
+This package:
+Listed license is GPLv3+, Public Domain.
+
 Common for all octave-forge packages:
 Preinst and postinst scripts are dynamically set up via 
 %p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
