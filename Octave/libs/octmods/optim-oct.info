@@ -1,9 +1,10 @@
 Info2: <<
 Package: optim%type_pkg[-blas]-oct%type_pkg[oct]
-Version: 1.3.1
+Version: 1.4.0
 Type: oct (3.6.0 3.6.1 3.6.2 3.6.3 3.6.4 3.8.2), forge (optim), -blas (-atlas -ref .), lapack (3.5.0)
 Revision: 1
 Distribution: ( %type_pkg[oct] << 364 ) 10.7, ( %type_pkg[oct] << 364 ) 10.8
+
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/optim/index.html 
@@ -57,7 +58,6 @@ Numerical derivatives:
         numgradient
         numhessian
         jacobs
-        cauchy
 Pivoting:
         cpiv_bard
         gjp
@@ -66,9 +66,6 @@ Tests:
         test_min_2
         test_min_3
         test_min_4
-        test_d2_min_1
-        test_d2_min_2
-        test_d2_min_3
         test_nelder_mead_min_1
         test_nelder_mead_min_2
         poly_2_ex
@@ -80,6 +77,8 @@ Examples:
         bfgsmin_example
         rosenbrock
         samin_example
+Documentation:
+        optim_doc
 <<
 License: OSI-Approved
 
@@ -92,7 +91,8 @@ BuildDepends: <<
   fink-octave-scripts (>= 0.1.2), 
   fftw3,
   hdf5.8,
-  fink (>=0.32)
+  fink (>=0.32),
+  texinfo-legacy
 <<
 RuntimeDepends: <<
   miscellaneous-oct%type_pkg[oct] (>= 1.0.10-1), 
@@ -119,11 +119,7 @@ Replaces: <<
 <<
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
-Source-MD5: fad65660d9278cec8601777a77e37749
-
-# Do not change anything from this point down, unless absolutely necessary,
-# since the foo-oct%type_pkg[oct] packages are designed to be built/installed
-# in the same way.
+Source-MD5: abbc1937ec5c18f9ce19880bff1b7151
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
@@ -132,6 +128,8 @@ BuildAsNobody: false
 
 CompileScript: <<
 #!/bin/sh -ev
+
+export PATH="%p/opt/texinfo-legacy/bin:$PATH"
 
 pkgsrc=%type_raw[forge]-%v
 
