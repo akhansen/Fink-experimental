@@ -14,38 +14,30 @@ package, maintained upstream by Riccardo Corradini. For parallel execution on
 a single machine see e.g. the function parcellfun (author: Jaroslav Hajek) in
 the general-oct package.
 
-Parallel
-	send
-	recv
-	reval
-	server
-	getid
-	pserver
-	connect
-	sclose
-	scloseall
-	select_sockets
-Internal
-	__bw_lock_file__
-	__bw_is_locked__
-	__bw_unlock_file__
-	__bw_load_variable__
-	__bw_secure_save__
-	__bw_psend__
-	__bw_prcv__
-	__bw_scheduler__
-	__bw_computing_machine__
-	__internal_exit__
-General
-	select
-User
-	bw_start
-	bw_list
-	bw_retrieve
-	bw_clear
+It provides the following functions:
+
+Single Machine:
+        parcellfun
+        pararrayfun
+Clusters:
+        send
+        recv
+        reval
+        server
+        connect
+        sclose
+        scloseall
+        select_sockets
+General:
+        select
+Unrelyable Clusters:
+        bw_start
+        bw_list
+        bw_retrieve
+        bw_clear
 <<
 
-License: GPL23+
+License: GPL3+
 
 BuildDepends: <<
   ( %type_pkg[oct] << 360 ) liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev, 

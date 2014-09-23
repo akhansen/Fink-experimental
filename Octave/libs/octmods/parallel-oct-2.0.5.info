@@ -14,6 +14,8 @@ package, maintained upstream by Riccardo Corradini. For parallel execution on
 a single machine see e.g. the function parcellfun (author: Jaroslav Hajek) in
 the general-oct package.
 
+It provides the following functions:
+
 Parallel
 	send
 	recv
