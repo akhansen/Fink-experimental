@@ -193,7 +193,6 @@ This package:
 Listed license is GPLv3+, MIT, FreeBSD
 
 Common for all octave-forge packages:
-
 Preinst and postinst scripts are dynamically set up via
 %p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager can't 
 cope with non-literal arguments.

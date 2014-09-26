@@ -208,7 +208,6 @@ Source-MD5: fe01a0c78040496618c9d8fe0edac202
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
-SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 UseMaxBuildJobs: false
 BuildAsNobody: false
 
@@ -227,8 +226,7 @@ PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-po
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
 
 DescPackaging: <<
-Common for all octave-forge packages.
-
+Common for all octave-forge packages:
 Preinst and postinst scripts are dynamically set up via
 %p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
 can't cope with non-literal arguments.
