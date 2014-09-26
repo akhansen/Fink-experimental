@@ -62,7 +62,6 @@ PatchScript: <<
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
-SetLIBRARY_PATH: /usr/X11R6/lib:%p/lib
 UseMaxBuildJobs: false
 BuildAsNobody: false
 
