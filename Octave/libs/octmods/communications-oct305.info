@@ -213,7 +213,6 @@ BuildAsNobody: false
 
 CompileScript: <<
 #!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct] 
 pkgsrc=%type_raw[forge]-%v
 
 ##### Invariant stuff begins here #####
