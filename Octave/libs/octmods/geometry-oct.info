@@ -296,7 +296,6 @@ BuildAsNobody: false
 
 CompileScript: <<
 #!/bin/sh -ev
-export OCTAVE=%p/bin/octave-%type_raw[oct]
 pkgsrc=%type_raw[forge]
 
 ##### Invariant stuff begins here #####
@@ -314,7 +313,6 @@ Some files have a FreeBSD license, and some have GPL3+.  The validator doesn't
 currently recognize this as an option.
 
 Common for all octave-forge packages:
-
 Preinst and postinst scripts are dynamically set up via
 %p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager can't 
 cope with non-literal arguments.
