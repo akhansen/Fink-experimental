@@ -55,7 +55,7 @@ Conflicts: octave-forge
 
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 Source-MD5: 298efdbb9628f3ccd44902078e0fdaf8
-]SourceDirectory: %type_pkg[forge]
+SourceDirectory: %type_pkg[forge]
 
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
