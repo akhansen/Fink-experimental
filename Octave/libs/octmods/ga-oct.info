@@ -68,9 +68,6 @@ PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-po
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
 
 DescPackaging: <<
-This package:
-Tag distributions rather than creating additional .info files.
-
 Common for all octave-forge packages:
 Preinst and postinst scripts are dynamically set up via
 %p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager can't 

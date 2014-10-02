@@ -239,10 +239,6 @@ Source-MD5: b0e0e27416c0afb541a7983318bb1baa
 Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
 SourceDirectory: %type_pkg[forge]
 
-# Do not change anything from this point down, unless absolutely necessary,
-# since the foo-oct%type_pkg[oct] packages are designed to be built/installed
-# in the same way.
-
 NoSetCPPFLAGS: true
 NoSetLDFLAGS: true
 UseMaxBuildJobs: false
@@ -250,7 +246,6 @@ BuildAsNobody: false
 
 CompileScript: <<
 #!/bin/sh -ev
-
 pkgsrc=%type_raw[forge]
 
 ##### Invariant stuff begins here #####
