@@ -84,7 +84,7 @@ InstallScript: <<
 	cp octave-forge-patch.sh octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in %i/share/%n/
 	chmod a+x %i/share/%n/octave-forge-patch.sh
 <<
-DocFiles: Readme.md NEWS
+DocFiles: COPYING Readme.md NEWS
 
 PostInstScript: <<
 echo "We replaced any previously installed oct-cc and oct-cxx compiler wrappers."
@@ -93,4 +93,9 @@ echo "Be sure to update any octave3XY*-dev packages to their newest version."
 
 DescUsage: <<
 Check out the %p/doc/%n/Readme.md file for usage instructions.
+<<
+
+DescPackaging: <<
+License is now GPLv3 because the package installs a derivative of Octave's mkoctfile 
+script.
 <<
