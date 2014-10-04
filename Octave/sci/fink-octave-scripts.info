@@ -1,7 +1,7 @@
 Package: fink-octave-scripts
 Version: 0.3.1
 Revision: 1
-License: Public Domain
+License: GPL3+
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 Homepage: http://akhansen.github.io/fink-octave-scripts
 Description: Convenience scripts for Octave add-ons
@@ -57,6 +57,7 @@ Replaces: <<
 
 Source: https://github.com/akhansen/%n/archive/%v.tar.gz
 Source-Checksum: SHA1(d48c7a15b5058137608d1c6bb0ac60fdf2c92794)
+Source: %n
 SourceRename: %n-%v.tar.gz
 
 PatchScript: <<
