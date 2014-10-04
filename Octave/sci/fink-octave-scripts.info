@@ -85,7 +85,7 @@ InstallScript: <<
 <<
 DocFiles: Readme.md NEWS
 
-PosedInstScript: <<
+PostInstScript: <<
 echo "We replaced prior versions of oct-cc and oct-cxx with our version..."
 echo "Be sure to update any octave3XY*-dev packages to the newest version."
 <<
