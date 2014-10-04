@@ -57,7 +57,7 @@ Replaces: <<
 
 Source: https://github.com/akhansen/%n/archive/%v.tar.gz
 Source-Checksum: SHA1(d48c7a15b5058137608d1c6bb0ac60fdf2c92794)
-Source: %n
+SourceDirectory: %n
 SourceRename: %n-%v.tar.gz
 
 PatchScript: <<
@@ -65,9 +65,9 @@ PatchScript: <<
 	sed -e 's,@FINKPREFIX@,%p,g' oct-cc.in > oct-cc
 	sed -e 's,@FINKPREFIX@,%p,g' oct-cxx.in > oct-cxx	
 	sed -i.bak -e 's,@FINKPREFIX@,%p,g' octave-forge-comp*.in octave-forge-*inst*.in octave-forge-prerm*.in genmkoctfile.sh.in
-	sed -e  's,%%OCTAVE_CONF_SED%%,"/usr/bin/env sed"' \
-			's,%%OCTAVE_PREFIX%%,"%p"' \
-			'd,%%DEFAULT_BINDIR%%,"%p/bin"' \ 
+	sed -e  's,%%OCTAVE_CONF_SED%%,"/usr/bin/env sed",' \
+		-e	's,%%OCTAVE_PREFIX%%,"%p",' \
+		-e	's,%%DEFAULT_BINDIR%%,"%p/bin",	' \ 
 														mkoctfile.in > mkoctfile-gcc4n.in
 <<
 
