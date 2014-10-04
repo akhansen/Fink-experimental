@@ -410,7 +410,7 @@ SplitOff: <<
 	Package: octave%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]-dev
 	Depends: <<
 		%{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] (=%v-%r),
-		fink-%{Ni}-scripts (>= 0.3-1),
+		fink-%{Ni}-scripts (>= 0.3.0-1),
 		fink (>=0.32),
 		gcc%type_pkg[gcc]-compiler 
 	<<
