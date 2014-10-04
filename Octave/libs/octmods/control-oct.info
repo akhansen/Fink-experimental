@@ -8,7 +8,6 @@ Distribution: (%type_pkg[oct] << 364) 10.7, (%type_pkg[oct] << 364) 10.8
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/control/index.html 
-License: GPL3+
 
 Description: Octave control tools
 DescDetail: <<
@@ -201,6 +200,8 @@ or look at the individual tests from
 
 %p/share/octave/%type_raw[oct]/packages/%type_pkg[forge]-%v/test_control.m
 <<
+
+License: GPL3+
 
 BuildDepends: <<
   (%type_raw[-blas] = -atlas)	atlas (>= 3.10.1-1),
