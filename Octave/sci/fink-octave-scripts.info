@@ -86,8 +86,8 @@ InstallScript: <<
 DocFiles: Readme.md NEWS
 
 PostInstScript: <<
-echo "We replaced prior versions of oct-cc and oct-cxx with our version..."
-echo "Be sure to update any octave3XY*-dev packages to the newest version."
+echo "We replaced any previously installed oct-cc and oct-cxx compiler wrappers."
+echo "Be sure to update any octave3XY*-dev packages to their newest version."
 <<
 
 DescUsage: <<
