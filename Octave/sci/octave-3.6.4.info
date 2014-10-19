@@ -33,7 +33,8 @@ BuildDepends: <<
 	(%type_raw[-blas] = -atlas) 	qrupdate-atlas (>= 1.1.2-7),
 	(%type_raw[-blas] = -ref) 		lapack%type_pkg[lapack], 
 	(%type_raw[-blas] = -ref) 		arpack-ng-ref (>= 3.1.3-3) | (%type_raw[-blas] = -ref) arpack-ng-mpi-ref (>= 3.1.3-3),
-	(%type_raw[-blas] = -ref) 		qrupdate-ref (>= 1.1.2-7)
+	(%type_raw[-blas] = -ref) 		qrupdate-ref (>= 1.1.2-7),
+	xcode (<< 6.0)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev

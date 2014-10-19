@@ -3,6 +3,8 @@ Package: octave%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui]
 Type: -blas (. -atlas -ref), oct (3.8.2), gcc (4.9), -x11 (boolean), lapack (3.5.0), java (1.6), -qtui (. -qtmac -qtx11)
 Version: 3.8.2
 Revision: 1
+Distribution: 10.7, 10.8, 10.9
+
 Description: MATLAB-like language for computations
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 License: GPL3+
@@ -45,7 +47,8 @@ BuildDepends: <<
 	(%type_raw[-qtui] = -qtmac) 		qscintilla2.11-qt4-mac,
 	(%type_raw[-qtui] = -qtx11) 		qt4-base-x11,
 	(%type_raw[-qtui] = -qtx11) 		qscintilla2.11-qt4-x11,
-	texlive-base | texlive-nox-base
+	texlive-base | texlive-nox-base,
+	xcode (<< 6.0)
 <<
 Depends: %{Ni}%type_pkg[oct]%type_pkg[-blas]%type_pkg[-x11]%type_pkg[-qtui] (=%v-%r)
 BuildConflicts: coot-dev, broken-gcc, lammpi-dev, fort77, 4ti2-dev
