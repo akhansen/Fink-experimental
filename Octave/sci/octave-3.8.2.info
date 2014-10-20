@@ -379,7 +379,10 @@ understand.  AquaTerm seems to be a sensible default.
 Create manpages for the versioned executables.
 
 We have split the package up into versioned runtime+library, development, and
-unversioned runtime packages,  to make upgrades easier for us and for users.
+unversioned runtime packages,  to make upgrades easier for us and for users.  Prior
+packaging had separate libraries, but this led to deadlocks when attempting to swap
+variants.  Also, it's unlikely that anybody is going to want just the libraries, 
+anyway.
 	
 The -atlas variant depends on -atlas variants (only) of qrupdate and arpack-ng.  
 The Accelerate variant depends on Accelerate variants (only) of these, and 
