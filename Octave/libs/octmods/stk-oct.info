@@ -1,0 +1,261 @@
+Info2: <<
+Package: stk%type_pkg[-blas]-oct%type_pkg[oct]
+Version: 2.2.0
+Type: oct (3.0.5 3.2.4 3.4.3 3.6.0 3.6.1 3.6.2 3.6.3 3.6.4 3.8.2), forge (stk)	
+Revision: 1
+Distribution: (%type_pkg[oct] << 364) 10.7, (%type_pkg[oct] << 364) 10.8
+
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+# unfortunately, Homepage won't do types
+Homepage: http://octave.sourceforge.net/stk/index.html 
+
+Description: Octave kriging tools
+DescDetail: <<
+The STK is a (not so) Small Toolbox for Kriging. Its primary focus in on the
+interpolation/regression technique known as kriging, which is very closely
+related to Splines and Radial Basis Functions, and can be interpreted as a
+non-parametric Bayesian method using a Gaussian Process (GP) prior. The STK
+also provides tools for the sequential and non-sequential design of
+experiments. Even though it is, currently, mostly geared towards the Design and
+Analysis of Computer Experiments (DACE), the STK can be useful for other
+applications areas (such as Geostatistics, Machine Learning, Non-parametric
+Regression, etc.).
+
+This package provides the following functions:
+Examples:
+        MDSSystem
+        optiPID
+        Anderson
+        Madievski
+Linear Time Invariant Models:
+        dss
+        filt
+        frd
+        ss
+        tf
+        zpk
+Model Data Access:
+        @lti/dssdata
+        @lti/filtdata
+        @lti/frdata
+        @lti/get
+        @lti/set
+        @lti/ssdata
+        @lti/tfdata
+        @lti/zpkdata
+Model Conversions:
+        @lti/c2d
+        @lti/d2c
+        @lti/d2d
+        @lti/prescale
+        @lti/xperm
+Model Interconnections:
+        @lti/append
+        @lti/blkdiag
+        @lti/connect
+        @lti/feedback
+        @lti/lft
+        @lti/mconnect
+        @lti/parallel
+        @lti/series
+        sumblk
+Model Characteristics:
+        ctrb
+        ctrbf
+        @lti/dcgain
+        gram
+        hsvd
+        @lti/isct
+        isctrb
+        isdetectable
+        @lti/isdt
+        @lti/isminimumphase
+        isobsv
+        @lti/issiso
+        isstabilizable
+        @lti/isstable
+        @lti/norm
+        obsv
+        obsvf
+        @lti/pole
+        pzmap
+        @lti/size
+        @lti/zero
+Model Simplification:
+        @lti/minreal
+        @lti/sminreal
+Time Domain Analysis:
+        covar
+        gensig
+        impulse
+        initial
+        lsim
+        ramp
+        step
+Frequency Domain Analysis:
+        bode
+        bodemag
+        @lti/freqresp
+        margin
+        nichols
+        nyquist
+        sensitivity
+        sigma
+Pole Placement:
+        place
+        rlocus
+Optimal Control:
+        dlqe
+        dlqr
+        estim
+        kalman
+        lqe
+        lqr
+Robust Control:
+        augw
+        fitfrd
+        h2syn
+        hinfsyn
+        mixsyn
+        mktito
+        ncfsyn
+Matrix Equation Solvers:
+        care
+        dare
+        dlyap
+        dlyapchol
+        lyap
+        lyapchol
+Model Reduction:
+        bstmodred
+        btamodred
+        hnamodred
+        spamodred
+Controller Reduction:
+        btaconred
+        cfconred
+        fwcfconred
+        spaconred
+Experimental Data Handling:
+        iddata
+        @iddata/cat
+        @iddata/detrend
+        @iddata/diff
+        @iddata/fft
+        @iddata/filter
+        @iddata/get
+        @iddata/ifft
+        @iddata/merge
+        @iddata/nkshift
+        @iddata/plot
+        @iddata/resample
+        @iddata/set
+        @iddata/size
+System Identification:
+        arx
+        moen4
+        moesp
+        n4sid
+Overloaded LTI Operators:
+        @lti/ctranspose
+        @lti/end
+        @lti/horzcat
+        @lti/inv
+        @lti/minus
+        @lti/mldivide
+        @lti/mpower
+        @lti/mrdivide
+        @lti/mtimes
+        @lti/plus
+        @lti/repmat
+        @lti/subsasgn
+        @lti/subsref
+        @lti/times
+        @lti/transpose
+        @lti/uminus
+        @lti/uplus
+        @lti/vertcat
+Overloaded IDDATA Operators:
+        @iddata/end
+        @iddata/horzcat
+        @iddata/subsasgn
+        @iddata/subsref
+        @iddata/vertcat
+Miscellaneous:
+        db2mag
+        mag2db
+        options
+        repsys
+        strseq
+        test_control
+        thiran
+        BMWengine
+        Boeing707
+        WestlandLynx
+<<
+DescUsage: <<
+From discussions with package's author, it appears that using either 
+atlas or Accelerate for lapack leads to numerical problems.  We therefore 
+also can use the reference lapack implementation from Fink's 
+lapack%type_pkg[lapack] package.  Install control-ref-oct%type_pkg[oct] 
+to use it.
+
+To see the numerical issues yourself either run
+
+test_control
+
+or look at the individual tests from 
+
+%p/share/octave/%type_raw[oct]/packages/%type_pkg[forge]-%v/test_control.m
+<<
+
+License: GPL3+
+
+BuildDepends: <<
+  liboctave%type_pkg[oct]-gcc%type_pkg[gcc]-dev,
+  fink-octave-scripts (>=0.3.0-1),
+  fftw3,
+  ( %type_pkg[oct] = 305 ) hdf5.8-oldapi,
+  ( %type_pkg[oct] != 305 ) hdf5.8 
+<<
+Depends: <<
+  octave%type_pkg[oct]-interpreter
+<<
+
+Source-MD5: b0e0e27416c0afb541a7983318bb1baa
+Source: mirror:sourceforge:octave/%type_raw[forge]-%v.tar.gz
+SourceDirectory: %type_pkg[forge]
+
+NoSetCPPFLAGS: true
+NoSetLDFLAGS: true
+UseMaxBuildJobs: false
+BuildAsNobody: false
+
+CompileScript: <<
+#!/bin/sh -ev
+pkgsrc=%type_raw[forge]
+
+##### Invariant stuff begins here #####
+%p/share/fink-octave-scripts/octave-forge-patch.sh %type_raw[forge] %v %type_raw[oct] %b %i $pkgsrc
+./octave-forge-compile.sh
+<<
+
+InstallScript: ./octave-forge-install.sh
+PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
+PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
+
+DescPackaging: <<
+This package:
+Hideous Distribution tagging is so that we can keep a *single* .info file in the
+10.7 tree that covers all octversions for 10.7/10.8, but keeps only 3.6.4+ for 10.9.  
+This is by design.  Don't touch this file without my permission.
+
+Common for all octave-forge packages:
+Preinst and postinst scripts are dynamically set up via 
+%p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
+can't cope with non-literal arguments.
+
+The Type: forge (pkgname) is used to minimize what needs to be changed when
+using this .info file as a template.
+<<
+<<
