@@ -140,7 +140,7 @@ The Type: forge (pkgname) is used to minimize what needs to be changed when
 using this .info file as a template.
 <<
 DescPort: <<
-Doesn't work on 10.9 currently because both llvm-gcc4.2 and gcc48 (omp.h providers)
+Doesn't work on 10.9 currently because both llvm-gcc4.2 and gcc49 (omp.h providers)
 are doing libstc++, and so we get missing symbol errors:
 
 Undefined symbols for architecture x86_64:
