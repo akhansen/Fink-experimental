@@ -4,7 +4,7 @@ Version: 1.0.0
 Type: oct (3.2.4 3.4.3), forge (quaternion)
 Revision: 4
 Epoch: 1
-Distribution: (%type_pkg[oct] << 364) 10.7, (%type_pkg[oct] << 364) 10.8
+Distribution: 10.7, 10.8
 Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
 # unfortunately, Homepage won't do types
 Homepage: http://octave.sourceforge.net/quaternion/index.html 
@@ -60,21 +60,6 @@ InstallScript: ./octave-forge-install.sh
 PostInstScript:  %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-postinst.sh
 PreRmScript: %p/share/octave/%type_raw[oct]/%type_raw[forge]/octave-forge-prerm.sh
 
-DescPackaging: <<
-This package:
-Hideous Distribution tagging is so that we can keep a *single* .info file in the
-10.7 tree that covers all octversions for 10.7/10.8, but keeps only 3.6.4 for 10.9+.  
-This is by design.  Don't touch this file without my permission.
-
-Common for all octave-forge packages:
-Preinst and postinst scripts are dynamically set up via 
-%p/share/fink-octave-scripts/octave-forge-patch.sh because Octave's package manager 
-can't cope with non-literal arguments.
-
-The Type: forge (pkgname) is used to minimize what needs to be changed when
-using this .info file as a template, or when the package name contains 
-underscores.
-<<
 DescPackaging: <<
 Common for all octave-forge packages.
 Preinst and postinst scripts are dynamically set up via 
