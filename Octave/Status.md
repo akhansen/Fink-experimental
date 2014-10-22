@@ -1,6 +1,13 @@
 Packaging Status
 ================
 
+2014-10-22 16:28 UTC
+--------------------
+
+Haven't been updating this file in a while. :-(
+
+Everything in the `sci/` and `libs/octmods/` directories should be ready to go.
+
 2014-07-08 21:06 UTC
 --------------------
 
