@@ -94,13 +94,11 @@ PatchScript: <<
 
 NoSetLDFLAGS: true
 SetLIBRARY_PATH: %p/lib
-SetLDFLAGS: -I%b/lib
-CXXFLAGS: -MD
 SetCC: flag-sort -r gcc
 SetCXX: flag-sort -r g++
 
 ConfigureParams: <<
-	--prefix=%p/opt/%N \
+  	--libdir=%i/lib/%N \
 	--mandir=%p/share/man \
 	--enable-intl \
 	--enable-unicode \
@@ -119,71 +117,60 @@ ConfigureParams: <<
 CompileScript: <<
 	#!/bin/sh -ev
 	. %p/sbin/fink-buildenv-helper.sh
-	./configure --prefix=%p/opt/%N \
-	--mandir=%p/share/man \
-	--enable-intl \
-	--enable-unicode \
-	--enable-dependency-tracking \
-	(%type_raw[-ui] = -gtk2) --with-gtk=2 \
-	(%type_raw[-ui] = -mac) --with-cocoa \
-	--without-carbon \
-	--with-libpng \
-	--with-libjpeg \
-	--with-libtiff \
-	--without-sdl \
-	--with-opengl \
-	--without-odbc \
-	--with-libiconv-prefix=%p
-	--with-macosx-version-min=$OSX_MAJOR_VERSION \ 
-	--with-macosx-sdk=$SDK_PATH \
-	--enable-macosx_arch=%m
+	if [ "%type_raw[-ui]" = "mac" ] ; then
+		UI="osx_cocoa"
+	else 
+		UI1="gtk2" 
+	fi
+	./configure %c --with-macosx-version-min=$OSX_MAJOR_VERSION --with-macosx-sdk=$SDK_PATH --enable-macosx_arch=%m
 	make
 	fink-package-precedence --depfile-ext='\.d' .
-	exit 2
 <<
 InstallScript: <<
 	#!/bin/sh -ev
 	if [ "%type_raw[-ui]" = "mac" ] ; then
 		UI="osx_cocoa"
 	else 
-		UI1="gtk2" 
+		UI="gtk2" 
 	fi
 	%{default_script}
-	/bin/rm %i/opt/%N/bin/wx-config
-	pushd %i/opt/%N/bin
-	/bin/ln -s ../lib/wx/config/$UI-unicode-%type_raw[maj] wx-config
-	cd ../lib
-	### wx-config stores build directory
-	perl -pi -e 's|-I%b/lib||g' wx/config/$UI-unicode-%type_raw[maj]
+	### remove wrapper that references build directory and link to 
+	/bin/rm %i/bin/wx-config
+	pushd %i/bin
+	/bin/ln -s ../lib/%N/wx/config/$UI-unicode-%type_raw[maj] wx-config
+	cd ../lib/%N
+	### clear build directory instances out of this, too
+	perl -pi -e 's|%b||g' wx/config/$UI-unicode-%type_raw[maj]
 	### fix install_names
+	cd %i/lib/%N
 	for lib in baseu baseu_net baseu_xml
 	do
-		install_name_tool -id %p/lib/libwx_$lib-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
+		install_name_tool -id %p/lib/%N/libwx_$lib-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
 		for lib2 in baseu baseu_net baseu_xml
 		do
-			install_name_tool -change %i/lib/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/libwx_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
 		done
 		for lib2 in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 		do
-			install_name_tool -change %i/lib/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
 
 		done
 	done 
 	for lib in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 	do
-		install_name_tool -id %p/lib/libwx_$UIu_$lib-%type_raw[lib].dylib \
-			libwx_osx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+		install_name_tool -id %p/lib/%N/libwx_$UIu_$lib-%type_raw[lib].dylib \
+			libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
 		for lib2 in baseu baseu_net baseu_xml
 		do
-			install_name_tool -change %i/lib/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/libwx_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
 		done
 		for lib2 in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 		do
-			install_name_tool -change %i/lib/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
 
 		done	
 	done
@@ -192,7 +179,6 @@ InstallScript: <<
 	/bin/cp -R docs/ %i/share/doc/%n
 	/usr/bin/install -m 755 -d %i/share/%n
 	/usr/bin/install -m 644 ./src/osx/wxmac.icns %i/share/%n
-	ln -s %p/bin/wx-config %p/opt/%N/bin/wx-config
 <<
 SplitOff: <<
 	Package: %N-shlibs
@@ -205,37 +191,37 @@ SplitOff: <<
 		libtiff5-shlibs
 	<<
 
-	Files: opt/%N/lib/libwx_*-%type_raw[lib]*.dylib 
+	Files: lib/%N/libwx_*-%type_raw[lib]*.dylib 
 	Shlibs: <<
-		%p/opt/%N/lib/libwx_baseu-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		%p/opt/%N/lib/libwx_baseu_net-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		%p/opt/%N/lib/libwx_baseu_xml-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_adv-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_aui-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-	    (%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_core-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_gl-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_html-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_media-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_propgrid-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_qa-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_ribbon-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_richtext-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_stc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_xrc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-        (%type_raw[-ui] = -mac) %p/opt/%N/lib/libwx_osx_cocoau_webview-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_adv-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_aui-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_core-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_gl-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_html-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_media-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_propgrid-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_qa-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_ribbon-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_richtext-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_stc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-		(%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_xrc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
-        (%type_raw[-ui] = -gtk2) %p/opt/%N/lib/libwx_gtk2u_webview-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		%p/lib/%N/libwx_baseu-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		%p/lib/%N/libwx_baseu_net-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		%p/lib/%N/libwx_baseu_xml-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_adv-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_aui-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+	    (%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_core-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_gl-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_html-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_media-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_propgrid-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_qa-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_ribbon-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_richtext-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_stc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_xrc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+        (%type_raw[-ui] = -mac) %p/lib/%N/libwx_osx_cocoau_webview-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_adv-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_aui-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_core-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_gl-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_html-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_media-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_propgrid-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_qa-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_ribbon-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_gtk2u_richtext-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_osx_gtk2u_stc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_osx_gtk2u_xrc-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
+        (%type_raw[-ui] = -gtk2) %p/lib/%N/libwx_osx_gtk2u_webview-%type_raw[lib].dylib 3.0.0 %n (>= 3.0.2-1)
     <<
 	DocFiles: docs/preamble.txt docs/licence.txt docs/licendoc.txt docs/gpl.txt docs/lgpl.txt
 <<
