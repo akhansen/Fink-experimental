@@ -124,12 +124,6 @@ InstallScript: <<
 			install_name_tool -change %i/lib/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
 				%p/lib/libwx_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
 		done
-		for lib2 in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
-		do
-			install_name_tool -change %i/lib/libwx_osx_cocoau_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/libwx_osx_cocoau_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
-
-		done
 	done 
 	for lib in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 	do
