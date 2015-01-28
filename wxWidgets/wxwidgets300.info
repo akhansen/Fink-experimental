@@ -153,24 +153,24 @@ InstallScript: <<
 		done
 		for lib2 in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 		do
-			install_name_tool -change %i/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_${UI}u_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_${UI}u_$lib2-%type_raw[lib].dylib libwx_$lib-%type_raw[lib].%type_raw[min].dylib
 
 		done
 	done 
 	for lib in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 	do
-		install_name_tool -id %p/lib/%N/libwx_$UIu_$lib-%type_raw[lib].dylib \
-			libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+		install_name_tool -id %p/lib/%N/libwx_${UI}u_$lib-%type_raw[lib].dylib \
+			libwx_${UI}u_$lib-%type_raw[lib].%type_raw[min].dylib
 		for lib2 in baseu baseu_net baseu_xml
 		do
 			install_name_tool -change %i/lib/%N/libwx_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/%N/libwx_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+				%p/lib/%N/libwx_$lib2-%type_raw[lib].dylib libwx_${UI}u_$lib-%type_raw[lib].%type_raw[min].dylib
 		done
 		for lib2 in adv aui core gl html media propgrid qa ribbon richtext stc webview xrc
 		do
-			install_name_tool -change %i/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].%type_raw[min].dylib \
-				%p/lib/%N/libwx_$UIu_$lib2-%type_raw[lib].dylib libwx_$UIu_$lib-%type_raw[lib].%type_raw[min].dylib
+			install_name_tool -change %i/lib/%N/libwx_${UI}u_$lib2-%type_raw[lib].%type_raw[min].dylib \
+				%p/lib/%N/libwx_${UI}u_$lib2-%type_raw[lib].dylib libwx_${UI}u_$lib-%type_raw[lib].%type_raw[min].dylib
 
 		done	
 	done
