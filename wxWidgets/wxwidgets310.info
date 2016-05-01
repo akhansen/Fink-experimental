@@ -1,0 +1,243 @@
+Info2: <<
+Package: wxwidgets310%type_pkg[-ui]
+Version: 3.1.0
+Revision: 1
+GCC: 4.0
+Type: maj (3.1), min (0.0) , -ui (-osxcocoa -gtk2), lib (3.1.0)
+
+Description: Cross-platform GUI API-mac/Cocoa version
+License: GPL2/LGPL
+Maintainer: Alexander Hansen <alexkhansen@users.sourceforge.net>
+
+Depends: <<
+	expat1-shlibs,
+	libiconv,
+	%N-shlibs,
+	macosx,
+	(%type_raw[-ui] = -gtk2) x11-shlibs
+<<
+BuildDepends: <<
+	(%type_raw[-ui] = -gtk2) atk1,
+	(%type_raw[-ui] = -gtk2) cairo,
+	clang (>=3.0),
+	expat1,
+	fink (>= 0.28),
+	fink-buildenv-modules,
+	fink-package-precedence,
+	flag-sort,
+	(%type_raw[-ui] = -gtk2) freetype219,
+	gettext-bin,
+	gettext-tools,
+	(%type_raw[-ui] = -gtk2) glib2-dev,
+	(%type_raw[-ui] = -gtk2) gst-plugins-base-0.10-dev,
+	(%type_raw[-ui] = -gtk2) gstreamer-0.10-dev,
+	(%type_raw[-ui] = -gtk2) gtk+2,
+	libgettext8-dev,
+	libiconv-dev,
+	libjpeg9,
+	(%type_raw[-ui] = -gtk2) libnotify,
+	libpng16,
+	libtiff5,
+	(%type_raw[-ui] = -gtk2) pango1-xft2-ft219-dev,
+	(%type_raw[-ui] = -gtk2) webkit-1.0.2,
+	(%type_raw[-ui] = -gtk2) x11-dev
+<<
+Conflicts: <<
+	wxgtk, 
+	wxcocoa, 
+	wxmac, 
+	wxgtk2.8, 
+	wxmac28, 
+	wxmac28-unicode, 
+	wxcocoa29, 
+	wxcocoa292, 
+	wxcocoa293, 
+	wxcocoa294, 
+	wxcocoa295,
+	wxwidgets300-cocoa,
+	wxwidgets300-gtk2,
+	wxwidgets300-osxcocoa,
+	wxwidgets310-gtk2,
+	wxwidgets310-osxcocoa
+<<
+Replaces: <<
+	wxgtk, 
+	wxcocoa, 
+	wxmac, 
+	wxgtk2.8, 
+	wxmac28, 
+	wxmac28-unicode, 
+	wxcocoa29, 
+	wxcocoa292, 
+	wxcocoa293, 
+	wxcocoa294, 
+	wxcocoa295,
+	wxwidgets300-cocoa,
+	wxwidgets300-gtk2,
+	wxwidgets300-osxcocoa,
+	wxwidgets310-gtk2,
+	wxwidgets310-osxcocoa
+<<
+BuildDependsOnly: true
+
+Source: https://github.com/wxWidgets/wxWidgets/releases/download/v%v/wxWidgets-%v.tar.bz2
+Source-MD5: e20c14bb9bf5d4ec0979a3cd7510dece
+Source-Checksum: SHA1(2170839cfa9d9322e8ee8368b21a15a2497b4f11)
+SourceDirectory: wxWidgets-%v
+
+PatchFile: 
+
+PatchScript: <<
+	#!/bin/sh -ev
+	. %p/sbin/fink-buildenv-helper.sh
+	perl -pi.bak -e 's/-framework QuickTime//; s/-no-cpp-precomp//' configure*
+	if [ $DARWIN_MAJOR_VERSION -ge 14 ] ; then
+		perl -pi -e 's/(WebKit)(\.h)/\1Legacy\2/' src/osx/webview_webkit.mm
+	fi
+	# autoconf2.6ish patch for modern XQuartz paths
+	perl -pi -e "s|/usr/lpp/Xamples|/opt/X11|" configure
+	# wedge equivalent fix into weird custom-written thingy...
+	perl -pi -e "s|/usr/pkg|/opt/X11|" configure
+<<
+
+NoSetLDFLAGS: true
+SetLIBRARY_PATH: %p/lib
+SetCC: flag-sort -r gcc
+SetCXX: flag-sort -r g++
+
+ConfigureParams: <<
+	--mandir=%p/share/man \
+	--enable-intl \
+	--enable-unicode \
+	--enable-dependency-tracking \
+	--enable-monolithic \
+	(%type_raw[-ui] = -gtk2) --with-gtk=2 \
+	(%type_raw[-ui] = -osxcocoa) --with-cocoa \
+	--without-carbon \
+	--with-libpng \
+	--with-libjpeg \
+	--with-libtiff \
+	--without-sdl \
+	--with-opengl \
+	--without-odbc \
+	--with-libiconv-prefix=%p
+<<
+CompileScript: <<
+	#!/bin/sh -ev
+	. %p/sbin/fink-buildenv-helper.sh
+	if [ "%type_raw[-ui]" = "-osxcocoa" ] ; then
+		UI="osx_cocoa"
+	else 
+		UI="gtk2" 
+	fi
+	./configure %c --with-macosx-version-min=$OSX_MAJOR_VERSION --enable-macosx_arch=%m
+	make
+	fink-package-precedence --depfile-ext='\.d' .
+<<
+InstallScript: <<
+	#!/bin/sh -ev
+	if [ "%type_raw[-ui]" = "-osxcocoa" ] ; then
+		UI="osx_cocoau"
+	else 
+		UI="gtk2u" 
+	fi
+	%{default_script}
+	/usr/bin/install -m 755 -d %i/share/doc/%N
+	/bin/cp -R docs/ %i/share/doc/%N
+	/usr/bin/install -m 755 -d %i/share/%N
+	### installed version points at a file in %i, which we most definitely don't want. 
+	/bin/rm %i/bin/wx-config
+	pushd %i/bin
+	/bin/ln -s ../lib/wx/config/${UI}-unicode-%type_raw[maj] wx-config
+	install_name_tool -change %i/lib/libwx_${UI}-%type_raw[lib].%type_raw[min].dylib %p/lib/libwx_${UI}-%type_raw[lib].dylib wxrc
+	cd ../lib
+	### fix install_names not to use %i and use foo-3.1.0 rather than foo-3.1
+	install_name_tool -id %p/lib/libwx_${UI}-%type_raw[lib].dylib libwx_${UI}-%type_raw[lib].%type_raw[min].dylib
+	install_name_tool -id %p/lib/libwx_${UI}_gl-%type_raw[lib].dylib libwx_${UI}_gl-%type_raw[lib].%type_raw[min].dylib
+	### replace %i by %p, make sure not to force Fink's grep, and get rid of flag-sort
+	perl -pi -e    's|%i|%p|g ; 
+					s|(EGREP.*)%p/bin/grep|\1/usr/bin/env grep\2|;
+					s/flag-sort -r //g;
+					s/-isysroot.*-mm\S*\"/\"/g' wx/config/${UI}-unicode-%type_raw[maj]
+	### fix linked library name not to use %i
+	install_name_tool -change %i/lib/libwx_${UI}-%type_raw[lib].%type_raw[min].dylib %p/lib/libwx_${UI}-%type_raw[lib].dylib libwx_${UI}_gl-%type_raw[lib].%type_raw[min].dylib
+	### additional cocoa fix
+	if [ "%type_raw[-ui]" = "-osxcocoa" ] ; then	
+		/usr/bin/install -m 644 %b/src/osx/wxmac.icns %i/share/%N
+	fi
+	popd
+	
+<<
+SplitOff: <<
+	Package: %N-shlibs
+	Depends: <<
+		expat1-shlibs,
+		libgettext8-shlibs,
+		libiconv,
+		libjpeg9-shlibs,
+		libpng16-shlibs,
+		libtiff5-shlibs
+	<<
+
+	Files: lib/libwx_*-%type_raw[lib]*.dylib 
+	Shlibs: <<
+		(%type_raw[-ui] = -osxcocoa) %p/lib/libwx_osx_cocoau-%type_raw[lib].dylib 1.0.0 %n (>= 3.1.0-1)
+		(%type_raw[-ui] = -osxcocoa) %p/lib/libwx_osx_cocoau_gl-%type_raw[lib].dylib 1.0.0 %n (>= 3.1.0-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/libwx_gtk2u-%type_raw[lib].dylib 1.0.0 %n (>= 3.1.0-1)
+		(%type_raw[-ui] = -gtk2) %p/lib/libwx_gtk2u_gl-%type_raw[lib].dylib 1.0.0 %n (>= 3.1.0-1)
+     <<
+	DocFiles: docs/preamble.txt docs/licence.txt docs/licendoc.txt docs/gpl.txt docs/lgpl.txt
+<<
+
+Homepage: http://www.wxwidgets.org/
+DescDetail: <<
+ In addition to common and advanced GUI facilities such as
+ frames, scrolling windows, toolbars, tree controls, icons,
+ device contexts, printing, splitter windows and so on, there are
+ wrappers for common file operations, and facilities for writing
+ TCP/IP applications, thread handling, and more. Where certain
+ features are not available on a platform, such as MDI and tree
+ controls on Unix, they are emulated.
+<<
+DescPackaging: <<
+Looks for cppunit, but that is only used in the testsuite, which
+is currently not run.
+
+Rename "cocoa" to "osxcocoa" for the current refactoring of the OS X native build.  
+Upstream puts "osx_cocoa" in the library names, but we'll have to avoid the underscore.
+
+No overlapping library names in the monolithic build, so the %p/lib/%N private directory
+is no longer required.
+<<
+DescPort: <<
+In addition to encoding the build directory, upstream build uses 
+libwx_osx_{cocoa|gtk2}u(_gl)-3.1.dylib as the library install name, but other binaries 
+in the package link via libwx_osx_{cocoa|gtk2}u-3.1.0.0.0 dylib.  
+We split the difference and use libwx_osx_{cocoa|gtk2}u(_gl)-3.1.0.dylib as the 
+install_name and as the link entry.  
+
+Because the QuickTime library is i386 only, forcibly rip out any attempts
+to link to it on x86_64.
+
+Use flag-sort because the default flag ordering in the gtk2 variant tries to use X11's 
+cairo, libpng, freetype2, etc. in front.
+
+Patch out "flag-sort" in wx-config, as well as the encoded SDK path.
+
+gtk2 version currently doesn't work.  It looks like the build now expects that builds on
+OS X don't use X11:
+
+...
+./include/wx/osx/core/private.h:40:44: warning: 'wxOSX_USE_COCOA_OR_CARBON' is
+      not defined, evaluates to 0 [-Wundef]
+#if ( !wxUSE_GUI && !wxOSX_USE_IPHONE ) || wxOSX_USE_COCOA_OR_CARBON
+                                           ^
+./include/wx/osx/core/private.h:62:5: warning: 'wxOSX_USE_IPHONE' is not
+      defined, evaluates to 0 [-Wundef]
+#if wxOSX_USE_IPHONE
+    ^
+./include/wx/osx/core/private.h:183:13: error: unknown type name 'WXHMENU'
+    virtual WXHMENU GetHMenu() = 0;
+
+<<
+<<
