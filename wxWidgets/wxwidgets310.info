@@ -3,7 +3,8 @@ Package: wxwidgets310%type_pkg[-ui]
 Version: 3.1.0
 Revision: 1
 GCC: 4.0
-Type: maj (3.1), min (0.0) , -ui (-osxcocoa -gtk2), lib (3.1.0)
+# gtk2 doesn't work out of the box
+Type: maj (3.1), min (0.0) , -ui (-osxcocoa), lib (3.1.0)
 
 Description: Cross-platform GUI API-mac/Cocoa version
 License: GPL2/LGPL
