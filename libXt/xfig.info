@@ -1,0 +1,72 @@
+Package: xfig
+Version: 3.2.6
+Revision: 1.1
+Description: Menu-driven tool to create graphical objects
+License: BSD
+Maintainer:  None <fink-devel@lists.sourceforge.net>
+BuildConflicts: libxt
+BuildDepends: <<
+	fink (>= 0.32),
+	fink-package-precedence,
+	flag-sort,
+	fontconfig2-dev (>= 2.10.0-1),
+	freetype219 (>= 2.4.11-1),
+	libjpeg9 (>= 9-3),
+	libpng16,
+	libxaw3dxft,
+	x11-dev,
+	xft2-dev (>= 2.2.0-1)
+<<
+Depends: <<
+	app-defaults,
+	fig2dev (>= 3.2.6),
+	libjpeg-bin,
+	libjpeg9-shlibs (>= 9-3),
+	libpng16-shlibs,
+	libxaw3dxft-shlibs,
+	netpbm-bin,
+	x-ghostscript-fonts,
+	x11,
+	x11-shlibs
+<<
+Source: mirror:sourceforge:mcj/%n-%v.tar.xz
+Source-MD5: 087a53173d4c092b65b471c99debc6b2
+PatchScript: <<
+	# eliminate most chances of picking up MacPorts or other Fink
+	# bad AC macro. bad.
+	perl -pi -e 's|\/opt\/local|%p|g' configure
+<<
+SetCC: flag-sort -v -r cc
+SetCPPFLAGS: -I/%p/include/freetype2
+ConfigureParams: <<
+	--enable-dependency-tracking \
+	--x-includes=/opt/X11/include \
+	--x-libraries=/opt/X11/lib \
+	--with-appdefaultdir=%p/etc/app-defaults
+<<
+CompileScript: <<
+	%{default_script}
+#	fink-package-precedence .
+<<
+InfoTest: <<
+	TestScript: make check || exit 2
+<<
+InstallScript: <<
+	make install DESTDIR=%d
+<<
+DocFiles: CHANGES FIGAPPS README
+DescPackaging: <<
+ XFIGLIBDIR was set to %p/share/xfig.  Looks in /etc/printcap
+ for printer descriptions, which may not be correct for darwin or OS X.
+
+Former Maintainer:  Dave Morrison <drm@finkproject.org>
+<<
+DescUsage: <<
+ The environment variable XAPPLRESDIR must point to  
+ /sw/etc/app-defaults when using this package.  (This happens by default 
+ if /sw/bin/init.* is sourced, thanks to the app-defaults package.) The
+ user can also specify "*customization: -color" in the .Xdefaults or
+ .Xresources file, to take advantage of the color support which was
+ compiled in. 
+<<
+Homepage: https://sourceforge.net/projects/mcj/
