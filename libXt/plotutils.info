@@ -63,7 +63,6 @@ SplitOff: <<
   Replaces: %N (<= 2.4.1-1)
   Depends: <<
   	libpng16-shlibs,
-  	libxt-shlibs,
   	x11-shlibs
   <<
   Files: lib/libplot.*.dylib lib/libplotter.*.dylib
