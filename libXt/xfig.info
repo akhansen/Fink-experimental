@@ -1,6 +1,6 @@
 Package: xfig
 Version: 3.2.6
-Revision: 1.2
+Revision: 1.3        
 Description: Menu-driven tool to create graphical objects
 License: BSD
 Maintainer:  None <fink-devel@lists.sourceforge.net>
@@ -13,7 +13,7 @@ BuildDepends: <<
 	freetype219 (>= 2.4.11-1),
 	libjpeg9 (>= 9-3),
 	libpng16,
-	libxaw3dxft,
+	libxaw3dxft (>> 1.6.2-6),
 	system-xfree86-dev (>= 3:2.7.112-3),
 	xft2-dev (>= 2.2.0-1)
 <<
@@ -23,7 +23,7 @@ Depends: <<
 	libjpeg-bin,
 	libjpeg9-shlibs (>= 9-3),
 	libpng16-shlibs,
-	libxaw3dxft-shlibs,
+	libxaw3dxft-shlibs (>> 1.6.2-6),
 	netpbm-bin,
 	x-ghostscript-fonts,
 	system-xfree86 (>= 3:2.7.112-3), 

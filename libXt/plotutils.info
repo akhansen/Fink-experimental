@@ -1,6 +1,6 @@
 Package: plotutils
 Version: 2.6
-Revision: 5.1
+Revision: 5.2
 Description: Functions for exporting 2-D vector graphics  
 License: GPL
 Homepage: http://www.gnu.org/software/plotutils
@@ -38,12 +38,12 @@ BuildDepends: <<
 	fink-package-precedence,
 	libpng16,
 	libtool2 (>= 2.4.2-4),
-	x11-dev
+	system-xfree86-dev (>= 3:2.7.112-3)
 <<
 Depends: <<
 	%N-shlibs (= %v-%r),
 	libpng16-shlibs,
-	x11
+	system-xfree86 (>= 3:2.7.112-3)
 <<
 
 ConfigureParams: --enable-libplotter --disable-static --enable-dependency-tracking
@@ -63,7 +63,7 @@ SplitOff: <<
   Replaces: %N (<= 2.4.1-1)
   Depends: <<
   	libpng16-shlibs,
-  	x11-shlibs
+  	system-xfree86-shlibs (>= 3:2.7.112-3)
   <<
   Files: lib/libplot.*.dylib lib/libplotter.*.dylib
   Shlibs: <<
