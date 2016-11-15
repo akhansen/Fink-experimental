@@ -23,11 +23,8 @@ Source-Checksum: a622240ce2377f15b6d8261e4c49b8f6
 
 PatchFile: %n.patch
 PatchFile-MD5: ab8a88563553aa5d82acf760c21ceb79
-PatchFile2:  %n-opt-x11.patch
-PatchFile2-MD5:  3c3c24db58d04ff9edd7c9d61f3b3084
 PatchScript: <<
 	sed 's|@PREFIX@|%p|g' %{PatchFile} | patch -p1
-	patch -p1 < %{PatchFile2}
 <<
 	
 ConfigureParams: <<
