@@ -25,6 +25,8 @@ PatchFile: %n.patch
 PatchFile-MD5: ab8a88563553aa5d82acf760c21ceb79
 PatchScript: <<
 	sed 's|@PREFIX@|%p|g' %{PatchFile} | patch -p1
+    perl -pi -e "s|/usr/X11R6|/opt/X11/|g" Makefile.in Makefile.noimake 
+    perl -pi -e "s|(LIBS.*)(-lX)|\1\-L/opt/X11/lib \2|g" configure
 <<
 	
 ConfigureParams: <<
@@ -33,9 +35,6 @@ ConfigureParams: <<
 
 CompileScript: <<
  #!/bin/sh -ev
- . %p/sbin/fink-buildenv-helper.sh
- perl -pi -e "s|/usr/X11R6|$X11_BASE_DIR|g" Makefile.in Makefile.noimake 
- perl -pi -e "s|(LIBS.*)(-lX)|\1\-L${X11_LIBRARY_DIR} \2|g" configure
  export PATH=%p/lib/xmkmf/bin:$PATH
  export IMAKEINCLUDE=-I%p/lib/X11/config
  %{default_script}
